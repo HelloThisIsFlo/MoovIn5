@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.NumberPicker;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -59,6 +61,7 @@ public class MainActivity extends ActionBarActivity {
 
         private Button mMotivateButton;
         private Button mChangeLocationButton;
+        private NumberPicker mDurationPicker;
 
         public MainFragment() {
         }
@@ -71,6 +74,7 @@ public class MainActivity extends ActionBarActivity {
             // Find elements by id
             mMotivateButton = (Button) rootView.findViewById(R.id.motivate_button);
             mChangeLocationButton = (Button) rootView.findViewById(R.id.change_location_button);
+            mDurationPicker = (NumberPicker) rootView.findViewById(R.id.duration_picker);
 
 
             // Set listeners
@@ -86,9 +90,19 @@ public class MainActivity extends ActionBarActivity {
                     //TODO implement onClickListener
                 }
             });
+            mDurationPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                @Override
+                public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                    Toast.makeText(getActivity(),
+                            "Coucou, numero choisi : " + newVal,
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
+            });
 
-
-
+            // Test
+            mDurationPicker.setMinValue(10);
+            mDurationPicker.setMaxValue(90);
             return rootView;
         }
     }

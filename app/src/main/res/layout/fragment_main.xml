@@ -9,6 +9,13 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity$PlaceholderFragment">
 
+    <NumberPicker
+        android:id="@+id/duration_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/motivate_button"
+        android:layout_centerHorizontal="true"/>
+
     <Button
         android:id="@+id/motivate_button"
         android:text="@string/motivate_button"

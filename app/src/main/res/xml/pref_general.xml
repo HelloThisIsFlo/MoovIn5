@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- TODO use numberpicker dialog instead of EditTextPreference -->
     <EditTextPreference
         android:title="@string/pref_warmup"
         android:key="@string/pref_warmup_key"
