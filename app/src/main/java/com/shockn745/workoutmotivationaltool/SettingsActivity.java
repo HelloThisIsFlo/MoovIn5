@@ -1,11 +1,10 @@
 package com.shockn745.workoutmotivationaltool;
 
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 
 public class SettingsActivity extends ActionBarActivity {
@@ -24,7 +23,10 @@ public class SettingsActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class SettingsFragment extends PreferenceFragment {
+    public static class SettingsFragment extends PreferenceFragment
+            implements Preference.OnPreferenceChangeListener{
+
+        private boolean mBindingPreferences;
 
         public SettingsFragment() {
         }
@@ -35,8 +37,40 @@ public class SettingsActivity extends ActionBarActivity {
 
             addPreferencesFromResource(R.xml.pref_general);
 
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_warmup_key)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_stretching_key)));
+
+        }
+
+        private void bindPreferenceSummaryToValue(Preference preference) {
+            preference.setOnPreferenceChangeListener(this);
+
+            // Update once manually the summary
+            mBindingPreferences = true;
+            onPreferenceChange(preference,
+                    PreferenceManager
+                            .getDefaultSharedPreferences(preference.getContext())
+                            .getString(preference.getKey(), "")
+            );
+            mBindingPreferences = false;
         }
 
 
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+            // Test if onPreferenceChange is manually triggered, when binding summary to value.
+            if (!mBindingPreferences) {
+                //Do something when preference changes
+            }
+
+            // Update summary
+            preference.setSummary(newValue.toString()
+                            + " "
+                            + getString(R.string.pref_summary_minute)
+            );
+
+            return true;
+        }
     }
 }

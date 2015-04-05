@@ -57,8 +57,8 @@ public class MainActivity extends ActionBarActivity {
      */
     public static class MainFragment extends Fragment {
 
-        private Button motivateButton;
-        private Button changeLocationButton;
+        private Button mMotivateButton;
+        private Button mChangeLocationButton;
 
         public MainFragment() {
         }
@@ -69,18 +69,18 @@ public class MainActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
             // Find elements by id
-            motivateButton = (Button) rootView.findViewById(R.id.motivate_button);
-            changeLocationButton = (Button) rootView.findViewById(R.id.change_location_button);
+            mMotivateButton = (Button) rootView.findViewById(R.id.motivate_button);
+            mChangeLocationButton = (Button) rootView.findViewById(R.id.change_location_button);
 
 
             // Set listeners
-            motivateButton.setOnClickListener(new View.OnClickListener() {
+            mMotivateButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //TODO implement onClickListener
                 }
             });
-            changeLocationButton.setOnClickListener(new View.OnClickListener() {
+            mChangeLocationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //TODO implement onClickListener

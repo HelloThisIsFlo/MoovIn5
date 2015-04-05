@@ -9,4 +9,5 @@
     <string name="pref_warmup_key">warmup</string>
     <string name="pref_stretching">Streching + shower duration</string>
     <string name="pref_stretching_key">stretching</string>
+    <string name="pref_summary_minute">Minutes</string>
 </resources>
