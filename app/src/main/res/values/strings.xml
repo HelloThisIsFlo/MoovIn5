@@ -4,4 +4,9 @@
     <string name="action_settings">Settings</string>
     <string name="motivate_button">Motivate Me!</string>
     <string name="change_location_button">Change location</string>
+    <string name="title_activity_setting">SettingsActivity</string>
+    <string name="pref_warmup">Warmup duration</string>
+    <string name="pref_warmup_key">warmup</string>
+    <string name="pref_stretching">Streching + shower duration</string>
+    <string name="pref_stretching_key">stretching</string>
 </resources>
