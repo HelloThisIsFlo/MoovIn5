@@ -24,6 +24,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.shockn745.workoutmotivationaltool.MainActivity" />
         </activity>
+        <activity
+            android:name=".MotivationActivity"
+            android:label="@string/title_activity_motivation" >
+        </activity>
     </application>
 
 </manifest>

@@ -81,7 +81,8 @@ public class MainActivity extends ActionBarActivity {
             mMotivateButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO implement onClickListener
+                    Intent startMotivation = new Intent(getActivity(), MotivationActivity.class);
+                    startActivity(startMotivation);
                 }
             });
             mChangeLocationButton.setOnClickListener(new View.OnClickListener() {
