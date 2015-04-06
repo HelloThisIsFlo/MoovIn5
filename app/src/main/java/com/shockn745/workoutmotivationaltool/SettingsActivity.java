@@ -47,11 +47,12 @@ public class SettingsActivity extends ActionBarActivity {
 
             // Update once manually the summary
             mBindingPreferences = true;
-            onPreferenceChange(preference,
-                    PreferenceManager
-                            .getDefaultSharedPreferences(preference.getContext())
-                            .getString(preference.getKey(), "")
-            );
+            //TODO uncomment and fix
+//            onPreferenceChange(preference,
+//                    PreferenceManager
+//                            .getDefaultSharedPreferences(preference.getContext())
+//                            .getString(preference.getKey(), "")
+//            );
             mBindingPreferences = false;
         }
 
