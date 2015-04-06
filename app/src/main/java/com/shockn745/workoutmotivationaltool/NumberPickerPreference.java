@@ -74,9 +74,7 @@ public class NumberPickerPreference  extends DialogPreference{
 
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-//        setValue(restorePersistedValue ? getPersistedInt(MIN_VALUE) : (Integer) defaultValue);
-        //TODO implement default value
-        setValue(restorePersistedValue ? getPersistedInt(MIN_VALUE) : 5);
+        setValue(restorePersistedValue ? getPersistedInt(MIN_VALUE) : (Integer) defaultValue);
     }
 
     public void setValue(int value) {
