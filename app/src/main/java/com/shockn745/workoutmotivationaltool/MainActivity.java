@@ -92,7 +92,8 @@ public class MainActivity extends ActionBarActivity {
             mChangeLocationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO implement onClickListener
+                    Intent startGymLocation = new Intent(getActivity(), GymLocationActivity.class);
+                    startActivity(startGymLocation);
                 }
             });
             mDurationPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
