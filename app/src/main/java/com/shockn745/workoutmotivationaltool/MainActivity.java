@@ -13,7 +13,11 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
-
+/**
+ * Main activity displaying a duration picker, the main "motivate me" button and a secondary
+ * button used to change the gym location
+ * @author Florian Kempenich
+ */
 public class MainActivity extends ActionBarActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -55,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+     * The main fragment of the application
      */
     public static class MainFragment extends Fragment {
 
@@ -101,9 +105,13 @@ public class MainActivity extends ActionBarActivity {
                 }
             });
 
-            // Test
-            mDurationPicker.setMinValue(10);
-            mDurationPicker.setMaxValue(90);
+            // Configure mDurationPicker
+            mDurationPicker.setMinValue(getResources().getInteger(R.integer.main_duration_min));
+            mDurationPicker.setMaxValue(getResources().getInteger(R.integer.main_duration_max));
+            // Disable focus for the elements of the picker (disable keyboard)
+            mDurationPicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+
+
             return rootView;
         }
     }

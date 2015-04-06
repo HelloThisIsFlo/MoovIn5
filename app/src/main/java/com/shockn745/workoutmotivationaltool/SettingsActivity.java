@@ -1,14 +1,16 @@
 package com.shockn745.workoutmotivationaltool;
 
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.util.Log;
 
-
+/**
+ * Setting activity
+ * @author Florian Kempenich
+ */
 public class SettingsActivity extends ActionBarActivity {
 
     @Override
@@ -23,7 +25,8 @@ public class SettingsActivity extends ActionBarActivity {
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+     * A fragment used to bind the preferences settings to the summary and listen to preference
+     * changes
      */
     public static class SettingsFragment extends PreferenceFragment
             implements SharedPreferences.OnSharedPreferenceChangeListener{
@@ -57,7 +60,6 @@ public class SettingsActivity extends ActionBarActivity {
             // Test if OnSharedPreferenceChanged is being manually triggered
             if (!mBindingPreferences) {
                 //Do something when preference changes
-                Log.v("gssqdg", "gsqgdqs");
             }
 
             // Update the preference summary

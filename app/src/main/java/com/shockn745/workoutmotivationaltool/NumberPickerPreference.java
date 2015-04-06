@@ -1,9 +1,9 @@
 package com.shockn745.workoutmotivationaltool;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -12,23 +12,32 @@ import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 
 /**
- * Created by Shock on 06.04.15.
+ * Class that defines a custom DialogPreferences used to display a numberpicker in preferences
+ * @author Florian Kempenich
  */
 public class NumberPickerPreference  extends DialogPreference{
 
-    // TODO move from hard coded to resource file
-    private static final int MIN_VALUE = 0;
-    private static final int MAX_VALUE = 60;
+    private int mMinValue;
+    private int mMaxValue;
 
     private NumberPicker mPicker;
     private int mValue;
 
+    @SuppressWarnings("unused")
     public NumberPickerPreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
+    @SuppressWarnings("unused")
     public NumberPickerPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
+    }
+
+    private void init() {
+        mMinValue = getContext().getResources().getInteger(R.integer.pref_duration_min);
+        mMaxValue = getContext().getResources().getInteger(R.integer.pref_duration_max);
     }
 
     @Override
@@ -44,6 +53,8 @@ public class NumberPickerPreference  extends DialogPreference{
         // Create the picker and set the layout parameters
         mPicker = new NumberPicker(getContext());
         mPicker.setLayoutParams(layoutParams);
+        // Disable focus for the elements of the picker (disable keyboard)
+        mPicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
         // Create the framelayout and add the picker
         FrameLayout dialogView = new FrameLayout(getContext());
@@ -53,10 +64,11 @@ public class NumberPickerPreference  extends DialogPreference{
     }
 
     @Override
+    @NonNull
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
-        mPicker.setMinValue(MIN_VALUE);
-        mPicker.setMaxValue(MAX_VALUE);
+        mPicker.setMinValue(mMinValue);
+        mPicker.setMaxValue(mMaxValue);
         mPicker.setValue(getValue());
     }
 
@@ -69,12 +81,12 @@ public class NumberPickerPreference  extends DialogPreference{
 
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
-        return a.getInt(index, MIN_VALUE);
+        return a.getInt(index, mMinValue);
     }
 
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-        setValue(restorePersistedValue ? getPersistedInt(MIN_VALUE) : (Integer) defaultValue);
+        setValue(restorePersistedValue ? getPersistedInt(mMinValue) : (Integer) defaultValue);
     }
 
     public void setValue(int value) {

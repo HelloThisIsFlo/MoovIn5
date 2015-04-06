@@ -22,7 +22,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
-    <!-- TODO add offset -->
 
     <Button
         android:id="@+id/change_location_button"
