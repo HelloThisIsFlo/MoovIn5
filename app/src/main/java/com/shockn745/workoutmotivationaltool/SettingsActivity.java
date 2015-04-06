@@ -1,10 +1,12 @@
 package com.shockn745.workoutmotivationaltool;
 
+import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 
 public class SettingsActivity extends ActionBarActivity {
@@ -24,7 +26,7 @@ public class SettingsActivity extends ActionBarActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class SettingsFragment extends PreferenceFragment
-            implements Preference.OnPreferenceChangeListener{
+            implements SharedPreferences.OnSharedPreferenceChangeListener{
 
         private boolean mBindingPreferences;
 
@@ -37,40 +39,33 @@ public class SettingsActivity extends ActionBarActivity {
 
             addPreferencesFromResource(R.xml.pref_general);
 
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_warmup_key)));
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_stretching_key)));
+            // Register this class as the preference listener
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(getActivity());
+            sp.registerOnSharedPreferenceChangeListener(this);
 
-        }
-
-        private void bindPreferenceSummaryToValue(Preference preference) {
-            preference.setOnPreferenceChangeListener(this);
-
-            // Update once manually the summary
+            //Manually trigger the update of the summary
             mBindingPreferences = true;
-            onPreferenceChange(preference,
-                    PreferenceManager
-                            .getDefaultSharedPreferences(preference.getContext())
-                            .getString(preference.getKey(), "")
-            );
+            onSharedPreferenceChanged(sp, getString(R.string.pref_warmup_key));
+            onSharedPreferenceChanged(sp, getString(R.string.pref_stretching_key));
             mBindingPreferences = false;
         }
 
-
         @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-            // Test if onPreferenceChange is manually triggered, when binding summary to value.
+            // Test if OnSharedPreferenceChanged is being manually triggered
             if (!mBindingPreferences) {
                 //Do something when preference changes
+                Log.v("gssqdg", "gsqgdqs");
             }
 
-            // Update summary
-            preference.setSummary(newValue.toString()
+            // Update the preference summary
+            Preference preference = findPreference(key);
+            preference.setSummary(sharedPreferences.getInt(key, 0)
                             + " "
                             + getString(R.string.pref_summary_minute)
             );
-
-            return true;
         }
     }
 }
