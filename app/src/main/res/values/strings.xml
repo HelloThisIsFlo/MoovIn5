@@ -12,4 +12,6 @@
     <string name="pref_summary_minute">Minutes</string>
     <string name="title_activity_motivation">MotivationActivity</string>
     <string name="title_activity_gym_location">Gym Location</string>
+    <string name="set_location_button">Set Location</string>
+    <string name="change_maptype_button">Change map type</string>
 </resources>
