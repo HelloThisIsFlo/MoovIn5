@@ -34,6 +34,9 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new MainFragment())
                     .commit();
         }
+
+        // Set the default values for the very first launch of the application.
+        PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
     }
 
 
@@ -98,6 +101,23 @@ public class MainActivity extends ActionBarActivity {
                     long lngLong = prefs.getLong(GymLocationActivity.LONGITUDE_KEY, 5);
                     int warmup = prefs.getInt(getString(R.string.pref_warmup_key), -1);
                     int stretching = prefs.getInt(getString(R.string.pref_stretching_key), -1);
+
+
+                    // TODO use contains to check if a preference has been set
+                    // If not tell te user to set it (for the location)
+                    // For the duration use the default value
+                    if (!prefs.contains(GymLocationActivity.LATITUDE_KEY)) {
+                        Log.v(LOG_TAG, "No preference saved : latitude");
+                    }
+                    if (!prefs.contains(GymLocationActivity.LONGITUDE_KEY)) {
+                        Log.v(LOG_TAG, "No preference saved : longitude");
+                    }
+                    if (!prefs.contains(getString(R.string.pref_warmup_key))) {
+                        Log.v(LOG_TAG, "No preference saved : warmup");
+                    }
+                    if (!prefs.contains(getString(R.string.pref_stretching_key))) {
+                        Log.v(LOG_TAG, "No preference saved : stretching");
+                    }
 
                     double lat = Double.longBitsToDouble(latLong);
                     double lng = Double.longBitsToDouble(lngLong);
