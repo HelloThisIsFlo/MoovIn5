@@ -1,8 +1,6 @@
 package com.shockn745.workoutmotivationaltool;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -10,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -38,11 +37,19 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gym_location);
 
-        // Get the mapFragment and register this Activity as the
-        // callback to get the GoogleMap object
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.gym_location_map);
+        // Add the MapFragment
+        // TODO initialize options with previous coordinates + level of zoom
+        GoogleMapOptions options = null;
+        SupportMapFragment mapFragment = SupportMapFragment.newInstance(options);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, mapFragment)
+                    .commit();
+        }
+
+        // Register this Activity as the callback to get the GoogleMap object
         mapFragment.getMapAsync(this);
+
 
         // Find elements by id
         mSetLocationButton = (Button) findViewById(R.id.set_location_button);

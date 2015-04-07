@@ -5,12 +5,12 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-    <fragment
-        android:id="@+id/gym_location_map"
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_above="@+id/set_location_button"/>
+        android:layout_above="@+id/set_location_button"
+        />
 
     <!-- TODO use a FAB instead -->
     <Button
