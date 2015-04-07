@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Main activity displaying a duration picker, the main "motivate me" button and a secondary
  * button used to change the gym location
@@ -92,39 +94,34 @@ public class MainActivity extends ActionBarActivity {
                 @Override
                 public void onClick(View v) {
 
+
+
+
                     // TEST location
                     // TODO Delete test
                     SharedPreferences prefs = PreferenceManager
                             .getDefaultSharedPreferences(getActivity());
 
-                    long latLong = prefs.getLong(GymLocationActivity.LATITUDE_KEY, 5);
-                    long lngLong = prefs.getLong(GymLocationActivity.LONGITUDE_KEY, 5);
                     int warmup = prefs.getInt(getString(R.string.pref_warmup_key), -1);
                     int stretching = prefs.getInt(getString(R.string.pref_stretching_key), -1);
 
 
-                    // TODO use contains to check if a preference has been set
-                    // If not tell te user to set it (for the location)
-                    // For the duration use the default value
-                    if (!prefs.contains(GymLocationActivity.LATITUDE_KEY)) {
-                        Log.v(LOG_TAG, "No preference saved : latitude");
-                    }
-                    if (!prefs.contains(GymLocationActivity.LONGITUDE_KEY)) {
-                        Log.v(LOG_TAG, "No preference saved : longitude");
-                    }
-                    if (!prefs.contains(getString(R.string.pref_warmup_key))) {
-                        Log.v(LOG_TAG, "No preference saved : warmup");
-                    }
-                    if (!prefs.contains(getString(R.string.pref_stretching_key))) {
-                        Log.v(LOG_TAG, "No preference saved : stretching");
+                    try {
+                        LatLng coordinates = Utility.getCoordinatesFromPreferences(getActivity());
+
+                        Log.v(LOG_TAG, "lat : " + coordinates.latitude);
+                        Log.v(LOG_TAG, "long : " + coordinates.longitude);
+                    } catch (Utility.PreferenceNotInitializedException e) {
+                        e.printStackTrace();
                     }
 
-                    double lat = Double.longBitsToDouble(latLong);
-                    double lng = Double.longBitsToDouble(lngLong);
-                    Log.v(LOG_TAG, "lat : " + lat);
-                    Log.v(LOG_TAG, "long : " + lng);
                     Log.v(LOG_TAG, "warmup : " + warmup);
                     Log.v(LOG_TAG, "stretching : " + stretching);
+
+
+
+
+
 
                     Intent startMotivation = new Intent(getActivity(), MotivationActivity.class);
                     startActivity(startMotivation);

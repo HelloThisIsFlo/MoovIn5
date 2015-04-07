@@ -29,7 +29,7 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
 
     private GoogleMap mMap = null;
     private Marker mMarker = null;
-    private LatLng mCoordonates = null;
+    private LatLng mCoordinates = null;
 
     private boolean mMaptypeIsHybrid = false;
 
@@ -67,29 +67,20 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
         mSetLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Convert double to long
-                long latLong = Double.doubleToLongBits(mCoordonates.latitude);
-                long lngLong = Double.doubleToLongBits(mCoordonates.longitude);
-
                 // Save the location to the shared preferences
-                SharedPreferences prefs = PreferenceManager
-                        .getDefaultSharedPreferences(GymLocationActivity.this);
-                prefs.edit()
-                        .putLong(LATITUDE_KEY, latLong)
-                        .putLong(LONGITUDE_KEY, lngLong)
-                        .apply();
+                Utility.saveCoordinatesToPreferences(GymLocationActivity.this, mCoordinates);
 
-                Log.v(LOG_TAG, "lat : " + mCoordonates.latitude);
-                Log.v(LOG_TAG, "long : " + mCoordonates.longitude);
+                Log.v(LOG_TAG, "lat : " + mCoordinates.latitude);
+                Log.v(LOG_TAG, "long : " + mCoordinates.longitude);
 
                 finish();
             }
         });
 
 
-        // Init mCoordonates - TEMPORARY
+        // Init mCoordinates - TEMPORARY
         // TODO Remove hardcoded init : retrieve previous location (or default location if 1st time)
-        mCoordonates = new LatLng(0, 0);
+        mCoordinates = new LatLng(0, 0);
 
     }
 
@@ -115,10 +106,10 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
                 if (mMarker == null) {
                     mMarker = mMap.addMarker(new MarkerOptions()
                             .position(latLng));
-                    mCoordonates = latLng;
+                    mCoordinates = latLng;
                 } else {
                     mMarker.setPosition(latLng);
-                    mCoordonates = latLng;
+                    mCoordinates = latLng;
                 }
 
             }
