@@ -1,9 +1,12 @@
 package com.shockn745.workoutmotivationaltool;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -85,6 +88,24 @@ public class MainActivity extends ActionBarActivity {
             mMotivateButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    // TEST location
+                    // TODO Delete test
+                    SharedPreferences prefs = PreferenceManager
+                            .getDefaultSharedPreferences(getActivity());
+
+                    long latLong = prefs.getLong(GymLocationActivity.LATITUDE_KEY, 5);
+                    long lngLong = prefs.getLong(GymLocationActivity.LONGITUDE_KEY, 5);
+                    int warmup = prefs.getInt(getString(R.string.pref_warmup_key), -1);
+                    int stretching = prefs.getInt(getString(R.string.pref_stretching_key), -1);
+
+                    double lat = Double.longBitsToDouble(latLong);
+                    double lng = Double.longBitsToDouble(lngLong);
+                    Log.v(LOG_TAG, "lat : " + lat);
+                    Log.v(LOG_TAG, "long : " + lng);
+                    Log.v(LOG_TAG, "warmup : " + warmup);
+                    Log.v(LOG_TAG, "stretching : " + stretching);
+
                     Intent startMotivation = new Intent(getActivity(), MotivationActivity.class);
                     startActivity(startMotivation);
                 }
