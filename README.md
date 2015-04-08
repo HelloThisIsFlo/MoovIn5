@@ -24,3 +24,7 @@ That's how it's able to tell so precisely the time you'll be back home.
 
 The warmup & stretching times are customizable in the settings.
 You can change your gym location (or select home) via a button on the main screen.
+
+## Important information
+To be able to test the project, you have to generate an API key for the Google Maps API.
+There's plenty of tutorial on how to do that
