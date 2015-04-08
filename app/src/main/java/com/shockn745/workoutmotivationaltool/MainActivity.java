@@ -1,9 +1,12 @@
 package com.shockn745.workoutmotivationaltool;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,7 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Main activity displaying a duration picker, the main "motivate me" button and a secondary
@@ -31,6 +37,9 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new MainFragment())
                     .commit();
         }
+
+        // Set the default values for the very first launch of the application.
+        PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
     }
 
 
@@ -66,6 +75,7 @@ public class MainActivity extends ActionBarActivity {
         private Button mMotivateButton;
         private Button mChangeLocationButton;
         private NumberPicker mDurationPicker;
+        private TextView mWarningEditText;
 
         public MainFragment() {
         }
@@ -79,12 +89,43 @@ public class MainActivity extends ActionBarActivity {
             mMotivateButton = (Button) rootView.findViewById(R.id.motivate_button);
             mChangeLocationButton = (Button) rootView.findViewById(R.id.change_location_button);
             mDurationPicker = (NumberPicker) rootView.findViewById(R.id.duration_picker);
+            mWarningEditText = (TextView) rootView.findViewById(R.id.warning_edit_text);
 
 
             // Set listeners
             mMotivateButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+
+
+
+                    // TEST location
+                    // TODO Delete test
+                    SharedPreferences prefs = PreferenceManager
+                            .getDefaultSharedPreferences(getActivity());
+
+                    int warmup = prefs.getInt(getString(R.string.pref_warmup_key), -1);
+                    int stretching = prefs.getInt(getString(R.string.pref_stretching_key), -1);
+
+
+                    try {
+                        LatLng coordinates = Utility.getCoordinatesFromPreferences(getActivity());
+
+                        Log.v(LOG_TAG, "lat : " + coordinates.latitude);
+                        Log.v(LOG_TAG, "long : " + coordinates.longitude);
+                    } catch (Utility.PreferenceNotInitializedException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.v(LOG_TAG, "warmup : " + warmup);
+                    Log.v(LOG_TAG, "stretching : " + stretching);
+
+
+
+
+
+
                     Intent startMotivation = new Intent(getActivity(), MotivationActivity.class);
                     startActivity(startMotivation);
                 }
@@ -92,7 +133,8 @@ public class MainActivity extends ActionBarActivity {
             mChangeLocationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO implement onClickListener
+                    Intent startGymLocation = new Intent(getActivity(), GymLocationActivity.class);
+                    startActivity(startGymLocation);
                 }
             });
             mDurationPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -113,6 +155,23 @@ public class MainActivity extends ActionBarActivity {
 
 
             return rootView;
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+
+            // Enable "Motivate Me" button only if the gym location has been initialized
+            SharedPreferences prefs = PreferenceManager
+                    .getDefaultSharedPreferences(getActivity());
+            if (prefs.contains(GymLocationActivity.LATITUDE_KEY) &&
+                    prefs.contains(GymLocationActivity.LONGITUDE_KEY)) {
+                mMotivateButton.setEnabled(true);
+                mWarningEditText.setVisibility(View.GONE);
+            } else {
+                mMotivateButton.setEnabled(false);
+                mWarningEditText.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

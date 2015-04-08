@@ -9,4 +9,8 @@
     <integer name="main_duration_min">10</integer>
     <integer name="main_duration_max">90</integer>
 
+    <!-- Parameters for the Gym location map -->
+    <integer name="gym_location_level_zoom">15</integer>
+    <integer name="gym_location_level_zoom_not_initialized">1</integer>
+
 </resources>
