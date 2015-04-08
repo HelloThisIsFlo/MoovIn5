@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -74,6 +75,7 @@ public class MainActivity extends ActionBarActivity {
         private Button mMotivateButton;
         private Button mChangeLocationButton;
         private NumberPicker mDurationPicker;
+        private TextView mWarningEditText;
 
         public MainFragment() {
         }
@@ -87,6 +89,7 @@ public class MainActivity extends ActionBarActivity {
             mMotivateButton = (Button) rootView.findViewById(R.id.motivate_button);
             mChangeLocationButton = (Button) rootView.findViewById(R.id.change_location_button);
             mDurationPicker = (NumberPicker) rootView.findViewById(R.id.duration_picker);
+            mWarningEditText = (TextView) rootView.findViewById(R.id.warning_edit_text);
 
 
             // Set listeners
@@ -152,6 +155,23 @@ public class MainActivity extends ActionBarActivity {
 
 
             return rootView;
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+
+            // Enable "Motivate Me" button only if the gym location has been initialized
+            SharedPreferences prefs = PreferenceManager
+                    .getDefaultSharedPreferences(getActivity());
+            if (prefs.contains(GymLocationActivity.LATITUDE_KEY) &&
+                    prefs.contains(GymLocationActivity.LONGITUDE_KEY)) {
+                mMotivateButton.setEnabled(true);
+                mWarningEditText.setVisibility(View.GONE);
+            } else {
+                mMotivateButton.setEnabled(false);
+                mWarningEditText.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
