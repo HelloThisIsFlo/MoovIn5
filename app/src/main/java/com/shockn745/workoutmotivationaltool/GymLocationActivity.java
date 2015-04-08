@@ -11,6 +11,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -37,9 +38,31 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gym_location);
 
+        // Initialize the GoogleMapOption with the location stored in the preferences
+        GoogleMapOptions options = new GoogleMapOptions();
+        try {
+            //Try to get previous location
+            LatLng coord = Utility.getCoordinatesFromPreferences(this);
+
+            // Init the map with the saved location
+            options.camera(new CameraPosition(
+                    coord,
+                    getResources().getInteger(R.integer.gym_location_level_zoom),
+                    0,
+                    0)
+            );
+        } catch (Utility.PreferenceNotInitializedException e) {
+            e.printStackTrace();
+            // Set default location if retrieval fails
+            options.camera(new CameraPosition(
+                    new LatLng(0, 0),
+                    getResources().getInteger(R.integer.gym_location_level_zoom_not_initialized),
+                    0,
+                    0)
+            );
+        }
+
         // Add the MapFragment
-        // TODO initialize options with previous coordinates + level of zoom
-        GoogleMapOptions options = null;
         SupportMapFragment mapFragment = SupportMapFragment.newInstance(options);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -104,6 +127,18 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
 
         // Activate the changeMaptype button
         mChangeMaptypeButton.setEnabled(true);
+
+        // Add a marker at the previously saved location
+        try {
+            //Try to get previous location, if fails the marker is simply not added
+            LatLng coord = Utility.getCoordinatesFromPreferences(this);
+
+            // Add marker to the previously saved location
+            mMarker = mMap.addMarker(new MarkerOptions()
+                    .position(coord));
+        } catch (Utility.PreferenceNotInitializedException e) {
+            e.printStackTrace();
+        }
 
 
         // Display a marker on the long clicked location
