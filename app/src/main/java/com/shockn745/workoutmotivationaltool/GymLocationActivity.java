@@ -98,20 +98,16 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
             @Override
             public void onClick(View v) {
                 // Save the location to the shared preferences
-                Utility.saveCoordinatesToPreferences(GymLocationActivity.this, mCoordinates);
+                if (mCoordinates != null) {
+                    Utility.saveCoordinatesToPreferences(GymLocationActivity.this, mCoordinates);
 
-                Log.v(LOG_TAG, "lat : " + mCoordinates.latitude);
-                Log.v(LOG_TAG, "long : " + mCoordinates.longitude);
+                    Log.v(LOG_TAG, "lat : " + mCoordinates.latitude);
+                    Log.v(LOG_TAG, "long : " + mCoordinates.longitude);
 
-                finish();
+                    finish();
+                }
             }
         });
-
-
-        // Init mCoordinates - TEMPORARY
-        // TODO Remove hardcoded init : retrieve previous location (or default location if 1st time)
-        mCoordinates = new LatLng(0, 0);
-
     }
 
     /**
@@ -137,7 +133,7 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
             mMarker = mMap.addMarker(new MarkerOptions()
                     .position(coord));
         } catch (Utility.PreferenceNotInitializedException e) {
-            e.printStackTrace();
+            Log.v(LOG_TAG, "Location not initialized, not adding the marker");
         }
 
 
@@ -145,6 +141,7 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
+                // Display the marker or change its location
                 if (mMarker == null) {
                     mMarker = mMap.addMarker(new MarkerOptions()
                             .position(latLng));
@@ -153,6 +150,9 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
                     mMarker.setPosition(latLng);
                     mCoordinates = latLng;
                 }
+
+                // Enable "Save Location" button
+                mSetLocationButton.setEnabled(true);
 
             }
         });
