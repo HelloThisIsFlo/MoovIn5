@@ -136,6 +136,9 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
             Log.v(LOG_TAG, "Location not initialized, not adding the marker");
         }
 
+        // Activate the myLocation layer
+        mMap.setMyLocationEnabled(true);
+
 
         // Display a marker on the long clicked location
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
