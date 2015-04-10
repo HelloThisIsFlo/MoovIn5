@@ -1,9 +1,12 @@
 package com.shockn745.workoutmotivationaltool;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -43,11 +46,26 @@ public class MotivationActivity extends ActionBarActivity {
 
         private static final String LOG_TAG = MotivationFragment.class.getSimpleName();
 
+        private static final int LOC_REQ_INTERVAL = 1000;
+        private static final int LOC_REQ_FASTEST_INTERVAL = 500;
+        // TODO check if 20 sec is enough
+        private static final int LOC_REQ_EXPIRATION = 20000;
+
         // Client used to communicate with the Google API for the location
         private GoogleApiClient mGoogleApiClient;
 
         // Location request used to query the location of the user
         private LocationRequest mLocationRequest;
+
+        private Handler mHandler;
+
+        // Runnable to display a dialog when the location is unavailable
+        private final Runnable mExpiredRunnable = new Runnable() {
+            @Override
+            public void run() {
+                showUnableToObtainLocation();
+            }
+        };
 
         public MotivationFragment() {
         }
@@ -55,15 +73,19 @@ public class MotivationActivity extends ActionBarActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
             buildGoogleApiClient();
 
-            // TODO check if we can get a callback on expiration, to notify fail to the user
+            mHandler = new Handler();
+
             // Create the LocationRequest object
             mLocationRequest = LocationRequest.create()
                     .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                     .setNumUpdates(1)
-                    .setInterval(1000)
-                    .setFastestInterval(500);
+                    .setInterval(LOC_REQ_INTERVAL)
+                    .setFastestInterval(LOC_REQ_FASTEST_INTERVAL)
+                    .setExpirationDuration(LOC_REQ_EXPIRATION);
+
         }
 
         @Override
@@ -84,6 +106,9 @@ public class MotivationActivity extends ActionBarActivity {
         @Override
         public void onPause() {
             super.onPause();
+
+            // Stop expiration timer
+            mHandler.removeCallbacks(mExpiredRunnable);
 
             // Remove the location updates
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
@@ -146,7 +171,31 @@ public class MotivationActivity extends ActionBarActivity {
          */
         @Override
         public void onLocationChanged(Location location) {
+            // Stop the expiration timer
+            mHandler.removeCallbacks(mExpiredRunnable);
+
+            // Handle location
             handleNewLocation(location);
+        }
+
+        private void showUnableToObtainLocation() {
+            // Create the AlertDialog
+            AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                    .setMessage(getResources().getString(R.string.alert_location_message))
+                    .setPositiveButton(getResources().getString(R.string.alert_location_dismiss),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    MotivationFragment.this.getActivity().finish();
+                                }
+                            })
+                    .create();
+
+            // Prevent the dialog from being dismissed, so it can call finish() on the activity
+            dialog.setCanceledOnTouchOutside(false);
+
+            // Show the dialog
+            dialog.show();
         }
 
         /**
@@ -177,6 +226,9 @@ public class MotivationActivity extends ActionBarActivity {
                         .requestLocationUpdates(mGoogleApiClient,
                                 mLocationRequest,
                                 MotivationFragment.this);
+
+                // Set the timer for expiration
+                mHandler.postDelayed(mExpiredRunnable, LOC_REQ_EXPIRATION);
             }
 
             /**

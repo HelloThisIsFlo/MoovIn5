@@ -15,4 +15,11 @@
     <string name="set_location_button">Set Location</string>
     <string name="change_maptype_button">Change map type</string>
     <string name="warning_not_initialized_edit_text">Please initialise the gym location !</string>
+    <string name="alert_location_dismiss">Dismiss</string>
+    <string name="alert_location_message">Unable to obtain a location, please check the
+        following elements and retry :\n
+        - Turn on GPS\n
+        - Turn on WiFi\n
+        - Allow this application to access your location
+    </string>
 </resources>
