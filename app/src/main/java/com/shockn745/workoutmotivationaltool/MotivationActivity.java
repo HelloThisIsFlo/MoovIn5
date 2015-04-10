@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 /**
@@ -37,12 +39,15 @@ public class MotivationActivity extends ActionBarActivity {
      * Fragment of MotivationActivity
      * see the {@link com.shockn745.workoutmotivationaltool.MotivationActivity} class
      */
-    public static class MotivationFragment extends Fragment {
+    public static class MotivationFragment extends Fragment implements LocationListener{
 
         private static final String LOG_TAG = MotivationFragment.class.getSimpleName();
 
         // Client used to communicate with the Google API for the location
         private GoogleApiClient mGoogleApiClient;
+
+        // Location request used to query the location of the user
+        private LocationRequest mLocationRequest;
 
         public MotivationFragment() {
         }
@@ -51,6 +56,14 @@ public class MotivationActivity extends ActionBarActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             buildGoogleApiClient();
+
+            // TODO check if we can get a callback on expiration, to notify fail to the user
+            // Create the LocationRequest object
+            mLocationRequest = LocationRequest.create()
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                    .setNumUpdates(1)
+                    .setInterval(1000)
+                    .setFastestInterval(500);
         }
 
         @Override
@@ -71,6 +84,10 @@ public class MotivationActivity extends ActionBarActivity {
         @Override
         public void onPause() {
             super.onPause();
+
+            // Remove the location updates
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+
             // Disconnect the GoogleApiClient
             if (mGoogleApiClient.isConnected()) {
                 mGoogleApiClient.disconnect();
@@ -123,6 +140,14 @@ public class MotivationActivity extends ActionBarActivity {
             Log.d(LOG_TAG, location.toString());
         }
 
+        /**
+         * Callback called when a new location is available
+         * @param location New location
+         */
+        @Override
+        public void onLocationChanged(Location location) {
+            handleNewLocation(location);
+        }
 
         /**
          * Connection listener used for the communication with the Google API.
@@ -146,16 +171,12 @@ public class MotivationActivity extends ActionBarActivity {
             public void onConnected(Bundle bundle) {
                 Log.i(LOG_TAG, "Location service connected");
 
-                // Get the last location
-                Location location = LocationServices
+                // Request location
+                LocationServices
                         .FusedLocationApi
-                        .getLastLocation(MotivationFragment.this.mGoogleApiClient);
-
-                if (location != null) {
-                    handleNewLocation(location);
-                } else {
-                    Log.d(LOG_TAG, "location == null");
-                }
+                        .requestLocationUpdates(mGoogleApiClient,
+                                mLocationRequest,
+                                MotivationFragment.this);
             }
 
             /**
@@ -183,6 +204,8 @@ public class MotivationActivity extends ActionBarActivity {
                         e.printStackTrace();
                     }
                 } else {
+                    // TODO implement dialogError
+                    // See : http://developer.android.com/google/auth/api-client.html
                     Log.i(LOG_TAG, "Location services connection failed with code "
                             + connectionResult.getErrorCode());
                 }
