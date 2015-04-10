@@ -1,6 +1,7 @@
 package com.shockn745.workoutmotivationaltool;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -59,10 +60,14 @@ public class MotivationActivity extends ActionBarActivity {
 
         private Handler mHandler;
 
+        // Progress dialog shown during processing
+        private ProgressDialog mProgressDialog;
+
         // Runnable to display a dialog when the location is unavailable
         private final Runnable mExpiredRunnable = new Runnable() {
             @Override
             public void run() {
+                // TODO Call handleResult(...) instead
                 showUnableToObtainLocation();
             }
         };
@@ -92,6 +97,14 @@ public class MotivationActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_motivation, container, false);
+
+            // Set up & show the progress dialog
+            mProgressDialog = new ProgressDialog(getActivity());
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
+
             return rootView;
         }
 
@@ -174,11 +187,20 @@ public class MotivationActivity extends ActionBarActivity {
             // Stop the expiration timer
             mHandler.removeCallbacks(mExpiredRunnable);
 
+            // TODO put in handleResult(...)
+            // Dismiss the currently displayed progress dialog
+            mProgressDialog.dismiss();
+
+            // TODO Call handleResult(...) instead and save location to member variable
             // Handle location
             handleNewLocation(location);
         }
 
         private void showUnableToObtainLocation() {
+            // TODO put in handleResult(...)
+            // Dismiss the currently displayed progress dialog
+            mProgressDialog.dismiss();
+
             // Create the AlertDialog
             AlertDialog dialog = new AlertDialog.Builder(getActivity())
                     .setMessage(getResources().getString(R.string.alert_location_message))
@@ -193,6 +215,7 @@ public class MotivationActivity extends ActionBarActivity {
 
             // Prevent the dialog from being dismissed, so it can call finish() on the activity
             dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
 
             // Show the dialog
             dialog.show();
