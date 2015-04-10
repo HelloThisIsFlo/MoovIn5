@@ -64,13 +64,13 @@ public class MotivationActivity extends ActionBarActivity {
         private ProgressDialog mProgressDialog;
 
         // Runnable to display a dialog when the location is unavailable
-        private final Runnable mExpiredRunnable = new Runnable() {
-            @Override
-            public void run() {
-                // TODO Call handleResult(...) instead
-                showUnableToObtainLocation();
-            }
-        };
+        private Runnable mExpiredRunnable;
+
+        // ResultHandler handles the result of the processing : loc. fetch, route process, etc...
+        private ResultHandler mResultHandler;
+
+        // Current location of the user
+        Location mLocation;
 
         public MotivationFragment() {
         }
@@ -90,6 +90,17 @@ public class MotivationActivity extends ActionBarActivity {
                     .setInterval(LOC_REQ_INTERVAL)
                     .setFastestInterval(LOC_REQ_FASTEST_INTERVAL)
                     .setExpirationDuration(LOC_REQ_EXPIRATION);
+
+            // Initialize the resultHandler
+            mResultHandler = new ResultHandler();
+
+            // Initialize the expiration timer
+            mExpiredRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    mResultHandler.handleResult(ResultHandler.PROCESS_RES_LOC_FAIL);
+                }
+            };
 
         }
 
@@ -171,11 +182,12 @@ public class MotivationActivity extends ActionBarActivity {
         }
 
         /**
-         * Handle the newly generated location
-         * @param location Location to be handled
+         * Handle the newly generated location, accessible vie the mLocation field
          */
-        private void handleNewLocation(Location location) {
-            Log.d(LOG_TAG, location.toString());
+        private void handleNewLocation() {
+            if (mLocation != null) {
+                Log.d(LOG_TAG, mLocation.toString());
+            }
         }
 
         /**
@@ -184,41 +196,82 @@ public class MotivationActivity extends ActionBarActivity {
          */
         @Override
         public void onLocationChanged(Location location) {
-            // Stop the expiration timer
-            mHandler.removeCallbacks(mExpiredRunnable);
-
-            // TODO put in handleResult(...)
-            // Dismiss the currently displayed progress dialog
-            mProgressDialog.dismiss();
-
-            // TODO Call handleResult(...) instead and save location to member variable
-            // Handle location
-            handleNewLocation(location);
+            mLocation = location;
+            mResultHandler.handleResult(ResultHandler.PROCESS_RES_LOC_OK);
         }
 
-        private void showUnableToObtainLocation() {
-            // TODO put in handleResult(...)
-            // Dismiss the currently displayed progress dialog
-            mProgressDialog.dismiss();
 
-            // Create the AlertDialog
-            AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                    .setMessage(getResources().getString(R.string.alert_location_message))
-                    .setPositiveButton(getResources().getString(R.string.alert_location_dismiss),
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    MotivationFragment.this.getActivity().finish();
-                                }
-                            })
-                    .create();
+        /**
+         * Class used to factor all the functions and parameters related to handling the result of
+         * the processing.<br>
+         * The following scenarios are possible :<br>
+         *     - Location succeeded<br>
+         *     - Localion failed<br>
+         *     - . . .<br><br>
+         * Note : Not related to Android Handler
+         */
+        private class ResultHandler {
 
-            // Prevent the dialog from being dismissed, so it can call finish() on the activity
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
+            // Constant fields to pass to handleResult(...)
+            private static final int PROCESS_RES_LOC_OK = 0;
+            private static final int PROCESS_RES_LOC_FAIL = 1;
 
-            // Show the dialog
-            dialog.show();
+            /**
+             * Handle the result of the processing.
+             * @param result Type of result, see constant fields
+             */
+            private void handleResult(int result) {
+                switch (result) {
+                    case PROCESS_RES_LOC_OK:
+                        // Stop the expiration timer
+                        mHandler.removeCallbacks(mExpiredRunnable);
+
+                        // Dismiss the currently displayed progress dialog
+                        mProgressDialog.dismiss();
+
+                        // Handle location
+                        MotivationFragment.this.handleNewLocation();
+
+                        break;
+                    case PROCESS_RES_LOC_FAIL:
+                        // Dismiss the currently displayed progress dialog
+                        mProgressDialog.dismiss();
+
+                        showUnableToObtainLocation();
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "handleResult : Result type not recognized");
+                        break;
+                }
+            }
+
+
+            /**
+             * Display a dialog informing the user that the location could not be retrieved, and gives
+             * him some hints to resolve the problem<br>
+             * The dialog can only be dismissed by a clicking the button, and it finishes the activity
+             * afterwards.
+             */
+            private void showUnableToObtainLocation() {
+                // Create the AlertDialog
+                AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                        .setMessage(getResources().getString(R.string.alert_location_message))
+                        .setPositiveButton(getResources().getString(R.string.alert_location_dismiss),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        MotivationFragment.this.getActivity().finish();
+                                    }
+                                })
+                        .create();
+
+                // Prevent the dialog from being dismissed, so it can call finish() on the activity
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.setCancelable(false);
+
+                // Show the dialog
+                dialog.show();
+            }
         }
 
         /**
