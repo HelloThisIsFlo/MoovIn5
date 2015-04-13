@@ -41,4 +41,13 @@
         android:layout_centerHorizontal="true"
         android:visibility="gone"/>
 
+    <!-- TODO Delete : Test Button -->
+    <Button
+        android:id="@+id/test_fetch_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test fetch direction"
+        android:layout_below="@id/warning_edit_text"
+        android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>

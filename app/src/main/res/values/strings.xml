@@ -22,4 +22,5 @@
         - Turn on WiFi\n
         - Allow this application to access your location
     </string>
+    <string name="title_activity_test">TestActivity</string>
 </resources>

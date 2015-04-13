@@ -77,6 +77,9 @@ public class MainActivity extends ActionBarActivity {
         private NumberPicker mDurationPicker;
         private TextView mWarningEditText;
 
+        //TODO delete : Test Button
+        private Button mTestFetchButton;
+
         public MainFragment() {
         }
 
@@ -152,6 +155,19 @@ public class MainActivity extends ActionBarActivity {
             mDurationPicker.setMaxValue(getResources().getInteger(R.integer.main_duration_max));
             // Disable focus for the elements of the picker (disable keyboard)
             mDurationPicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+
+
+
+            // TODO Delete : Test Button
+            mTestFetchButton = (Button) rootView.findViewById(R.id.test_fetch_button);
+            mTestFetchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent startTestActivity = new Intent(getActivity(), TestActivity.class);
+                    startActivity(startTestActivity);
+                }
+            });
+
 
 
             return rootView;

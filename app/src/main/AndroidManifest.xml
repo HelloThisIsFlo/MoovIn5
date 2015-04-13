@@ -40,7 +40,6 @@
             android:name=".MotivationActivity"
             android:label="@string/title_activity_motivation" >
         </activity>
-
         <activity
             android:name=".GymLocationActivity"
             android:label="@string/title_activity_gym_location"
@@ -57,7 +56,17 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/api_key_maps" />
+
         <uses-library android:name="com.google.android.maps" />
+
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.shockn745.workoutmotivationaltool.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
