@@ -1,16 +1,17 @@
-package com.shockn745.workoutmotivationaltool;
+package com.shockn745.workoutmotivationaltool.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.shockn745.workoutmotivationaltool.GymLocationActivity;
 
 /**
  * Utility class with static utility methods
  * @author Florian Kempenich
  */
-public class Utility {
+public class PreferencesUtility {
 
     /**
      * Get the coordinates stored in the default shared preferences.

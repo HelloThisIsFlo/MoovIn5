@@ -1,4 +1,4 @@
-package com.shockn745.workoutmotivationaltool;
+package com.shockn745.workoutmotivationaltool.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+
+import com.shockn745.workoutmotivationaltool.R;
 
 /**
  * Setting activity

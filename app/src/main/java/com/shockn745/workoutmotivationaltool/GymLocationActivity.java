@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.shockn745.workoutmotivationaltool.settings.PreferencesUtility;
 
 
 public class GymLocationActivity extends ActionBarActivity implements OnMapReadyCallback {
@@ -42,7 +43,7 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
         GoogleMapOptions options = new GoogleMapOptions();
         try {
             //Try to get previous location
-            LatLng coord = Utility.getCoordinatesFromPreferences(this);
+            LatLng coord = PreferencesUtility.getCoordinatesFromPreferences(this);
 
             // Init the map with the saved location
             options.camera(new CameraPosition(
@@ -51,7 +52,7 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
                     0,
                     0)
             );
-        } catch (Utility.PreferenceNotInitializedException e) {
+        } catch (PreferencesUtility.PreferenceNotInitializedException e) {
             e.printStackTrace();
             // Set default location if retrieval fails
             options.camera(new CameraPosition(
@@ -99,7 +100,7 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
             public void onClick(View v) {
                 // Save the location to the shared preferences
                 if (mCoordinates != null) {
-                    Utility.saveCoordinatesToPreferences(GymLocationActivity.this, mCoordinates);
+                    PreferencesUtility.saveCoordinatesToPreferences(GymLocationActivity.this, mCoordinates);
 
                     Log.v(LOG_TAG, "lat : " + mCoordinates.latitude);
                     Log.v(LOG_TAG, "long : " + mCoordinates.longitude);
@@ -127,12 +128,12 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
         // Add a marker at the previously saved location
         try {
             //Try to get previous location, if fails the marker is simply not added
-            LatLng coord = Utility.getCoordinatesFromPreferences(this);
+            LatLng coord = PreferencesUtility.getCoordinatesFromPreferences(this);
 
             // Add marker to the previously saved location
             mMarker = mMap.addMarker(new MarkerOptions()
                     .position(coord));
-        } catch (Utility.PreferenceNotInitializedException e) {
+        } catch (PreferencesUtility.PreferenceNotInitializedException e) {
             Log.v(LOG_TAG, "Location not initialized, not adding the marker");
         }
 

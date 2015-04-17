@@ -1,4 +1,4 @@
-package com.shockn745.workoutmotivationaltool;
+package com.shockn745.workoutmotivationaltool.motivation;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,10 +20,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.shockn745.workoutmotivationaltool.R;
 
 /**
  * Fragment of MotivationActivity
- * see the {@link com.shockn745.workoutmotivationaltool.MotivationActivity} class
+ * see the {@link MotivationActivity} class
  */
 public class MotivationFragment extends Fragment implements LocationListener {
 

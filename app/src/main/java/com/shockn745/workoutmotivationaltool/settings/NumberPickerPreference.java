@@ -1,4 +1,4 @@
-package com.shockn745.workoutmotivationaltool;
+package com.shockn745.workoutmotivationaltool.settings;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.NumberPicker;
+
+import com.shockn745.workoutmotivationaltool.R;
 
 /**
  * Class that defines a custom DialogPreferences used to display a numberpicker in preferences
