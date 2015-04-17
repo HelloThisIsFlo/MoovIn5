@@ -1,26 +1,40 @@
 <resources>
     <string name="app_name">Workout Motivational Tool</string>
-    <string name="hello_world">Hello world!</string>
+
+    <!-- Activity Title -->
+    <string name="title_activity_setting">SettingsActivity</string>
+    <string name="title_activity_motivation">MotivationActivity</string>
+    <string name="title_activity_gym_location">Gym Location</string>
+
+
+    <!-- Main Activity -->
     <string name="action_settings">Settings</string>
     <string name="motivate_button">Motivate Me!</string>
     <string name="change_location_button">Change location</string>
-    <string name="title_activity_setting">SettingsActivity</string>
-    <string name="pref_warmup">Warmup duration</string>
-    <string name="pref_warmup_key">warmup</string>
-    <string name="pref_stretching">Streching + shower duration</string>
-    <string name="pref_stretching_key">stretching</string>
-    <string name="pref_summary_minute">Minutes</string>
-    <string name="title_activity_motivation">MotivationActivity</string>
-    <string name="title_activity_gym_location">Gym Location</string>
+
+    <!-- MotivationActivity -->
+    <string name="hello_world">Hello world!</string>
+
+    <!-- GymLocationActivity -->
     <string name="set_location_button">Set Location</string>
     <string name="change_maptype_button">Change map type</string>
+
+
+    <!-- Alert dialog -->
     <string name="warning_not_initialized_edit_text">Please initialise the gym location !</string>
-    <string name="alert_location_dismiss">Dismiss</string>
     <string name="alert_location_message">Unable to obtain a location, please check the
         following elements and retry :\n
         - Turn on GPS\n
         - Turn on WiFi\n
         - Allow this application to access your location
     </string>
-    <string name="title_activity_test">TestActivity</string>
+    <string name="alert_location_dismiss">Dismiss</string>
+
+    <!-- Preference name & key -->
+    <string name="pref_warmup">Warmup duration</string>
+    <string name="pref_warmup_key">warmup</string>
+    <string name="pref_stretching">Streching + shower duration</string>
+    <string name="pref_stretching_key">stretching</string>
+    <string name="pref_summary_minute">Minutes</string>
+    <string name="pref_workout_key">workout</string>
 </resources>
