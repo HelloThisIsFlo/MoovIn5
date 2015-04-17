@@ -1,10 +1,15 @@
 package com.shockn745.workoutmotivationaltool.motivation;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.shockn745.workoutmotivationaltool.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,11 +21,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 
 /**
  * Background task to fetch the transit time from the Google Directions API
- * It sends a http request, parse the result JSON string and returns the transit time
- * to destination<br>
+ * It sends a http request, parse the result JSON string and update the UI<br>
  * It takes a LatLng[2] as parameter, where :<br>
  *     LatLng[0] : start point<br>
  *     LatLng[1] : destination<br>
@@ -34,7 +39,13 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
     private final static int CONNECTION_ERROR = 2;
     private final static int JSON_ERROR = 3;
     private final static int EMPTY_ERROR = 4;
+    private final static int NO_ROUTES_ERROR = 5;
 
+    Activity mActivity;
+
+    public FetchTransitTask(Activity mActivity) {
+        this.mActivity = mActivity;
+    }
 
     /**
      * See class description
@@ -140,7 +151,15 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
                 try {
                     // String too long to log => using debug mode instead
                     // Log.d(LOG_TAG, jsonString);
-                    return parseTransitTime(jsonString);
+                    int transitTime = parseTransitTime(jsonString);
+                    if (transitTime == -1) {
+                        // No routes availables
+                        // TODO Warn the user
+                        publishProgress(NO_ROUTES_ERROR);
+                        return null;
+                    } else {
+                        return transitTime;
+                    }
                 } catch (JSONException e) {
                     publishProgress(JSON_ERROR);
                     return null;
@@ -171,6 +190,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
                 break;
             case CONNECTION_ERROR:
                 Log.d(LOG_TAG, "Connection error !");
+                // TODO notify user.
                 break;
             case JSON_ERROR:
                 Log.d(LOG_TAG, "Error with JSON parsing !");
@@ -178,14 +198,18 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
             case EMPTY_ERROR:
                 Log.d(LOG_TAG, "Empty JSON string !");
                 break;
+            case NO_ROUTES_ERROR:
+                Log.d(LOG_TAG, "No routes => Warn the user !");
+                // TODO notify user
+                break;
             default:
                 break;
         }
     }
 
     /**
-     *
-     * @param transitTime
+     * Updates the UI of MotivationFragment/
+     * @param transitTime Result of doInBackground method
      */
     @Override
     protected void onPostExecute(Integer transitTime) {
@@ -194,6 +218,35 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
             Log.d(LOG_TAG, "On est dans post execute !");
             Log.d(LOG_TAG, "Transit time (in seconds) : " + transitTime);
 
+            TextView textView = (TextView) mActivity.findViewById(R.id.motivation_text_view);
+
+            // Get warmup & stretching times
+            SharedPreferences prefs = PreferenceManager
+                    .getDefaultSharedPreferences(mActivity);
+
+            int warmup = prefs.getInt(mActivity.getString(R.string.pref_warmup_key),
+                    mActivity.getResources().getInteger(R.integer.pref_warmup_default));
+            int stretching = prefs.getInt(mActivity.getString(R.string.pref_stretching_key),
+                    mActivity.getResources().getInteger(R.integer.pref_stretching_default));
+
+            // Calculate the time spent and add it to the current time
+            // Time spent (in milliseconds)
+            // TODO Add workout duration
+            // TODO calculate 2 different transit times : to go & to come back
+            long timeSpent = (warmup * 60 * 1000)
+                    + (stretching * 60 * 1000)
+                    + 2 * (transitTime * 1000);
+
+            // Current time
+            Date now = new Date();
+            long currentTime = now.getTime();
+
+            // Time back at home
+            Date backAtHome = new Date(currentTime + timeSpent);
+
+
+            // Update the UI
+            textView.setText(backAtHome.toString());
 
 
 
@@ -212,8 +265,14 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
         final String JSON_LEGS = "legs";
         final String JSON_DURATION = "duration";
         final String JSON_DURATION_VALUE = "value";
+        final String JSON_STATUS = "status";
 
         JSONObject root = new JSONObject(jsonString);
+
+        // Check that there are routes availables
+        if (root.getString(JSON_STATUS).equals("ZERO_RESULTS")) {
+            return -1;
+        }
 
         // Return the transit time
         return root.getJSONArray(JSON_ROUTES)

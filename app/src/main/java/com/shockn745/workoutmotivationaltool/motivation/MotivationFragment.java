@@ -6,11 +6,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -189,13 +187,10 @@ public class MotivationFragment extends Fragment implements LocationListener {
                 // Get gym location from preferences
                 LatLng gymLoc = PreferencesUtility.getCoordinatesFromPreferences(getActivity());
 
-                // Get warmup & stretching times
-                SharedPreferences prefs = PreferenceManager
-                        .getDefaultSharedPreferences(getActivity());
-
-                int warmup = prefs.getInt(getString(R.string.pref_warmup_key), -1);
-                int stretching = prefs.getInt(getString(R.string.pref_stretching_key), -1);
-
+                // Fetch transit time from Google Directions API
+                FetchTransitTask fetchTask = new FetchTransitTask(getActivity());
+                LatLng mLocLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+                fetchTask.execute(mLocLatLng, gymLoc);
 
             } catch (PreferencesUtility.PreferenceNotInitializedException e) {
                 // Show error dialog
