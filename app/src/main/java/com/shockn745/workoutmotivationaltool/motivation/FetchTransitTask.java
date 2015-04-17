@@ -219,7 +219,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
 
             TextView textView = (TextView) mActivity.findViewById(R.id.motivation_text_view);
 
-            // Get warmup & stretching times
+            // Get workout, warmup & stretching times
             SharedPreferences prefs = PreferenceManager
                     .getDefaultSharedPreferences(mActivity);
 
@@ -227,6 +227,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
                     mActivity.getResources().getInteger(R.integer.pref_warmup_default));
             int stretching = prefs.getInt(mActivity.getString(R.string.pref_stretching_key),
                     mActivity.getResources().getInteger(R.integer.pref_stretching_default));
+            int workout = prefs.getInt(mActivity.getString(R.string.pref_workout_key), 0);
 
             // Calculate the time spent and add it to the current time
             // Time spent (in milliseconds)
@@ -245,7 +246,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
 
 
             // Update the UI
-            textView.setText(backAtHome.toString());
+            textView.setText(backAtHome.toString() + " Workout duration : " + workout);
 
 
 

@@ -3,6 +3,7 @@ package com.shockn745.workoutmotivationaltool;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.shockn745.workoutmotivationaltool.motivation.MotivationActivity;
 import com.shockn745.workoutmotivationaltool.settings.SettingsActivity;
@@ -77,6 +77,11 @@ public class MainActivity extends ActionBarActivity {
         private NumberPicker mDurationPicker;
         private TextView mWarningEditText;
 
+        // Components for the timer used by mDurationPicker
+        Handler mHandler;
+        SaveDurationTimer mSavePreferencesTimer;
+        private static final int SAVE_PREFERENCES_TIMER_DELAY = 500;
+
         public MainFragment() {
         }
 
@@ -91,6 +96,31 @@ public class MainActivity extends ActionBarActivity {
             mDurationPicker = (NumberPicker) rootView.findViewById(R.id.duration_picker);
             mWarningEditText = (TextView) rootView.findViewById(R.id.warning_edit_text);
 
+            // Configure mDurationPicker
+            mDurationPicker.setMinValue(getResources().getInteger(R.integer.main_duration_min));
+            mDurationPicker.setMaxValue(getResources().getInteger(R.integer.main_duration_max));
+            // Disable focus for the elements of the picker (disable keyboard)
+            mDurationPicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+            // Init with the previous value
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            if (prefs.contains(getString(R.string.pref_workout_key))) {
+                // Init
+                int workoutPrevious = prefs.getInt(getString(R.string.pref_workout_key),
+                        getResources().getInteger(R.integer.workout_default));
+                mDurationPicker.setValue(workoutPrevious);
+            } else {
+                // Save the default value to the preferences
+                int workoutDefault = getResources().getInteger(R.integer.workout_default);
+                prefs.edit()
+                        .putInt(getString(R.string.pref_workout_key),workoutDefault)
+                        .apply();
+                mDurationPicker.setValue(workoutDefault);
+            }
+
+
+            // Init timer used by mDurationPicker
+            mHandler = new Handler();
+            mSavePreferencesTimer = new SaveDurationTimer(getActivity());
 
             // Set listeners
             mMotivateButton.setOnClickListener(new View.OnClickListener() {
@@ -108,21 +138,21 @@ public class MainActivity extends ActionBarActivity {
                 }
             });
             mDurationPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                /**
+                 * Every time the value is changed, a timer is launched, at expiration the value is
+                 * saved in preferences.
+                 * This is to avoid repetitive writes in the preferences while scrolling through
+                 * the numbers
+                 * @param newVal Value to be saved
+                 */
                 @Override
                 public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                    Toast.makeText(getActivity(),
-                            "Coucou, numero choisi : " + newVal,
-                            Toast.LENGTH_SHORT)
-                            .show();
+                    // Cancel previously started timer
+                    mHandler.removeCallbacks(mSavePreferencesTimer);
+                    mSavePreferencesTimer.setWorkoutDuration(newVal);
+                    mHandler.postDelayed(mSavePreferencesTimer, SAVE_PREFERENCES_TIMER_DELAY);
                 }
             });
-
-            // Configure mDurationPicker
-            mDurationPicker.setMinValue(getResources().getInteger(R.integer.main_duration_min));
-            mDurationPicker.setMaxValue(getResources().getInteger(R.integer.main_duration_max));
-            // Disable focus for the elements of the picker (disable keyboard)
-            mDurationPicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-
 
             return rootView;
         }

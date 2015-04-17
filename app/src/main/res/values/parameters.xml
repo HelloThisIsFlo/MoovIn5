@@ -6,6 +6,7 @@
     <integer name="pref_duration_max">60</integer>
     <integer name="pref_warmup_default">15</integer>
     <integer name="pref_stretching_default">30</integer>
+    <integer name="workout_default">10</integer>
 
     <!-- Min & max values for the main duration picker -->
     <integer name="main_duration_min">10</integer>
