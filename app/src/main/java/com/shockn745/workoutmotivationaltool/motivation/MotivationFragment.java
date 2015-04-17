@@ -21,6 +21,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.shockn745.workoutmotivationaltool.R;
+import com.shockn745.workoutmotivationaltool.settings.PreferencesUtility;
 
 /**
  * Fragment of MotivationActivity
@@ -180,6 +181,16 @@ public class MotivationFragment extends Fragment implements LocationListener {
     private void handleNewLocation() {
         if (mLocation != null) {
             Log.d(LOG_TAG, mLocation.toString());
+
+            // Get gym location from preferences
+            try {
+                PreferencesUtility.getCoordinatesFromPreferences(getActivity());
+            } catch (PreferencesUtility.PreferenceNotInitializedException e) {
+                // Show error dialog
+                mResultHandler.handleResult(ResultHandler.PROCESS_RES_GYM_NOT_INIT);
+            }
+        } else {
+            Log.d(LOG_TAG, "mLocation == null !");
         }
     }
 
@@ -198,6 +209,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
         // Constant fields to pass to handleResult(...)
         private static final int PROCESS_RES_LOC_OK = 0;
         private static final int PROCESS_RES_LOC_FAIL = 1;
+        private static final int PROCESS_RES_GYM_NOT_INIT = 2;
 
         /**
          * Handle the result of the processing.
@@ -222,6 +234,12 @@ public class MotivationFragment extends Fragment implements LocationListener {
 
                     showUnableToObtainLocation();
                     break;
+                case PROCESS_RES_GYM_NOT_INIT:
+                    // Dismiss the currently displayed progress dialog
+                    mProgressDialog.dismiss();
+
+                    showGymNotInit();
+                    break;
                 default:
                     Log.d(LOG_TAG, "handleResult : Result type not recognized");
                     break;
@@ -239,6 +257,35 @@ public class MotivationFragment extends Fragment implements LocationListener {
             // Create the AlertDialog
             AlertDialog dialog = new AlertDialog.Builder(getActivity())
                     .setMessage(getResources().getString(R.string.alert_location_message))
+                    .setPositiveButton(getResources().getString(R.string.alert_location_dismiss),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    MotivationFragment.this.getActivity().finish();
+                                }
+                            })
+                    .create();
+
+            // Prevent the dialog from being dismissed, so it can call finish() on the activity
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+
+            // Show the dialog
+            dialog.show();
+        }
+
+        /**
+         * Display a dialof informing the user that the gym location has not been initialized,
+         * and invites him to initialize it.
+         * The dialog can only be dismissed by a clicking the button, and it finishes the activity
+         * afterwards.
+         */
+        private void showGymNotInit() {
+            // Create the AlertDialog
+            AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                    .setMessage(
+                            getResources().getString(R.string.warning_not_initialized_edit_text)
+                    )
                     .setPositiveButton(getResources().getString(R.string.alert_location_dismiss),
                             new DialogInterface.OnClickListener() {
                                 @Override
