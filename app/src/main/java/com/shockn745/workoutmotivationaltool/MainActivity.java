@@ -160,19 +160,6 @@ public class MainActivity extends ActionBarActivity {
             mDurationPicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
 
-
-            // TODO Delete : Test Button
-            mTestFetchButton = (Button) rootView.findViewById(R.id.test_fetch_button);
-            mTestFetchButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent startTestActivity = new Intent(getActivity(), TestActivity.class);
-                    startActivity(startTestActivity);
-                }
-            });
-
-
-
             return rootView;
         }
 
