@@ -4,13 +4,13 @@
     <com.shockn745.workoutmotivationaltool.settings.NumberPickerPreference
         android:title="@string/pref_warmup"
         android:key="@string/pref_warmup_key"
-        android:defaultValue="15"
+        android:defaultValue="@integer/pref_warmup_default"
         />
 
     <com.shockn745.workoutmotivationaltool.settings.NumberPickerPreference
         android:title="@string/pref_stretching"
         android:key="@string/pref_stretching_key"
-        android:defaultValue="30"
+        android:defaultValue="@integer/pref_stretching_default"
         />
 
 </PreferenceScreen>

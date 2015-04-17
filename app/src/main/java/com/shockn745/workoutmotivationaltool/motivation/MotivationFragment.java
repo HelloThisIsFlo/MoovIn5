@@ -6,9 +6,11 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.shockn745.workoutmotivationaltool.R;
 import com.shockn745.workoutmotivationaltool.settings.PreferencesUtility;
 
@@ -182,9 +185,18 @@ public class MotivationFragment extends Fragment implements LocationListener {
         if (mLocation != null) {
             Log.d(LOG_TAG, mLocation.toString());
 
-            // Get gym location from preferences
             try {
-                PreferencesUtility.getCoordinatesFromPreferences(getActivity());
+                // Get gym location from preferences
+                LatLng gymLoc = PreferencesUtility.getCoordinatesFromPreferences(getActivity());
+
+                // Get warmup & stretching times
+                SharedPreferences prefs = PreferenceManager
+                        .getDefaultSharedPreferences(getActivity());
+
+                int warmup = prefs.getInt(getString(R.string.pref_warmup_key), -1);
+                int stretching = prefs.getInt(getString(R.string.pref_stretching_key), -1);
+
+
             } catch (PreferencesUtility.PreferenceNotInitializedException e) {
                 // Show error dialog
                 mResultHandler.handleResult(ResultHandler.PROCESS_RES_GYM_NOT_INIT);

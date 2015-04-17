@@ -80,9 +80,6 @@ public class MainActivity extends ActionBarActivity {
         private NumberPicker mDurationPicker;
         private TextView mWarningEditText;
 
-        //TODO delete : Test Button
-        private Button mTestFetchButton;
-
         public MainFragment() {
         }
 
