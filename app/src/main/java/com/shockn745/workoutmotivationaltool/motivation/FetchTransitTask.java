@@ -154,7 +154,6 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
                     int transitTime = parseTransitTime(jsonString);
                     if (transitTime == -1) {
                         // No routes availables
-                        // TODO Warn the user
                         publishProgress(NO_ROUTES_ERROR);
                         return null;
                     } else {

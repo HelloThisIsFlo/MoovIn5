@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,9 +16,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.shockn745.workoutmotivationaltool.motivation.MotivationActivity;
-import com.shockn745.workoutmotivationaltool.settings.PreferencesUtility;
 import com.shockn745.workoutmotivationaltool.settings.SettingsActivity;
 
 /**
@@ -99,36 +96,6 @@ public class MainActivity extends ActionBarActivity {
             mMotivateButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
-
-
-                    // TEST location
-                    // TODO Delete test
-                    SharedPreferences prefs = PreferenceManager
-                            .getDefaultSharedPreferences(getActivity());
-
-                    int warmup = prefs.getInt(getString(R.string.pref_warmup_key), -1);
-                    int stretching = prefs.getInt(getString(R.string.pref_stretching_key), -1);
-
-
-                    try {
-                        LatLng coordinates = PreferencesUtility.getCoordinatesFromPreferences(getActivity());
-
-                        Log.v(LOG_TAG, "lat : " + coordinates.latitude);
-                        Log.v(LOG_TAG, "long : " + coordinates.longitude);
-                    } catch (PreferencesUtility.PreferenceNotInitializedException e) {
-                        e.printStackTrace();
-                    }
-
-                    Log.v(LOG_TAG, "warmup : " + warmup);
-                    Log.v(LOG_TAG, "stretching : " + stretching);
-
-
-
-
-
-
                     Intent startMotivation = new Intent(getActivity(), MotivationActivity.class);
                     startActivity(startMotivation);
                 }
