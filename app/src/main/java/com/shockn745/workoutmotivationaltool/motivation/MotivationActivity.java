@@ -1,7 +1,9 @@
-package com.shockn745.workoutmotivationaltool;
+package com.shockn745.workoutmotivationaltool.motivation;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+
+import com.shockn745.workoutmotivationaltool.R;
 
 /**
  * This activity is where the location is retrieved, the travel time processed and the information

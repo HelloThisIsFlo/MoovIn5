@@ -18,6 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.shockn745.workoutmotivationaltool.motivation.MotivationActivity;
+import com.shockn745.workoutmotivationaltool.settings.PreferencesUtility;
+import com.shockn745.workoutmotivationaltool.settings.SettingsActivity;
 
 /**
  * Main activity displaying a duration picker, the main "motivate me" button and a secondary
@@ -110,11 +113,11 @@ public class MainActivity extends ActionBarActivity {
 
 
                     try {
-                        LatLng coordinates = Utility.getCoordinatesFromPreferences(getActivity());
+                        LatLng coordinates = PreferencesUtility.getCoordinatesFromPreferences(getActivity());
 
                         Log.v(LOG_TAG, "lat : " + coordinates.latitude);
                         Log.v(LOG_TAG, "long : " + coordinates.longitude);
-                    } catch (Utility.PreferenceNotInitializedException e) {
+                    } catch (PreferencesUtility.PreferenceNotInitializedException e) {
                         e.printStackTrace();
                     }
 
