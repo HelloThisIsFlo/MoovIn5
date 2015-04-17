@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -243,6 +244,7 @@ public class TestActivity extends ActionBarActivity {
                 if (transitTime != null) {
                     // Do sthg
                     Log.d(LOG_TAG, "On est dans post execute !");
+                    Log.d(LOG_TAG, "Transit time (in seconds) : " + transitTime);
 
 
 
@@ -258,8 +260,20 @@ public class TestActivity extends ActionBarActivity {
              */
             private int parseTransitTime(String jsonString) throws JSONException {
 
+                final String JSON_ROUTES = "routes";
+                final String JSON_LEGS = "legs";
+                final String JSON_DURATION = "duration";
+                final String JSON_DURATION_VALUE = "value";
 
-                return 0;
+                JSONObject root = new JSONObject(jsonString);
+
+                // Return the transit time
+                return root.getJSONArray(JSON_ROUTES)
+                        .getJSONObject(0)
+                        .getJSONArray(JSON_LEGS)
+                        .getJSONObject(0)
+                        .getJSONObject(JSON_DURATION)
+                        .getInt(JSON_DURATION_VALUE);
             }
 
         }
