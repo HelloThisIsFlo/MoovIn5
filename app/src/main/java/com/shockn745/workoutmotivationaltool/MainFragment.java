@@ -64,7 +64,7 @@ public class MainFragment extends Fragment {
             // Save the default value to the preferences
             int workoutDefault = getResources().getInteger(R.integer.workout_default);
             prefs.edit()
-                    .putInt(getString(R.string.pref_workout_key),workoutDefault)
+                    .putInt(getString(R.string.pref_workout_key), workoutDefault)
                     .apply();
             mDurationPicker.setValue(workoutDefault);
         }

@@ -11,6 +11,7 @@ import com.shockn745.workoutmotivationaltool.R;
 
 /**
  * Setting activity
+ *
  * @author Florian Kempenich
  */
 public class SettingsActivity extends ActionBarActivity {
@@ -31,7 +32,7 @@ public class SettingsActivity extends ActionBarActivity {
      * changes
      */
     public static class SettingsFragment extends PreferenceFragment
-            implements SharedPreferences.OnSharedPreferenceChangeListener{
+            implements SharedPreferences.OnSharedPreferenceChangeListener {
 
         private boolean mBindingPreferences;
 

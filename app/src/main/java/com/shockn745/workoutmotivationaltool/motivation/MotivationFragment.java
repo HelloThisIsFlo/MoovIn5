@@ -133,10 +133,11 @@ public class MotivationFragment extends Fragment implements LocationListener {
      * started the resolution.
      * After the end of the resolution this function will be called when the activity & fragment
      * resume
+     *
      * @param requestCode Code passed to identify that the activity result is from a connection
      *                    resolution
-     * @param resultCode Ok if == RESULT_OK
-     * @param data Not used
+     * @param resultCode  Ok if == RESULT_OK
+     * @param data        Not used
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -168,6 +169,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
 
     /**
      * Callback called when a new location is available
+     *
      * @param location New location
      */
     @Override
@@ -206,9 +208,9 @@ public class MotivationFragment extends Fragment implements LocationListener {
      * Class used to factor all the functions and parameters related to handling the result of
      * the processing.<br>
      * The following scenarios are possible :<br>
-     *     - Location succeeded<br>
-     *     - Location failed<br>
-     *     - . . .<br><br>
+     * - Location succeeded<br>
+     * - Location failed<br>
+     * - . . .<br><br>
      * Note : Not related to Android Handler
      */
     private class ResultHandler {
@@ -220,6 +222,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
 
         /**
          * Handle the result of the processing.
+         *
          * @param result Type of result, see constant fields
          */
         private void handleResult(int result) {
@@ -314,8 +317,9 @@ public class MotivationFragment extends Fragment implements LocationListener {
     /**
      * Connection listener used for the communication with the Google API.
      * For more information check the "See also" section.
+     *
      * @see <a href="http://developer.android.com/google/auth/api-client.html">
-     *     Accessing Google APIs</a>
+     * Accessing Google APIs</a>
      */
     private class ConnectionListener
             implements GoogleApiClient.ConnectionCallbacks,
@@ -327,6 +331,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
 
         /**
          * Callback called when the connection to the location API succeeded
+         *
          * @param bundle
          */
         @Override
@@ -346,6 +351,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
 
         /**
          * Callback called when the connection to the location API is suspended
+         *
          * @param i
          */
         @Override
@@ -355,6 +361,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
 
         /**
          * Callback called when the connection to the location API fails
+         *
          * @param connectionResult
          */
         @Override

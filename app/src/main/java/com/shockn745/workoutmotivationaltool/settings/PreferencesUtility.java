@@ -9,18 +9,20 @@ import com.shockn745.workoutmotivationaltool.GymLocationActivity;
 
 /**
  * Utility class with static utility methods
+ *
  * @author Florian Kempenich
  */
 public class PreferencesUtility {
 
     /**
      * Get the coordinates stored in the default shared preferences.
+     *
      * @param context Context passed in getDefaultSharedPreferences
      * @return Coordinates stored in the preferences
      * @throws PreferenceNotInitializedException if one of the preferences has not been initialized
      */
     public static LatLng getCoordinatesFromPreferences(Context context)
-            throws PreferenceNotInitializedException{
+            throws PreferenceNotInitializedException {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -43,7 +45,8 @@ public class PreferencesUtility {
 
     /**
      * Save the coordinates to the default shared preferences
-     * @param context Context passed in getDefaultSharedPreferences
+     *
+     * @param context     Context passed in getDefaultSharedPreferences
      * @param coordinates Coordinates to save in the share in the preferences
      */
     public static void saveCoordinatesToPreferences(Context context, LatLng coordinates) {

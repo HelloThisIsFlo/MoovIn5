@@ -47,19 +47,19 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
 
             // Init the map with the saved location
             options.camera(new CameraPosition(
-                    coord,
-                    getResources().getInteger(R.integer.gym_location_level_zoom),
-                    0,
-                    0)
+                            coord,
+                            getResources().getInteger(R.integer.gym_location_level_zoom),
+                            0,
+                            0)
             );
         } catch (PreferencesUtility.PreferenceNotInitializedException e) {
             e.printStackTrace();
             // Set default location if retrieval fails
             options.camera(new CameraPosition(
-                    new LatLng(0, 0),
-                    getResources().getInteger(R.integer.gym_location_level_zoom_not_initialized),
-                    0,
-                    0)
+                            new LatLng(0, 0),
+                            getResources().getInteger(R.integer.gym_location_level_zoom_not_initialized),
+                            0,
+                            0)
             );
         }
 
@@ -115,6 +115,7 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
      * Callback called when the map is ready to be used.
      * The map is handled in this function
      * GoogleMap object is non null
+     *
      * @param googleMap The map object retrieved
      */
     @Override

@@ -27,9 +27,8 @@ import java.util.Date;
  * Background task to fetch the transit time from the Google Directions API
  * It sends a http request, parse the result JSON string and update the UI<br>
  * It takes a LatLng[2] as parameter, where :<br>
- *     LatLng[0] : start point<br>
- *     LatLng[1] : destination<br>
- *
+ * LatLng[0] : start point<br>
+ * LatLng[1] : destination<br>
  */
 public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
     private final String LOG_TAG = FetchTransitTask.class.getSimpleName();
@@ -49,6 +48,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
 
     /**
      * See class description
+     *
      * @param params params[0] : start point<br>params[1] : destination
      * @return Transit time between the two points
      */
@@ -175,6 +175,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
 
     /**
      * Handle the error that could happen in "doInBackground" method
+     *
      * @param errorCode Code of the error
      */
     @Override
@@ -208,6 +209,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
 
     /**
      * Updates the UI of MotivationFragment/
+     *
      * @param transitTime Result of doInBackground method
      */
     @Override
@@ -249,12 +251,12 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
             textView.setText(backAtHome.toString() + " Workout duration : " + workout);
 
 
-
         }
     }
 
     /**
      * Parses the JSON String and returns the transit time in seconds.
+     *
      * @param jsonString JSON String to parse
      * @return Transit time (in seconds)
      * @throws JSONException When there is a problem parsing the JSON String

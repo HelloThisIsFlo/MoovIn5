@@ -12,6 +12,7 @@ import com.shockn745.workoutmotivationaltool.settings.SettingsActivity;
 /**
  * Main activity displaying a duration picker, the main "motivate me" button and a secondary
  * button used to change the gym location
+ *
  * @author Florian Kempenich
  */
 public class MainActivity extends ActionBarActivity {

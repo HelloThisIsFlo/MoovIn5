@@ -15,9 +15,10 @@ import com.shockn745.workoutmotivationaltool.R;
 
 /**
  * Class that defines a custom DialogPreferences used to display a numberpicker in preferences
+ *
  * @author Florian Kempenich
  */
-public class NumberPickerPreference  extends DialogPreference{
+public class NumberPickerPreference extends DialogPreference {
 
     private int mMinValue;
     private int mMaxValue;
