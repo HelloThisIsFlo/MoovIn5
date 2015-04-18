@@ -67,8 +67,7 @@ public class NumberPickerPreference extends DialogPreference {
     }
 
     @Override
-    @NonNull
-    protected void onBindDialogView(View view) {
+    protected void onBindDialogView(@NonNull View view) {
         super.onBindDialogView(view);
         mPicker.setMinValue(mMinValue);
         mPicker.setMaxValue(mMaxValue);

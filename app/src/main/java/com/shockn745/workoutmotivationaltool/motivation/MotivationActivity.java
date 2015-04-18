@@ -1,7 +1,7 @@
 package com.shockn745.workoutmotivationaltool.motivation;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 
 import com.shockn745.workoutmotivationaltool.R;
 
@@ -11,14 +11,14 @@ import com.shockn745.workoutmotivationaltool.R;
  *
  * @author Florian Kempenich
  */
-public class MotivationActivity extends ActionBarActivity {
+public class MotivationActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_motivation);
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
+            getFragmentManager().beginTransaction()
                     .add(R.id.container, new MotivationFragment())
                     .commit();
         }

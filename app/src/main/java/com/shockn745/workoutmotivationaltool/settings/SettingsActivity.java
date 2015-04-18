@@ -1,11 +1,11 @@
 package com.shockn745.workoutmotivationaltool.settings;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 
 import com.shockn745.workoutmotivationaltool.R;
 
@@ -14,7 +14,7 @@ import com.shockn745.workoutmotivationaltool.R;
  *
  * @author Florian Kempenich
  */
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -33,7 +33,7 @@
             android:label="@string/title_activity_setting"
             android:parentActivityName=".MainActivity" >
             <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
+                android:name="android.PARENT_ACTIVITY"
                 android:value="com.shockn745.workoutmotivationaltool.MainActivity" />
         </activity>
         <activity
@@ -45,7 +45,7 @@
             android:label="@string/title_activity_gym_location"
             android:parentActivityName=".MainActivity" >
             <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
+                android:name="android.PARENT_ACTIVITY"
                 android:value="com.shockn745.workoutmotivationaltool.MainActivity" />
         </activity>
 

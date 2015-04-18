@@ -1,9 +1,9 @@
 package com.shockn745.workoutmotivationaltool;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -15,7 +15,7 @@ import com.shockn745.workoutmotivationaltool.settings.SettingsActivity;
  *
  * @author Florian Kempenich
  */
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -24,7 +24,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
+            getFragmentManager().beginTransaction()
                     .add(R.id.container, new MainFragment())
                     .commit();
         }

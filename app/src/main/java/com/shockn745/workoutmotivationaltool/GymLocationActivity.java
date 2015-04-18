@@ -1,16 +1,16 @@
 package com.shockn745.workoutmotivationaltool;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -18,7 +18,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.shockn745.workoutmotivationaltool.settings.PreferencesUtility;
 
 
-public class GymLocationActivity extends ActionBarActivity implements OnMapReadyCallback {
+public class GymLocationActivity extends Activity implements OnMapReadyCallback {
 
     private final static String LOG_TAG = GymLocationActivity.class.getSimpleName();
 
@@ -64,9 +64,9 @@ public class GymLocationActivity extends ActionBarActivity implements OnMapReady
         }
 
         // Add the MapFragment
-        SupportMapFragment mapFragment = SupportMapFragment.newInstance(options);
+        MapFragment mapFragment = MapFragment.newInstance(options);
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
+            getFragmentManager().beginTransaction()
                     .add(R.id.container, mapFragment)
                     .commit();
         }
