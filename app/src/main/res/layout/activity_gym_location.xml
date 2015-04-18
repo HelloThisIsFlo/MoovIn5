@@ -21,7 +21,6 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/set_location_button"
         android:layout_below="@id/toolbar"
         />
 
@@ -36,18 +35,19 @@
         android:layout_alignParentStart="true"
         android:enabled="false"/>
 
-    <Button
+
+
+    <ImageButton
         android:id="@+id/change_maptype_button"
         android:text="@string/change_maptype_button"
-        android:enabled="false"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        style="@style/FloatingActionButton"
+        android:src="@drawable/ic_satellite_view"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_alignParentEnd="true"
-        android:layout_alignRight="@id/set_location_button"
-        android:layout_alignEnd="@id/set_location_button"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="48dp" />
 
+    <!--android:background="@drawable/ripple"-->
 
 
 </RelativeLayout>

@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toolbar;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -29,7 +30,7 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
     // UI components
     private Toolbar mToolbar;
     private Button mSetLocationButton;
-    private Button mChangeMaptypeButton;
+    private ImageButton mChangeMaptypeButton;
 
     private GoogleMap mMap = null;
     private Marker mMarker = null;
@@ -44,7 +45,7 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
 
         // Find elements by id
         mSetLocationButton = (Button) findViewById(R.id.set_location_button);
-        mChangeMaptypeButton = (Button) findViewById(R.id.change_maptype_button);
+        mChangeMaptypeButton = (ImageButton) findViewById(R.id.change_maptype_button);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         // Add toolbar

@@ -21,16 +21,18 @@
              colorControlHighlight and colorSwitchThumbNormal. -->
     </style>
 
+    <!-- Theme for the GymActivity -->
     <style name="AppTheme.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <!--We will be using the toolbar so no need to show ActionBar-->
         <item name="android:windowActionBar">false</item>
     </style>
 
-    <style name="ToolbarTheme" parent="@android:style/Theme.Material">
-        <item name="android:colorPrimary">@color/primary</item>
-        <item name="android:windowTranslucentNavigation">false</item>
-
+    <style name="FloatingActionButton" parent="android:Widget.Material.Button">
+        <item name="android:background">@drawable/fab_background</item>
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:stateListAnimator">@anim/fab_state_list_animator</item>
     </style>
 
 </resources>
