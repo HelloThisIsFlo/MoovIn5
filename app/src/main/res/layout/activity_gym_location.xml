@@ -5,11 +5,24 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
+    <!-- TODO set the height of the toolbar -->
+    <Toolbar
+        android:id="@+id/toolbar"
+        android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
+        android:popupTheme="@style/AppTheme.NoActionBar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?android:attr/actionBarSize"
+        android:background="?android:attr/colorPrimary"
+        android:elevation="8dp"
+        />
+
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/set_location_button"
+        android:layout_below="@id/toolbar"
         />
 
     <!-- TODO use a FAB instead -->

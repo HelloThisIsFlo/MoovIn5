@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toolbar;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -25,6 +26,8 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
     public final static String LATITUDE_KEY = "latitude";
     public final static String LONGITUDE_KEY = "longitude";
 
+    // UI components
+    private Toolbar mToolbar;
     private Button mSetLocationButton;
     private Button mChangeMaptypeButton;
 
@@ -38,6 +41,17 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gym_location);
+
+        // Find elements by id
+        mSetLocationButton = (Button) findViewById(R.id.set_location_button);
+        mChangeMaptypeButton = (Button) findViewById(R.id.change_maptype_button);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        // Add toolbar
+        setActionBar(mToolbar);
+        // Add the navigation arrow
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         // Initialize the GoogleMapOption with the location stored in the preferences
         GoogleMapOptions options = new GoogleMapOptions();
@@ -74,10 +88,6 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
         // Register this Activity as the callback to get the GoogleMap object
         mapFragment.getMapAsync(this);
 
-
-        // Find elements by id
-        mSetLocationButton = (Button) findViewById(R.id.set_location_button);
-        mChangeMaptypeButton = (Button) findViewById(R.id.change_maptype_button);
 
         // Set listeners
         mChangeMaptypeButton.setOnClickListener(new View.OnClickListener() {
