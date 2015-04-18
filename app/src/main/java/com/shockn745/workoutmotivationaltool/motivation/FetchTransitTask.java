@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -233,11 +234,11 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
 
             // Calculate the time spent and add it to the current time
             // Time spent (in milliseconds)
-            // TODO Add workout duration
-            // TODO calculate 2 different transit times : to go & to come back
+            // TODO calculate 2 different transit times : to go & to come back (do it in the same FetchTransitTask)
             long timeSpent = (warmup * 60 * 1000)
                     + (stretching * 60 * 1000)
-                    + 2 * (transitTime * 1000);
+                    + 2 * (transitTime * 1000)
+                    + (workout * 60 * 1000);
 
             // Current time
             Date now = new Date();
@@ -248,7 +249,11 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
 
 
             // Update the UI
-            textView.setText(backAtHome.toString() + " Workout duration : " + workout);
+            textView.setText(
+                    DateFormat
+                            .getTimeFormat(mActivity)
+                            .format(backAtHome)
+            );
 
 
         }
