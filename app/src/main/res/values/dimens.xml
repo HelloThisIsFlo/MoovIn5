@@ -4,6 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     
     <!-- FAB -->
+    <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_resting_elevation">6dp</dimen>
     <dimen name="fab_pressed_elevation">12dp</dimen>
+    <dimen name="fab_margin_bottom">48dp</dimen>
 </resources>

@@ -39,15 +39,21 @@
 
     <ImageButton
         android:id="@+id/change_maptype_button"
-        android:text="@string/change_maptype_button"
         style="@style/FloatingActionButton"
         android:src="@drawable/ic_satellite_view"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="48dp" />
+        android:layout_marginBottom="@dimen/fab_margin_bottom" />
 
-    <!--android:background="@drawable/ripple"-->
+    <ImageButton
+        android:id="@+id/test"
+        style="@style/FloatingActionButton"
+        android:src="@drawable/ic_done"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/fab_margin_bottom" />
 
 
 </RelativeLayout>

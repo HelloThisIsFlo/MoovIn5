@@ -1,10 +1,13 @@
 package com.shockn745.workoutmotivationaltool;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toolbar;
@@ -157,7 +160,7 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                // Display the marker or change its location
+                // Show "accept" button & display the marker or change its location
                 if (mMarker == null) {
                     mMarker = mMap.addMarker(new MarkerOptions()
                             .position(latLng));
@@ -169,6 +172,25 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
 
                 // Enable "Save Location" button
                 mSetLocationButton.setEnabled(true);
+
+                // TODO move
+                // Show "accept" button
+                // Slide satellite button up
+                float slideLength = getResources().getDimension(R.dimen.fab_size)
+                        + (getResources().getDimension(R.dimen.fab_margin_bottom) / 2);
+                ObjectAnimator test = ObjectAnimator.ofFloat(
+                        mChangeMaptypeButton,
+                        "translationY",
+                        0,
+                        - slideLength
+                );
+                Interpolator interpolator = AnimationUtils.loadInterpolator(
+                        GymLocationActivity.this,
+                        android.R.interpolator.fast_out_slow_in
+                );
+                test.setDuration(500)
+                        .setInterpolator(interpolator);
+                test.start();
 
             }
         });
