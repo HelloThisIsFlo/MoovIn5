@@ -1,11 +1,18 @@
 package com.shockn745.workoutmotivationaltool;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
-import android.widget.Button;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
+import android.widget.ImageButton;
+import android.widget.Toolbar;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -15,7 +22,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.shockn745.workoutmotivationaltool.settings.PreferencesUtility;
+import com.shockn745.workoutmotivationaltool.settings.PreferencesUtils;
 
 
 public class GymLocationActivity extends Activity implements OnMapReadyCallback {
@@ -25,25 +32,44 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
     public final static String LATITUDE_KEY = "latitude";
     public final static String LONGITUDE_KEY = "longitude";
 
-    private Button mSetLocationButton;
-    private Button mChangeMaptypeButton;
+    // UI components
+    private ImageButton mSetLocationButton;
+    private ImageButton mChangeMaptypeButton;
 
     private GoogleMap mMap = null;
     private Marker mMarker = null;
     private LatLng mCoordinates = null;
 
     private boolean mMaptypeIsHybrid = false;
+    private boolean mAcceptButtonVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gym_location);
 
+        // Find elements by id
+        mSetLocationButton = (ImageButton) findViewById(R.id.set_location_button);
+        mChangeMaptypeButton = (ImageButton) findViewById(R.id.change_maptype_button);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        // Add toolbar
+        setActionBar(mToolbar);
+
+        // Add the navigation arrow
+
+        // Inspection removed, because it won't throw NullPointerException since the actionBar is
+        // initialized just above.
+
+        //noinspection ConstantConditions
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         // Initialize the GoogleMapOption with the location stored in the preferences
         GoogleMapOptions options = new GoogleMapOptions();
         try {
             //Try to get previous location
-            LatLng coord = PreferencesUtility.getCoordinatesFromPreferences(this);
+            LatLng coord = PreferencesUtils.getCoordinatesFromPreferences(this);
 
             // Init the map with the saved location
             options.camera(new CameraPosition(
@@ -52,7 +78,7 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
                             0,
                             0)
             );
-        } catch (PreferencesUtility.PreferenceNotInitializedException e) {
+        } catch (PreferencesUtils.PreferenceNotInitializedException e) {
             e.printStackTrace();
             // Set default location if retrieval fails
             options.camera(new CameraPosition(
@@ -75,10 +101,6 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
         mapFragment.getMapAsync(this);
 
 
-        // Find elements by id
-        mSetLocationButton = (Button) findViewById(R.id.set_location_button);
-        mChangeMaptypeButton = (Button) findViewById(R.id.change_maptype_button);
-
         // Set listeners
         mChangeMaptypeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +122,7 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
             public void onClick(View v) {
                 // Save the location to the shared preferences
                 if (mCoordinates != null) {
-                    PreferencesUtility.saveCoordinatesToPreferences(GymLocationActivity.this, mCoordinates);
+                    PreferencesUtils.saveCoordinatesToPreferences(GymLocationActivity.this, mCoordinates);
 
                     Log.v(LOG_TAG, "lat : " + mCoordinates.latitude);
                     Log.v(LOG_TAG, "long : " + mCoordinates.longitude);
@@ -129,12 +151,12 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
         // Add a marker at the previously saved location
         try {
             //Try to get previous location, if fails the marker is simply not added
-            LatLng coord = PreferencesUtility.getCoordinatesFromPreferences(this);
+            LatLng coord = PreferencesUtils.getCoordinatesFromPreferences(this);
 
             // Add marker to the previously saved location
             mMarker = mMap.addMarker(new MarkerOptions()
                     .position(coord));
-        } catch (PreferencesUtility.PreferenceNotInitializedException e) {
+        } catch (PreferencesUtils.PreferenceNotInitializedException e) {
             Log.v(LOG_TAG, "Location not initialized, not adding the marker");
         }
 
@@ -146,7 +168,11 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                // Display the marker or change its location
+                // Perform haptic feedback (not handled by GoogleMap)
+                findViewById(R.id.container)
+                        .performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+
+                // Show "accept" button & display the marker or change its location
                 if (mMarker == null) {
                     mMarker = mMap.addMarker(new MarkerOptions()
                             .position(latLng));
@@ -156,9 +182,90 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
                     mCoordinates = latLng;
                 }
 
-                // Enable "Save Location" button
-                mSetLocationButton.setEnabled(true);
+                // Check if "accept" button is already visible
+                if (!mAcceptButtonVisible) {
+                    // Animate FABs
+                    /// Init interpolator
+                    Interpolator interpolator = AnimationUtils.loadInterpolator(
+                            GymLocationActivity.this,
+                            android.R.interpolator.fast_out_slow_in
+                    );
 
+                    /// Slide "satellite" button up
+                    float slideLength = getResources().getDimension(R.dimen.fab_size)
+                            + getResources().getDimension(R.dimen.fab_margin_bottom);
+                    ObjectAnimator satelliteAnimator = ObjectAnimator.ofFloat(
+                            mChangeMaptypeButton,
+                            "translationY",
+                            0,
+                            -slideLength
+                    );
+                    satelliteAnimator
+                            .setDuration(getResources().getInteger(R.integer.fab_anim_duration))
+                            .setInterpolator(interpolator);
+
+                    /// Slide in "accept" button
+                    float startPosition = getResources().getDimension(R.dimen.fab_size)
+                            + getResources().getDimension(R.dimen.fab_margin_bottom)
+                            + getResources().getDimension(R.dimen.fab_dynamic_margin);
+                    ObjectAnimator acceptAnimator = ObjectAnimator.ofFloat(
+                            mSetLocationButton,
+                            "translationY",
+                            startPosition,
+                            0
+                    );
+                    acceptAnimator
+                            .setDuration(getResources().getInteger(R.integer.fab_anim_duration))
+                            .setInterpolator(interpolator);
+
+                    /// Start animations
+                    mSetLocationButton.setVisibility(View.VISIBLE);
+                    acceptAnimator.start();
+                    satelliteAnimator.start();
+
+                    mAcceptButtonVisible = true;
+                } else {
+                    // Draw attention to the "accept" button
+                    // Flash with a different color
+
+                    // Highlight FAB with a different color
+                    final ImageButton setLocationButtonHighlight =
+                            (ImageButton) findViewById(R.id.set_location_button_highlight);
+
+                    // flash == invisible -> visible -> invisible
+                    ObjectAnimator flashAnimation = ObjectAnimator.ofFloat(
+                            setLocationButtonHighlight,
+                            "alpha",
+                            0,
+                            1f,
+                            0).setDuration(1000);
+                    flashAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+
+                    // Handle visibility of Highlight FAB
+                    setLocationButtonHighlight.setVisibility(View.VISIBLE);
+                    flashAnimation.addListener(new Animator.AnimatorListener() {
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            setLocationButtonHighlight.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+                        }
+                    });
+
+                    // Start flash animation
+                    flashAnimation.start();
+                }
             }
         });
 

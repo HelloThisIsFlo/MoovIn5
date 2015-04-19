@@ -43,7 +43,8 @@
         <activity
             android:name=".GymLocationActivity"
             android:label="@string/title_activity_gym_location"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.PARENT_ACTIVITY"
                 android:value="com.shockn745.workoutmotivationaltool.MainActivity" />

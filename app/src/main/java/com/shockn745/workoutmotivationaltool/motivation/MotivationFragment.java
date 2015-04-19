@@ -22,7 +22,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.shockn745.workoutmotivationaltool.R;
-import com.shockn745.workoutmotivationaltool.settings.PreferencesUtility;
+import com.shockn745.workoutmotivationaltool.settings.PreferencesUtils;
 
 /**
  * Fragment of MotivationActivity
@@ -55,7 +55,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
     private ResultHandler mResultHandler;
 
     // Current location of the user
-    Location mLocation;
+    private Location mLocation;
 
     public MotivationFragment() {
     }
@@ -187,14 +187,14 @@ public class MotivationFragment extends Fragment implements LocationListener {
 
             try {
                 // Get gym location from preferences
-                LatLng gymLoc = PreferencesUtility.getCoordinatesFromPreferences(getActivity());
+                LatLng gymLoc = PreferencesUtils.getCoordinatesFromPreferences(getActivity());
 
                 // Fetch transit time from Google Directions API
                 FetchTransitTask fetchTask = new FetchTransitTask(getActivity());
                 LatLng mLocLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
                 fetchTask.execute(mLocLatLng, gymLoc);
 
-            } catch (PreferencesUtility.PreferenceNotInitializedException e) {
+            } catch (PreferencesUtils.PreferenceNotInitializedException e) {
                 // Show error dialog
                 mResultHandler.handleResult(ResultHandler.PROCESS_RES_GYM_NOT_INIT);
             }
@@ -332,7 +332,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
         /**
          * Callback called when the connection to the location API succeeded
          *
-         * @param bundle
+         * @param bundle Not used
          */
         @Override
         public void onConnected(Bundle bundle) {
@@ -352,7 +352,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
         /**
          * Callback called when the connection to the location API is suspended
          *
-         * @param i
+         * @param i Not used
          */
         @Override
         public void onConnectionSuspended(int i) {
@@ -362,7 +362,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
         /**
          * Callback called when the connection to the location API fails
          *
-         * @param connectionResult
+         * @param connectionResult Used to start resolution
          */
         @Override
         public void onConnectionFailed(ConnectionResult connectionResult) {

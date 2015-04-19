@@ -31,7 +31,7 @@ import java.util.Date;
  * LatLng[0] : start point<br>
  * LatLng[1] : destination<br>
  */
-public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
+class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
     private final String LOG_TAG = FetchTransitTask.class.getSimpleName();
 
     private final static int ARG_ERROR = 0;
@@ -41,7 +41,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
     private final static int EMPTY_ERROR = 4;
     private final static int NO_ROUTES_ERROR = 5;
 
-    Activity mActivity;
+    private final Activity mActivity;
 
     public FetchTransitTask(Activity mActivity) {
         this.mActivity = mActivity;
@@ -147,14 +147,14 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
             }
 
             // Parse the JSON String to retrieve transit time
-            // Return result if succesful
+            // Return result if successful
             if (jsonString != null) {
                 try {
                     // String too long to log => using debug mode instead
                     // Log.d(LOG_TAG, jsonString);
                     int transitTime = parseTransitTime(jsonString);
                     if (transitTime == -1) {
-                        // No routes availables
+                        // No routes available
                         publishProgress(NO_ROUTES_ERROR);
                         return null;
                     } else {
@@ -216,8 +216,6 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
     @Override
     protected void onPostExecute(Integer transitTime) {
         if (transitTime != null) {
-            // Do sthg
-            Log.d(LOG_TAG, "On est dans post execute !");
             Log.d(LOG_TAG, "Transit time (in seconds) : " + transitTime);
 
             TextView textView = (TextView) mActivity.findViewById(R.id.motivation_text_view);

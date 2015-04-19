@@ -1,9 +1,5 @@
 package com.shockn745.workoutmotivationaltool;
 
-/**
- * Created by Shock on 17.04.15.
- */
-
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,8 +26,8 @@ public class MainFragment extends Fragment {
     private TextView mWarningEditText;
 
     // Components for the timer used by mDurationPicker
-    Handler mHandler;
-    SaveDurationTimer mSavePreferencesTimer;
+    private Handler mHandler;
+    private SaveDurationTimer mSavePreferencesTimer;
     private static final int SAVE_PREFERENCES_TIMER_DELAY = 500;
 
     public MainFragment() {

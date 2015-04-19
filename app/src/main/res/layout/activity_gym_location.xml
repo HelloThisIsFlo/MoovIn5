@@ -5,36 +5,54 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
+    <!-- TODO set the height of the toolbar -->
+    <Toolbar
+        android:id="@+id/toolbar"
+        android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
+        android:popupTheme="@style/AppTheme.NoActionBar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?android:attr/actionBarSize"
+        android:background="?android:attr/colorPrimary"
+        android:elevation="8dp"
+        />
+
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/set_location_button"
+        android:layout_below="@id/toolbar"
         />
 
-    <!-- TODO use a FAB instead -->
-    <Button
-        android:id="@+id/set_location_button"
-        android:text="@string/set_location_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:enabled="false"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/change_maptype_button"
-        android:text="@string/change_maptype_button"
-        android:enabled="false"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        style="@style/FloatingActionButton.Default"
+        android:src="@drawable/ic_satellite_view"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_alignParentEnd="true"
-        android:layout_alignRight="@id/set_location_button"
-        android:layout_alignEnd="@id/set_location_button"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/fab_margin_bottom" />
 
+    <ImageButton
+        android:id="@+id/set_location_button"
+        style="@style/FloatingActionButton.Default"
+        android:src="@drawable/ic_done"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/fab_margin_bottom"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/set_location_button_highlight"
+        style="@style/FloatingActionButton.Highlight"
+        android:src="@drawable/ic_done"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/fab_margin_bottom"
+        android:visibility="gone" />
 
 
 </RelativeLayout>
