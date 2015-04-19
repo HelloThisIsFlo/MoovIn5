@@ -1,7 +1,7 @@
 
 
 
-Reveal effect :
+Reveal effect : Use it to display "add card" card when add FAB is pressed (on motivation activity).
 ---------------
 
 View myView = findViewById(R.id.container); //TODO remove

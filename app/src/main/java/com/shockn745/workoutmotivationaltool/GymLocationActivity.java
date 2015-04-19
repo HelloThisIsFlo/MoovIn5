@@ -215,18 +215,25 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
 
                     mAcceptButtonVisible = true;
                 } else {
+                    // Draw attention to the "accept" button
+                    // Flash with a different color
+
+                    // Highlight FAB with a different color
                     final ImageButton setLocationButtonHighlight =
                             (ImageButton) findViewById(R.id.set_location_button_highlight);
-                    ObjectAnimator acceptAnimator = ObjectAnimator.ofFloat(
+
+                    // flash == invisible -> visible -> invisible
+                    ObjectAnimator flashAnimation = ObjectAnimator.ofFloat(
                             setLocationButtonHighlight,
                             "alpha",
                             0,
                             1f,
                             0).setDuration(1000);
-                    acceptAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                    setLocationButtonHighlight.setVisibility(View.VISIBLE);
+                    flashAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
 
-                    acceptAnimator.addListener(new Animator.AnimatorListener() {
+                    // Handle visibility of Highlight FAB
+                    setLocationButtonHighlight.setVisibility(View.VISIBLE);
+                    flashAnimation.addListener(new Animator.AnimatorListener() {
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
@@ -234,15 +241,20 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
                         }
 
                         @Override
-                        public void onAnimationStart(Animator animation) {}
+                        public void onAnimationStart(Animator animation) {
+                        }
+
                         @Override
-                        public void onAnimationCancel(Animator animation) {}
+                        public void onAnimationCancel(Animator animation) {
+                        }
+
                         @Override
-                        public void onAnimationRepeat(Animator animation) {}
+                        public void onAnimationRepeat(Animator animation) {
+                        }
                     });
 
-                    acceptAnimator.start();
-                    // TODO add end animation listenener
+                    // Start flash animation
+                    flashAnimation.start();
                 }
             }
         });
