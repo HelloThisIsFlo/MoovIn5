@@ -27,7 +27,7 @@
 
     <ImageButton
         android:id="@+id/change_maptype_button"
-        style="@style/FloatingActionButton"
+        style="@style/FloatingActionButton.Default"
         android:src="@drawable/ic_satellite_view"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_alignParentEnd="true"
@@ -36,7 +36,17 @@
 
     <ImageButton
         android:id="@+id/set_location_button"
-        style="@style/FloatingActionButton"
+        style="@style/FloatingActionButton.Default"
+        android:src="@drawable/ic_done"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/fab_margin_bottom"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/set_location_button_highlight"
+        style="@style/FloatingActionButton.Highlight"
         android:src="@drawable/ic_done"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_alignParentEnd="true"

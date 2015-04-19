@@ -1,11 +1,13 @@
 package com.shockn745.workoutmotivationaltool;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.ImageButton;
@@ -212,6 +214,35 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
                     satelliteAnimator.start();
 
                     mAcceptButtonVisible = true;
+                } else {
+                    final ImageButton setLocationButtonHighlight =
+                            (ImageButton) findViewById(R.id.set_location_button_highlight);
+                    ObjectAnimator acceptAnimator = ObjectAnimator.ofFloat(
+                            setLocationButtonHighlight,
+                            "alpha",
+                            0,
+                            1f,
+                            0).setDuration(1000);
+                    acceptAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    setLocationButtonHighlight.setVisibility(View.VISIBLE);
+
+                    acceptAnimator.addListener(new Animator.AnimatorListener() {
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            setLocationButtonHighlight.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onAnimationStart(Animator animation) {}
+                        @Override
+                        public void onAnimationCancel(Animator animation) {}
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {}
+                    });
+
+                    acceptAnimator.start();
+                    // TODO add end animation listenener
                 }
             }
         });

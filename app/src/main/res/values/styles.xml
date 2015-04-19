@@ -29,10 +29,17 @@
     </style>
 
     <style name="FloatingActionButton" parent="android:Widget.Material.Button">
-        <item name="android:background">@drawable/fab_background</item>
         <item name="android:layout_width">@dimen/fab_size</item>
         <item name="android:layout_height">@dimen/fab_size</item>
         <item name="android:stateListAnimator">@anim/fab_state_list_animator</item>
+    </style>
+
+    <style name="FloatingActionButton.Default">
+        <item name="android:background">@drawable/fab_background</item>
+    </style>
+
+    <style name="FloatingActionButton.Highlight">
+        <item name="android:background">@drawable/fab_background_highlight</item>
     </style>
 
 </resources>
