@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.shockn745.workoutmotivationaltool.recyclerview.TestRecyclerview;
 import com.shockn745.workoutmotivationaltool.settings.SettingsActivity;
 
 /**
