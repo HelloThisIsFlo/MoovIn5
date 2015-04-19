@@ -7,5 +7,8 @@
     <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_resting_elevation">6dp</dimen>
     <dimen name="fab_pressed_elevation">12dp</dimen>
-    <dimen name="fab_margin_bottom">48dp</dimen>
+    <dimen name="fab_margin_bottom">16dp</dimen>
+    <!-- Added margin for dynamic slide in reveal effect -->
+    <dimen name="fab_dynamic_margin">56dp</dimen>
+
 </resources>

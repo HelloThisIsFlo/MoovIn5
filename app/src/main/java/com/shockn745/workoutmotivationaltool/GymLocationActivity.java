@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toolbar;
 
@@ -32,7 +31,7 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
 
     // UI components
     private Toolbar mToolbar;
-    private Button mSetLocationButton;
+    private ImageButton mSetLocationButton;
     private ImageButton mChangeMaptypeButton;
 
     private GoogleMap mMap = null;
@@ -40,6 +39,7 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
     private LatLng mCoordinates = null;
 
     private boolean mMaptypeIsHybrid = false;
+    private boolean mAcceptButtonVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
         setContentView(R.layout.activity_gym_location);
 
         // Find elements by id
-        mSetLocationButton = (Button) findViewById(R.id.set_location_button);
+        mSetLocationButton = (ImageButton) findViewById(R.id.set_location_button);
         mChangeMaptypeButton = (ImageButton) findViewById(R.id.change_maptype_button);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -170,28 +170,49 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
                     mCoordinates = latLng;
                 }
 
-                // Enable "Save Location" button
-                mSetLocationButton.setEnabled(true);
+                // Check if "accept" button is already visible
+                if (!mAcceptButtonVisible) {
+                    // Animate FABs
+                    /// Init interpolator
+                    Interpolator interpolator = AnimationUtils.loadInterpolator(
+                            GymLocationActivity.this,
+                            android.R.interpolator.fast_out_slow_in
+                    );
 
-                // TODO move
-                // Show "accept" button
-                // Slide satellite button up
-                float slideLength = getResources().getDimension(R.dimen.fab_size)
-                        + (getResources().getDimension(R.dimen.fab_margin_bottom) / 2);
-                ObjectAnimator test = ObjectAnimator.ofFloat(
-                        mChangeMaptypeButton,
-                        "translationY",
-                        0,
-                        - slideLength
-                );
-                Interpolator interpolator = AnimationUtils.loadInterpolator(
-                        GymLocationActivity.this,
-                        android.R.interpolator.fast_out_slow_in
-                );
-                test.setDuration(500)
-                        .setInterpolator(interpolator);
-                test.start();
+                    /// Slide "satellite" button up
+                    float slideLength = getResources().getDimension(R.dimen.fab_size)
+                            + getResources().getDimension(R.dimen.fab_margin_bottom);
+                    ObjectAnimator satelliteAnimator = ObjectAnimator.ofFloat(
+                            mChangeMaptypeButton,
+                            "translationY",
+                            0,
+                            -slideLength
+                    );
+                    satelliteAnimator
+                            .setDuration(getResources().getInteger(R.integer.fab_anim_duration))
+                            .setInterpolator(interpolator);
 
+                    /// Slide in "accept" button
+                    float startPosition = getResources().getDimension(R.dimen.fab_size)
+                            + getResources().getDimension(R.dimen.fab_margin_bottom)
+                            + getResources().getDimension(R.dimen.fab_dynamic_margin);
+                    ObjectAnimator acceptAnimator = ObjectAnimator.ofFloat(
+                            mSetLocationButton,
+                            "translationY",
+                            startPosition,
+                            0
+                    );
+                    acceptAnimator
+                            .setDuration(getResources().getInteger(R.integer.fab_anim_duration))
+                            .setInterpolator(interpolator);
+
+                    /// Start animations
+                    mSetLocationButton.setVisibility(View.VISIBLE);
+                    acceptAnimator.start();
+                    satelliteAnimator.start();
+
+                    mAcceptButtonVisible = true;
+                }
             }
         });
 

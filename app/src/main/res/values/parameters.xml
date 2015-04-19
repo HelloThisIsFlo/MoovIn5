@@ -16,4 +16,8 @@
     <integer name="gym_location_level_zoom">15</integer>
     <integer name="gym_location_level_zoom_not_initialized">1</integer>
 
+    <!-- Animation -->
+    <integer name="fab_anim_duration">500</integer>
+
+
 </resources>
