@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
@@ -162,6 +163,10 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
+                // Perform haptic feedback (not handled by GoogleMap)
+                findViewById(R.id.container)
+                        .performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+
                 // Show "accept" button & display the marker or change its location
                 if (mMarker == null) {
                     mMarker = mMap.addMarker(new MarkerOptions()
