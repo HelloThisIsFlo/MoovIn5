@@ -33,7 +33,6 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
     public final static String LONGITUDE_KEY = "longitude";
 
     // UI components
-    private Toolbar mToolbar;
     private ImageButton mSetLocationButton;
     private ImageButton mChangeMaptypeButton;
 
@@ -52,11 +51,17 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
         // Find elements by id
         mSetLocationButton = (ImageButton) findViewById(R.id.set_location_button);
         mChangeMaptypeButton = (ImageButton) findViewById(R.id.change_maptype_button);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         // Add toolbar
         setActionBar(mToolbar);
+
         // Add the navigation arrow
+
+        // Inspection removed, because it won't throw NullPointerException since the actionBar is
+        // initialized just above.
+
+        //noinspection ConstantConditions
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
 

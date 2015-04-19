@@ -55,7 +55,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
     private ResultHandler mResultHandler;
 
     // Current location of the user
-    Location mLocation;
+    private Location mLocation;
 
     public MotivationFragment() {
     }
@@ -332,7 +332,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
         /**
          * Callback called when the connection to the location API succeeded
          *
-         * @param bundle
+         * @param bundle Not used
          */
         @Override
         public void onConnected(Bundle bundle) {
@@ -352,7 +352,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
         /**
          * Callback called when the connection to the location API is suspended
          *
-         * @param i
+         * @param i Not used
          */
         @Override
         public void onConnectionSuspended(int i) {
@@ -362,7 +362,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
         /**
          * Callback called when the connection to the location API fails
          *
-         * @param connectionResult
+         * @param connectionResult Used to start resolution
          */
         @Override
         public void onConnectionFailed(ConnectionResult connectionResult) {

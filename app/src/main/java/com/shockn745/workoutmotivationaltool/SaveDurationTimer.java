@@ -7,14 +7,16 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
- * Created by Shock on 17.04.15.
+ * Timer used to save the workout duration in the preference after a certain amount of time
+ * It is used to prevent multiple writes to shared preferences when scrolling through the numbers
+ * in the duration picker
  */
-public class SaveDurationTimer implements Runnable {
+class SaveDurationTimer implements Runnable {
 
     private static final String LOG_TAG = SaveDurationTimer.class.getSimpleName();
 
     private int workoutDuration = -1;
-    private Activity mActivity;
+    private final Activity mActivity;
 
     public SaveDurationTimer(Activity mActivity) {
         this.mActivity = mActivity;

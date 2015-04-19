@@ -15,10 +15,6 @@
     <!-- MotivationActivity -->
     <string name="hello_world">Hello world!</string>
 
-    <!-- GymLocationActivity -->
-    <string name="set_location_button">Set Location</string>
-    <string name="change_maptype_button">Change map type</string>
-
 
     <!-- Alert dialog -->
     <string name="warning_not_initialized_edit_text">Please initialise the gym location !</string>
