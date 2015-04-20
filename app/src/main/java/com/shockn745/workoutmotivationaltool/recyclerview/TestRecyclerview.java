@@ -57,7 +57,33 @@ public class TestRecyclerview extends Activity {
             mRecyclerView.setLayoutManager(mLayoutManager);
 
             // Set the adapter
-            String[] testDataset = {"coucou", "qsdfsdf", "test"};
+            String[] testDataset = {
+                    "coucou",
+                    "qsdfsdf",
+                    "coucou",
+                    "qsdfsdf",
+                    "coucou",
+                    "qsdfsdf",
+                    "coucou",
+                    "qsdfsdf",
+                    "coucou",
+                    "qsdfsdf",
+                    "coucou",
+                    "qsdfsdf",
+                    "coucou",
+                    "qsdfsdf",
+                    "coucou",
+                    "qsdfsdf",
+                    "coucou",
+                    "qsdfsdf",
+                    "coucou",
+                    "qsdfsdf",
+                    "coucou",
+                    "qsdfsdf",
+                    "coucou",
+                    "qsdfsdf",
+                    "test"
+            };
             mAdapter = new testAdapter(testDataset);
             mRecyclerView.setAdapter(mAdapter);
 

@@ -26,6 +26,7 @@ public class testAdapter extends RecyclerView.Adapter<testAdapter.TestHolder> {
         mDataSet = dataSet;
     }
 
+
     /**
      * Create the viewHolder
      *
@@ -33,7 +34,9 @@ public class testAdapter extends RecyclerView.Adapter<testAdapter.TestHolder> {
      */
     @Override
     public TestHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_test, null);
+        View v = LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.list_item_test, parent, false);
         return new TestHolder(v);
     }
 
