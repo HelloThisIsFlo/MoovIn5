@@ -8,7 +8,10 @@
     <dimen name="fab_resting_elevation">6dp</dimen>
     <dimen name="fab_pressed_elevation">12dp</dimen>
     <dimen name="fab_margin_bottom">16dp</dimen>
+    <dimen name="fab_margin_top">28dp</dimen> <!-- 56/2 where 56dp is the height of the toolbar -->
     <!-- Added margin for dynamic slide in reveal effect -->
     <dimen name="fab_dynamic_margin">56dp</dimen>
+
+    <dimen name="toolbar_elevation">4dp</dimen>
 
 </resources>
