@@ -75,7 +75,7 @@ public class TestRecyclerview extends Activity {
             testDataset.add("ipad");
             testDataset.add("Röyksopp");
             testDataset.add("Robot");
-            mAdapter = new testAdapter(testDataset);
+            mAdapter = new TestAdapter(testDataset);
             mRecyclerView.setAdapter(mAdapter);
 
 
