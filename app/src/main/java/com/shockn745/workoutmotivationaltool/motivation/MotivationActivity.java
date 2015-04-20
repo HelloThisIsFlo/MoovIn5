@@ -2,6 +2,7 @@ package com.shockn745.workoutmotivationaltool.motivation;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.Toolbar;
 
 import com.shockn745.workoutmotivationaltool.R;
 
@@ -22,5 +23,18 @@ public class MotivationActivity extends Activity {
                     .add(R.id.container, new MotivationFragment())
                     .commit();
         }
+
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        // Add toolbar
+        setActionBar(mToolbar);
+
+        // Add the navigation arrow
+
+        // Inspection removed, because it won't throw NullPointerException since the actionBar is
+        // initialized just above.
+
+        //noinspection ConstantConditions
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }
