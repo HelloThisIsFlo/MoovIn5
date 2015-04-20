@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 import com.shockn745.workoutmotivationaltool.R;
 
+import java.util.ArrayList;
+
 
 public class TestRecyclerview extends Activity {
 
@@ -52,43 +54,29 @@ public class TestRecyclerview extends Activity {
             // Get the RecyclerView
             mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
 
-            // Set layout manager
+
+            // Set recyclerView
             mLayoutManager = new LinearLayoutManager(getActivity());
             mRecyclerView.setLayoutManager(mLayoutManager);
+            // Notify the recyclerView that its size won't change (better perfs)
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
             // Set the adapter
-            String[] testDataset = {
-                    "coucou",
-                    "qsdfsdf",
-                    "coucou",
-                    "qsdfsdf",
-                    "coucou",
-                    "qsdfsdf",
-                    "coucou",
-                    "qsdfsdf",
-                    "coucou",
-                    "qsdfsdf",
-                    "coucou",
-                    "qsdfsdf",
-                    "coucou",
-                    "qsdfsdf",
-                    "coucou",
-                    "qsdfsdf",
-                    "coucou",
-                    "qsdfsdf",
-                    "coucou",
-                    "qsdfsdf",
-                    "coucou",
-                    "qsdfsdf",
-                    "coucou",
-                    "qsdfsdf",
-                    "test"
-            };
+            ArrayList<String> testDataset = new ArrayList<String>();
+            testDataset.add("salut");
+            testDataset.add("coucou");
+            testDataset.add("test");
+            testDataset.add("23234");
+            testDataset.add("Richard");
+            testDataset.add("Radiateur");
+            testDataset.add("antivertueux");
+            testDataset.add("florent");
+            testDataset.add("ipad");
+            testDataset.add("Röyksopp");
+            testDataset.add("Robot");
             mAdapter = new testAdapter(testDataset);
             mRecyclerView.setAdapter(mAdapter);
-
-
-
 
 
             new DefaultItemAnimator();

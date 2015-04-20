@@ -1,6 +1,7 @@
 package com.shockn745.workoutmotivationaltool.recyclerview;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,13 @@ import android.widget.TextView;
 
 import com.shockn745.workoutmotivationaltool.R;
 
+import java.util.ArrayList;
+
 public class testAdapter extends RecyclerView.Adapter<testAdapter.TestHolder> {
 
-    private String[] mDataSet;
+    public static final String LOG_TAG = testAdapter.class.getSimpleName();
+
+    private ArrayList<String> mDataSet;
 
     public static class TestHolder extends RecyclerView.ViewHolder {
 
@@ -22,7 +27,7 @@ public class testAdapter extends RecyclerView.Adapter<testAdapter.TestHolder> {
         }
     }
 
-    public testAdapter(String[] dataSet) {
+    public testAdapter(ArrayList<String> dataSet) {
         mDataSet = dataSet;
     }
 
@@ -34,10 +39,10 @@ public class testAdapter extends RecyclerView.Adapter<testAdapter.TestHolder> {
      */
     @Override
     public TestHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater
+        View cardView = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.list_item_test, parent, false);
-        return new TestHolder(v);
+        return new TestHolder(cardView);
     }
 
     /**
@@ -47,13 +52,21 @@ public class testAdapter extends RecyclerView.Adapter<testAdapter.TestHolder> {
      * @param position Position of the data
      */
     @Override
-    public void onBindViewHolder(TestHolder holder, int position) {
-        holder.mTextView.setText(mDataSet[position]);
+    public void onBindViewHolder(final TestHolder holder, int position) {
+        holder.mTextView.setText(mDataSet.get(position));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "Item supprimé : " + mDataSet.get(holder.getPosition()));
+                mDataSet.remove(holder.getPosition());
+                testAdapter.this.notifyItemRemoved(holder.getPosition());
+            }
+        });
     }
 
 
     @Override
     public int getItemCount() {
-        return mDataSet.length;
+        return mDataSet.size();
     }
 }
