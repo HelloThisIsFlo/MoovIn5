@@ -6,11 +6,16 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.shockn745.workoutmotivationaltool.R;
+import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardInterface;
 
 import java.util.ArrayList;
 
@@ -34,8 +39,10 @@ public class TestRecyclerview extends Activity {
      */
     public static class TestRecyclerviewFragment extends Fragment {
 
+        private static final String LOG_TAG = TestRecyclerviewFragment.class.getSimpleName();
+
         private RecyclerView mRecyclerView;
-        private RecyclerView.Adapter mAdapter;
+        private TestAdapter mAdapter;
         private RecyclerView.LayoutManager mLayoutManager;
 
         public TestRecyclerviewFragment() {
@@ -44,6 +51,23 @@ public class TestRecyclerview extends Activity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            setHasOptionsMenu(true);
+        }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            super.onCreateOptionsMenu(menu, inflater);
+            inflater.inflate(R.menu.menu_test, menu);
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            if (item.getItemId() == R.id.action_add_card) {
+                mAdapter.addCardFromLIFO();
+            } else {
+                Log.d(LOG_TAG, "Error : MenuItem not recognized");
+            }
+            return super.onOptionsItemSelected(item);
         }
 
         @Override
@@ -62,19 +86,9 @@ public class TestRecyclerview extends Activity {
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-            // Set the adapter
-            ArrayList<String> testDataset = new ArrayList<String>();
-            testDataset.add("salut");
-            testDataset.add("coucou");
-            testDataset.add("test");
-            testDataset.add("23234");
-            testDataset.add("Richard");
-            testDataset.add("Radiateur");
-            testDataset.add("antivertueux");
-            testDataset.add("florent");
-            testDataset.add("ipad");
-            testDataset.add("Röyksopp");
-            testDataset.add("Robot");
+            // Set the adapter with empty dataset
+            ArrayList<CardInterface> testDataset= new ArrayList<>();
+
             mAdapter = new TestAdapter(testDataset);
             mRecyclerView.setAdapter(mAdapter);
 
