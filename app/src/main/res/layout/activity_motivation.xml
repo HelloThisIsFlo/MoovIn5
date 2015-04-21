@@ -26,7 +26,7 @@
     <ImageButton
         android:id="@+id/add_card_button"
         style="@style/FloatingActionButton.Default"
-        android:src="@drawable/ic_satellite_view"
+        android:src="@drawable/ic_add"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
@@ -36,8 +36,8 @@
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
-        android:layout_width="150dp"
-        android:layout_height="250dp"
+        android:layout_width="@dimen/add_card_menu_width"
+        android:layout_height="@dimen/add_card_menu_height"
         android:layout_below="@id/add_card_button"
         android:layout_toStartOf="@id/add_card_button"
         android:visibility="gone"
