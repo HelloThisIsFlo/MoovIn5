@@ -18,6 +18,7 @@
 
     <!-- Animation -->
     <integer name="fab_anim_duration">500</integer>
+    <integer name="card_menu_reveal_duration">500</integer>
 
 
 </resources>
