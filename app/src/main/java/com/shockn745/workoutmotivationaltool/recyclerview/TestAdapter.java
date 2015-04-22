@@ -36,9 +36,9 @@ public class TestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         mLifo.push(new CardContact("QSDF", "QSDF", "06060606060"));
         mLifo.push(new CardContact("PI", "ORANGE", "06060606060"));
         mLifo.push(new CardSimple("Texte 3 "));
-        mLifo.push(new CardAd("Texte 4 "));
+        mLifo.push(new CardAd("Ad 1"));
         mLifo.push(new CardContact("NO345M", "FGHGF", "06060606060"));
-        mLifo.push(new CardSimple("Ad 1"));
+        mLifo.push(new CardSimple("Texte 4 "));
         mLifo.push(new CardContact("SAA", "VER", "06060606060"));
         mLifo.push(new CardContact("MIIISDf", "sddgsfg", "06060606060"));
         mLifo.push(new CardContact("hhhhh", "hhhhhhh", "06060606060"));
@@ -141,26 +141,18 @@ public class TestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     /**
      * Determine whether a card wan be dismissed or not
      * @param position Position of the card
-     * @return
+     * @return true if dismissable
      */
     @Override
     public boolean canDismiss(int position) {
         //TODO uncomment
-//        return mDataSet.get(position).canDismiss();
-        return true;
+        return mDataSet.get(position).canDismiss();
     }
 
-    /**
-     * Handle dismiss request
-     * @param recyclerView The recyclerview
-     * @param reverseSortedPositions An array of positions to dismiss, sorted in descending
-     */
     @Override
-    public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
-        removeCard(reverseSortedPositions[0]);
-
+    public void onDismiss(RecyclerView recyclerView, int position) {
+        removeCard(position);
     }
-
 
     ///////////////////////////////////
     // Methods to handle the dataset //
