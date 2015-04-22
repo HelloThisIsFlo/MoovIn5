@@ -61,7 +61,7 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity
-            android:name=".recyclerview.TestRecyclerview"
+            android:name=".recyclerview.TestActivity"
             android:label="@string/title_activity_test_recyclerview"
             android:parentActivityName=".MainActivity" >
             <meta-data

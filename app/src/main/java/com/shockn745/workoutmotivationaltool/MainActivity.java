@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.shockn745.workoutmotivationaltool.recyclerview.TestRecyclerview;
+import com.shockn745.workoutmotivationaltool.recyclerview.TestActivity;
 import com.shockn745.workoutmotivationaltool.settings.SettingsActivity;
 
 /**
@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
 
         // Directly start test activity
-        startActivity(new Intent(this, TestRecyclerview.class));
+        startActivity(new Intent(this, TestActivity.class));
     }
 
 

@@ -20,7 +20,7 @@ import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardInterface;
 import java.util.ArrayList;
 
 
-public class TestRecyclerview extends Activity {
+public class TestActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class TestRecyclerview extends Activity {
         setContentView(R.layout.activity_test_recyclerview);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new TestRecyclerviewFragment())
+                    .add(R.id.container, new TestFragment())
                     .commit();
         }
     }
@@ -37,15 +37,15 @@ public class TestRecyclerview extends Activity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class TestRecyclerviewFragment extends Fragment {
+    public static class TestFragment extends Fragment {
 
-        private static final String LOG_TAG = TestRecyclerviewFragment.class.getSimpleName();
+        private static final String LOG_TAG = TestFragment.class.getSimpleName();
 
         private RecyclerView mRecyclerView;
         private TestAdapter mAdapter;
         private RecyclerView.LayoutManager mLayoutManager;
 
-        public TestRecyclerviewFragment() {
+        public TestFragment() {
         }
 
         @Override
