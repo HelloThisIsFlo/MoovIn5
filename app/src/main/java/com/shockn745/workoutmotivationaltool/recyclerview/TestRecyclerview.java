@@ -92,6 +92,17 @@ public class TestRecyclerview extends Activity {
             mAdapter = new TestAdapter(testDataset);
             mRecyclerView.setAdapter(mAdapter);
 
+            // Set the OnTouchListener
+            SwipeDismissRecyclerViewTouchListener touchListener =
+                    new SwipeDismissRecyclerViewTouchListener(
+                            mRecyclerView,
+                            mAdapter
+                    );
+            mRecyclerView.setOnTouchListener(touchListener);
+            // Setting this scroll listener is required to ensure that during ListView scrolling,
+            // we don't look for swipes.
+            mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
+
 
             new DefaultItemAnimator();
 

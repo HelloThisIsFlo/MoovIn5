@@ -16,7 +16,8 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-public class TestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class TestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        implements SwipeDismissRecyclerViewTouchListener.DismissCallbacks {
 
     public static final String LOG_TAG = TestAdapter.class.getSimpleName();
 
@@ -108,12 +109,12 @@ public class TestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         // Enable delete on click
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeCard(holder.getPosition());
-            }
-        });
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                removeCard(holder.getPosition());
+//            }
+//        });
     }
 
 
@@ -129,6 +130,37 @@ public class TestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemViewType(int position) {
         return mDataSet.get(position).getViewType();
     }
+
+
+
+
+    //////////////////////////////////////////
+    // Methods to implement DismissCallback //
+    //////////////////////////////////////////
+
+    /**
+     * Determine whether a card wan be dismissed or not
+     * @param position Position of the card
+     * @return
+     */
+    @Override
+    public boolean canDismiss(int position) {
+        //TODO uncomment
+//        return mDataSet.get(position).canDismiss();
+        return true;
+    }
+
+    /**
+     * Handle dismiss request
+     * @param recyclerView The recyclerview
+     * @param reverseSortedPositions An array of positions to dismiss, sorted in descending
+     */
+    @Override
+    public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
+        removeCard(reverseSortedPositions[0]);
+
+    }
+
 
     ///////////////////////////////////
     // Methods to handle the dataset //
@@ -178,6 +210,8 @@ public class TestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             Log.d(LOG_TAG, "Empty LIFO");
         }
     }
+
+
 
 
 }
