@@ -15,23 +15,29 @@
  */
 package com.shockn745.workoutmotivationaltool.recyclerview;
 
+import android.content.Context;
+import android.graphics.Point;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
+
+import com.shockn745.workoutmotivationaltool.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This implementation of {@link RecyclerView.ItemAnimator} provides basic
- * animations on remove, add, and move events that happen to the items in
- * a RecyclerView. RecyclerView uses a DefaultItemAnimator by default.
+ * This implementation is a copy of {@link RecyclerView.ItemAnimator} with a different
+ * add animation
+ * Commented methods are either added or modified
  *
- * @see RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)
+ * @see RecyclerView.ItemAnimator
  */
 public class TestAnimator extends RecyclerView.ItemAnimator {
     private static final String LOG_TAG = TestAnimator.class.getSimpleName();
@@ -51,6 +57,13 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
     private ArrayList<ViewHolder> mMoveAnimations = new ArrayList<>();
     private ArrayList<ViewHolder> mRemoveAnimations = new ArrayList<>();
     private ArrayList<ViewHolder> mChangeAnimations = new ArrayList<>();
+
+    private Context mContext;
+
+    public TestAnimator(Context mContext) {
+        this.mContext = mContext;
+        setAddDuration(mContext.getResources().getInteger(R.integer.card_add_anim_duration));
+    }
 
     private static class MoveInfo {
         public ViewHolder holder;
@@ -96,7 +109,7 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
     }
 
     /**
-     * Added class to store original Y position
+     * Class to store original Y position
      */
     private static class AddInfo {
         public ViewHolder holder;
@@ -226,27 +239,44 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
         mRemoveAnimations.add(holder);
     }
 
+    /**
+     * Init the add animation
+     * @param holder holder containing the view to animate
+     * @return true
+     */
     @Override
     public boolean animateAdd(final ViewHolder holder) {
         endAnimation(holder);
-//        ViewCompat.setAlpha(holder.itemView, 0);
-        Log.d(LOG_TAG, "Set testY = " + holder.itemView.getY());
 
+        // Get the screen dimensions
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+
+        // Save Y position of origin
         AddInfo addInfo = new AddInfo(holder, holder.itemView.getY());
 
-
-        holder.itemView.setY(1000);
+        // Start animation with view below screen
+        holder.itemView.setY(height);
         mPendingAdditions.add(addInfo);
         return true;
     }
 
+    /**
+     * Executes the add animation
+     * @param addInfo Contains the view to animate & the original Y position
+     */
     private void animateAddImpl(final AddInfo addInfo) {
         final ViewHolder holder = addInfo.holder;
         final View view = holder.itemView;
         mAddAnimations.add(holder);
         final ViewPropertyAnimatorCompat animation = ViewCompat.animate(view);
-//        animation.y(addInfo.originY).setDuration(getAddDuration()).
-        animation.y(addInfo.originY).setDuration(3000).
+        animation.setInterpolator(
+                AnimationUtils.loadInterpolator(mContext, android.R.interpolator.fast_out_slow_in)
+        );
+        animation.y(addInfo.originY).setDuration(getAddDuration()).
                 setListener(new VpaListenerAdapter() {
                     @Override
                     public void onAnimationStart(View view) {

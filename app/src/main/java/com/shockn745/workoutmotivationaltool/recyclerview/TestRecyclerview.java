@@ -84,7 +84,7 @@ public class TestRecyclerview extends Activity {
             mRecyclerView.setLayoutManager(mLayoutManager);
             // Notify the recyclerView that its size won't change (better perfs)
             mRecyclerView.setHasFixedSize(true);
-            mRecyclerView.setItemAnimator(new TestAnimator());
+            mRecyclerView.setItemAnimator(new TestAnimator(getActivity()));
 
             // Set the adapter with empty dataset
             ArrayList<CardInterface> testDataset= new ArrayList<>();
