@@ -10,4 +10,6 @@ public interface CardInterface {
 
     public int getViewType();
 
+    public boolean canDismiss();
+
 }
