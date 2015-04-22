@@ -3,7 +3,7 @@ package com.shockn745.workoutmotivationaltool.recyclerview;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.shockn745.workoutmotivationaltool.R;
 import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardInterface;
+import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardSimple;
 
 import java.util.ArrayList;
 
@@ -44,6 +45,8 @@ public class TestActivity extends Activity {
         private RecyclerView mRecyclerView;
         private TestAdapter mAdapter;
         private RecyclerView.LayoutManager mLayoutManager;
+
+        private Handler mHandler = new Handler();
 
         public TestFragment() {
         }
@@ -77,20 +80,20 @@ public class TestActivity extends Activity {
 
             // Get the RecyclerView
             mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+            initRecyclerView();
 
+            createTestScenario();
 
+            return rootView;
+        }
+
+        private void initRecyclerView() {
             // Set recyclerView
             mLayoutManager = new LinearLayoutManager(getActivity());
             mRecyclerView.setLayoutManager(mLayoutManager);
             // Notify the recyclerView that its size won't change (better perfs)
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setItemAnimator(new TestAnimator(getActivity()));
-
-            // Set the adapter with empty dataset
-            ArrayList<CardInterface> testDataset= new ArrayList<>();
-
-            mAdapter = new TestAdapter(testDataset);
-            mRecyclerView.setAdapter(mAdapter);
 
             // Set the OnTouchListener
             SwipeDismissRecyclerViewTouchListener touchListener =
@@ -104,9 +107,33 @@ public class TestActivity extends Activity {
             mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
 
 
-            new DefaultItemAnimator();
+            // Set the adapter with empty dataset
+            ArrayList<CardInterface> testDataset= new ArrayList<>();
 
-            return rootView;
+            mAdapter = new TestAdapter(testDataset);
+            mRecyclerView.setAdapter(mAdapter);
+        }
+
+        /**
+         * Add Loading card (simple card here) and then 2s later, add second "wait" (funny) message
+         */
+        private void createTestScenario() {
+            // Add first card
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.addCard(new CardSimple("LOADING . . ."));
+
+                }
+            }, 500);
+
+            // Add second card
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.addCard(new CardSimple("Wait just a bit longer . . . "));
+                }
+            }, 2500);
         }
     }
 }
