@@ -20,6 +20,7 @@ import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -33,22 +34,23 @@ import java.util.List;
  * @see RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)
  */
 public class TestAnimator extends RecyclerView.ItemAnimator {
+    private static final String LOG_TAG = TestAnimator.class.getSimpleName();
     private static final boolean DEBUG = false;
 
-    private ArrayList<ViewHolder> mPendingRemovals = new ArrayList<ViewHolder>();
-    private ArrayList<ViewHolder> mPendingAdditions = new ArrayList<ViewHolder>();
-    private ArrayList<MoveInfo> mPendingMoves = new ArrayList<MoveInfo>();
-    private ArrayList<ChangeInfo> mPendingChanges = new ArrayList<ChangeInfo>();
+    private ArrayList<ViewHolder> mPendingRemovals = new ArrayList<>();
+    private ArrayList<AddInfo> mPendingAdditions = new ArrayList<>();
+    private ArrayList<MoveInfo> mPendingMoves = new ArrayList<>();
+    private ArrayList<ChangeInfo> mPendingChanges = new ArrayList<>();
 
-    private ArrayList<ArrayList<ViewHolder>> mAdditionsList =
-            new ArrayList<ArrayList<ViewHolder>>();
-    private ArrayList<ArrayList<MoveInfo>> mMovesList = new ArrayList<ArrayList<MoveInfo>>();
-    private ArrayList<ArrayList<ChangeInfo>> mChangesList = new ArrayList<ArrayList<ChangeInfo>>();
+    private ArrayList<ArrayList<AddInfo>> mAdditionsList =
+            new ArrayList<>();
+    private ArrayList<ArrayList<MoveInfo>> mMovesList = new ArrayList<>();
+    private ArrayList<ArrayList<ChangeInfo>> mChangesList = new ArrayList<>();
 
-    private ArrayList<ViewHolder> mAddAnimations = new ArrayList<ViewHolder>();
-    private ArrayList<ViewHolder> mMoveAnimations = new ArrayList<ViewHolder>();
-    private ArrayList<ViewHolder> mRemoveAnimations = new ArrayList<ViewHolder>();
-    private ArrayList<ViewHolder> mChangeAnimations = new ArrayList<ViewHolder>();
+    private ArrayList<ViewHolder> mAddAnimations = new ArrayList<>();
+    private ArrayList<ViewHolder> mMoveAnimations = new ArrayList<>();
+    private ArrayList<ViewHolder> mRemoveAnimations = new ArrayList<>();
+    private ArrayList<ViewHolder> mChangeAnimations = new ArrayList<>();
 
     private static class MoveInfo {
         public ViewHolder holder;
@@ -90,6 +92,19 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
                     ", toX=" + toX +
                     ", toY=" + toY +
                     '}';
+        }
+    }
+
+    /**
+     * Added class to store original Y position
+     */
+    private static class AddInfo {
+        public ViewHolder holder;
+        public float originY;
+
+        private AddInfo(ViewHolder holder, float originY) {
+            this.holder = holder;
+            this.originY = originY;
         }
     }
 
@@ -157,14 +172,14 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
         }
         // Next, add stuff
         if (additionsPending) {
-            final ArrayList<ViewHolder> additions = new ArrayList<ViewHolder>();
+            final ArrayList<AddInfo> additions = new ArrayList<AddInfo>();
             additions.addAll(mPendingAdditions);
             mAdditionsList.add(additions);
             mPendingAdditions.clear();
             Runnable adder = new Runnable() {
                 public void run() {
-                    for (ViewHolder holder : additions) {
-                        animateAddImpl(holder);
+                    for (AddInfo addInfo : additions) {
+                        animateAddImpl(addInfo);
                     }
                     additions.clear();
                     mAdditionsList.remove(additions);
@@ -175,7 +190,7 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
                 long moveDuration = movesPending ? getMoveDuration() : 0;
                 long changeDuration = changesPending ? getChangeDuration() : 0;
                 long totalDelay = removeDuration + Math.max(moveDuration, changeDuration);
-                View view = additions.get(0).itemView;
+                View view = additions.get(0).holder.itemView;
                 ViewCompat.postOnAnimationDelayed(view, adder, totalDelay);
             } else {
                 adder.run();
@@ -214,21 +229,30 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
     @Override
     public boolean animateAdd(final ViewHolder holder) {
         endAnimation(holder);
-        ViewCompat.setAlpha(holder.itemView, 0);
-        mPendingAdditions.add(holder);
+//        ViewCompat.setAlpha(holder.itemView, 0);
+        Log.d(LOG_TAG, "Set testY = " + holder.itemView.getY());
+
+        AddInfo addInfo = new AddInfo(holder, holder.itemView.getY());
+
+
+        holder.itemView.setY(1000);
+        mPendingAdditions.add(addInfo);
         return true;
     }
 
-    private void animateAddImpl(final ViewHolder holder) {
+    private void animateAddImpl(final AddInfo addInfo) {
+        final ViewHolder holder = addInfo.holder;
         final View view = holder.itemView;
         mAddAnimations.add(holder);
         final ViewPropertyAnimatorCompat animation = ViewCompat.animate(view);
-        animation.alpha(1).setDuration(getAddDuration()).
+//        animation.y(addInfo.originY).setDuration(getAddDuration()).
+        animation.y(addInfo.originY).setDuration(3000).
                 setListener(new VpaListenerAdapter() {
                     @Override
                     public void onAnimationStart(View view) {
                         dispatchAddStarting(holder);
                     }
+
                     @Override
                     public void onAnimationCancel(View view) {
                         ViewCompat.setAlpha(view, 1);
@@ -465,7 +489,7 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
             }
         }
         for (int i = mAdditionsList.size() - 1; i >= 0; i--) {
-            ArrayList<ViewHolder> additions = mAdditionsList.get(i);
+            ArrayList<AddInfo> additions = mAdditionsList.get(i);
             if (additions.remove(item)) {
                 ViewCompat.setAlpha(view, 1);
                 dispatchAddFinished(item);
@@ -543,7 +567,7 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
         }
         count = mPendingAdditions.size();
         for (int i = count - 1; i >= 0; i--) {
-            ViewHolder item = mPendingAdditions.get(i);
+            ViewHolder item = mPendingAdditions.get(i).holder;
             View view = item.itemView;
             ViewCompat.setAlpha(view, 1);
             dispatchAddFinished(item);
@@ -577,10 +601,10 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
         }
         listCount = mAdditionsList.size();
         for (int i = listCount - 1; i >= 0; i--) {
-            ArrayList<ViewHolder> additions = mAdditionsList.get(i);
+            ArrayList<AddInfo> additions = mAdditionsList.get(i);
             count = additions.size();
             for (int j = count - 1; j >= 0; j--) {
-                ViewHolder item = additions.get(j);
+                ViewHolder item = additions.get(j).holder;
                 View view = item.itemView;
                 ViewCompat.setAlpha(view, 1);
                 dispatchAddFinished(item);
@@ -625,5 +649,5 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
 
         @Override
         public void onAnimationCancel(View view) {}
-    };
+    }
 }
