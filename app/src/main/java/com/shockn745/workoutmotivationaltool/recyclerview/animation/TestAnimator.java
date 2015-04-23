@@ -42,6 +42,8 @@ import java.util.List;
 public class TestAnimator extends RecyclerView.ItemAnimator {
     private static final String LOG_TAG = TestAnimator.class.getSimpleName();
     private static final boolean DEBUG = false;
+    public static final int STYLE_LOADING = 0;
+    public static final int STYLE_POST_LOADING = 1;
 
     private ArrayList<ViewHolder> mPendingRemovals = new ArrayList<>();
     private ArrayList<AddInfo> mPendingAdditions = new ArrayList<>();
@@ -59,9 +61,11 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
     private ArrayList<ViewHolder> mChangeAnimations = new ArrayList<>();
 
     private Context mContext;
+    private int mAnimationStyle;
 
-    public TestAnimator(Context mContext) {
+    public TestAnimator(Context mContext, int animationStyle) {
         this.mContext = mContext;
+        this.mAnimationStyle = animationStyle;
         setAddDuration(mContext.getResources().getInteger(R.integer.card_add_anim_duration));
     }
 
@@ -218,7 +222,72 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
         return true;
     }
 
+    /**
+     * Decides which implementation of the remove animation to use depending on the
+     * animation style attribute.
+     * @param holder holder containing the view to animate
+     */
     private void animateRemoveImpl(final ViewHolder holder) {
+        if (mAnimationStyle == STYLE_LOADING) {
+            animateRemoveImplLoading(holder);
+        } else {
+            // Default animation
+            animateRemoveImplPostLoading(holder);
+        }
+    }
+
+    /**
+     * Implementation of the animation for the step 1 (loading screen)
+     * @param holder holder containing the view to animate
+     */
+    private void animateRemoveImplLoading(final ViewHolder holder) {
+        final View view = holder.itemView;
+
+        // Compute translation distance
+        float viewY = view.getY();
+        float viewHeight = view.getHeight();
+
+        float translationDistance = -viewY - viewHeight;
+
+        // Get the screen dimensions
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+
+        translationDistance = - height;
+
+
+        final ViewPropertyAnimatorCompat animation = ViewCompat.animate(view);
+        animation.setInterpolator(
+                AnimationUtils.loadInterpolator(mContext, android.R.interpolator.fast_out_linear_in)
+        );
+        animation.setDuration(getRemoveDuration())
+                .translationY(translationDistance).setListener(new VpaListenerAdapter() {
+            @Override
+            public void onAnimationStart(View view) {
+                dispatchRemoveStarting(holder);
+            }
+
+            @Override
+            public void onAnimationEnd(View view) {
+                animation.setListener(null);
+                ViewCompat.setTranslationY(view, 0);
+                dispatchRemoveFinished(holder);
+                mRemoveAnimations.remove(holder);
+                dispatchFinishedWhenDone();
+            }
+        }).start();
+        mRemoveAnimations.add(holder);
+    }
+
+    /**
+     * Implementation of the animation for the step 2 (after loading)
+     * Also the default animation
+     * @param holder holder containing the view to animate
+     */
+    private void animateRemoveImplPostLoading(final ViewHolder holder) {
         final View view = holder.itemView;
         final ViewPropertyAnimatorCompat animation = ViewCompat.animate(view);
         animation.setDuration(getRemoveDuration())
@@ -238,6 +307,7 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
         }).start();
         mRemoveAnimations.add(holder);
     }
+
 
     /**
      * Init the add animation
@@ -668,6 +738,14 @@ public class TestAnimator extends RecyclerView.ItemAnimator {
         for (int i = viewHolders.size() - 1; i >= 0; i--) {
             ViewCompat.animate(viewHolders.get(i).itemView).cancel();
         }
+    }
+
+    /**
+     * Set the animation style
+     * @param mAnimationStyle Either STYLE_LOADING or STYLE_POST_LOADING
+     */
+    public void setmAnimationStyle(int mAnimationStyle) {
+        this.mAnimationStyle = mAnimationStyle;
     }
 
     private static class VpaListenerAdapter implements ViewPropertyAnimatorListener {

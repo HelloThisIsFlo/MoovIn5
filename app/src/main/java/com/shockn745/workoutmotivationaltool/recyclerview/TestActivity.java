@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.shockn745.workoutmotivationaltool.R;
 import com.shockn745.workoutmotivationaltool.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
@@ -47,6 +48,7 @@ public class TestActivity extends Activity {
         private RecyclerView mRecyclerView;
         private TestAdapter mAdapter;
         private RecyclerView.LayoutManager mLayoutManager;
+        private TestAnimator mAnimator;
 
         private Handler mHandler = new Handler();
 
@@ -103,7 +105,9 @@ public class TestActivity extends Activity {
             mRecyclerView.setLayoutManager(mLayoutManager);
             // Notify the recyclerView that its size won't change (better perfs)
             mRecyclerView.setHasFixedSize(true);
-            mRecyclerView.setItemAnimator(new TestAnimator(getActivity()));
+            mAnimator = new TestAnimator(getActivity(), TestAnimator.STYLE_LOADING);
+            mAnimator.setRemoveDuration(500);
+            mRecyclerView.setItemAnimator(mAnimator);
 
             // Set the OnTouchListener
             SwipeDismissRecyclerViewTouchListener touchListener =
@@ -139,6 +143,31 @@ public class TestActivity extends Activity {
                     mAdapter.addCard(new CardSimple("Wait just a bit longer . . . "));
                 }
             }, 2500);
+
+
+
+            // Clear the loading screen after 5 seconds
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.clearLoadingScreen();
+                }
+            }, 5000);
+
+
+
+            // Change animation after 10 seconds
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAnimator.setmAnimationStyle(TestAnimator.STYLE_POST_LOADING);
+                    Toast.makeText(
+                            getActivity(),
+                            "Animation changed to POST_LOADING",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
+            }, 10000);
         }
     }
 }

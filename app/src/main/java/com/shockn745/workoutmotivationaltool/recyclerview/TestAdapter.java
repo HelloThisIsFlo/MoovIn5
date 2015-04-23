@@ -204,6 +204,17 @@ public class TestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
+    public void clearLoadingScreen() {
+        //
+        mDataSet.remove(0);
+        try {
+            mDataSet.remove(0);
+        } catch (IndexOutOfBoundsException e) {
+            Log.d(LOG_TAG, "Second card was not shown");
+        }
+        notifyItemRangeRemoved(0, 2);
+    }
+
 
 
 
