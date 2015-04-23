@@ -24,3 +24,36 @@ View myView = findViewById(R.id.container); //TODO remove
 //                    myView.setVisibility(View.VISIBLE);
     anim.setDuration(3000);
     anim.start();
+
+
+Temp :
+------
+
+<integer name="card_remove_step1_anim_duration">500</integer>
+    <integer name="card_remove_step2_anim_duration">500</integer>
+
+
+
+
+    abstract protected void animateRemoveImpl(final ViewHolder holder);
+    //        final View view = holder.itemView;
+    //        final ViewPropertyAnimatorCompat animation = ViewCompat.animate(view);
+    //        // TODO remove
+    //        setRemoveDuration(5000);
+    //        animation.setDuration(getRemoveDuration())
+    ////                .alpha(0).setListener(new VpaListenerAdapter() {
+    //                .translationY(-1000).setListener(new VpaListenerAdapter() {
+    //            @Override
+    //            public void onAnimationStart(View view) {
+    //                dispatchRemoveStarting(holder);
+    //            }
+    //            @Override
+    //            public void onAnimationEnd(View view) {
+    //                animation.setListener(null);
+    //                ViewCompat.setTranslationY(view, 0);
+    //                dispatchRemoveFinished(holder);
+    //                mRemoveAnimations.remove(holder);
+    //                dispatchFinishedWhenDone();
+    //            }
+    //        }).start();
+    //        mRemoveAnimations.add(holder);

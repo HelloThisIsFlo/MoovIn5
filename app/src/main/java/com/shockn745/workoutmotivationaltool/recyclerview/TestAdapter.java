@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.shockn745.workoutmotivationaltool.R;
+import com.shockn745.workoutmotivationaltool.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
 import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardAd;
 import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardContact;
 import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardInterface;

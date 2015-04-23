@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.shockn745.workoutmotivationaltool.R;
+import com.shockn745.workoutmotivationaltool.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
+import com.shockn745.workoutmotivationaltool.recyclerview.animation.TestAnimator;
 import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardInterface;
 import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardSimple;
 
