@@ -10,10 +10,12 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -22,13 +24,17 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.shockn745.workoutmotivationaltool.R;
+import com.shockn745.workoutmotivationaltool.motivation.background.FetchTransitTask;
 import com.shockn745.workoutmotivationaltool.settings.PreferencesUtility;
+
+import java.util.Date;
 
 /**
  * Fragment of MotivationActivity
  * see the {@link MotivationActivity} class
  */
-public class MotivationFragment extends Fragment implements LocationListener {
+public class MotivationFragment extends Fragment
+        implements LocationListener, FetchTransitTask.FetchTransitCallback {
 
     private static final String LOG_TAG = MotivationFragment.class.getSimpleName();
 
@@ -55,7 +61,10 @@ public class MotivationFragment extends Fragment implements LocationListener {
     private ResultHandler mResultHandler;
 
     // Current location of the user
-    Location mLocation;
+    private Location mLocation;
+
+    // Time back at home
+    private Date mBackAtHomeTime;
 
     public MotivationFragment() {
     }
@@ -83,7 +92,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
         mExpiredRunnable = new Runnable() {
             @Override
             public void run() {
-                mResultHandler.handleResult(ResultHandler.PROCESS_RES_LOC_FAIL);
+                mResultHandler.handleResult(ResultHandler.LOC_FAIL);
             }
         };
 
@@ -175,7 +184,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         mLocation = location;
-        mResultHandler.handleResult(ResultHandler.PROCESS_RES_LOC_OK);
+        mResultHandler.handleResult(ResultHandler.LOC_OK);
     }
 
     /**
@@ -190,19 +199,24 @@ public class MotivationFragment extends Fragment implements LocationListener {
                 LatLng gymLoc = PreferencesUtility.getCoordinatesFromPreferences(getActivity());
 
                 // Fetch transit time from Google Directions API
-                FetchTransitTask fetchTask = new FetchTransitTask(getActivity());
+                FetchTransitTask fetchTask = new FetchTransitTask(getActivity(), this);
                 LatLng mLocLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
                 fetchTask.execute(mLocLatLng, gymLoc);
 
             } catch (PreferencesUtility.PreferenceNotInitializedException e) {
                 // Show error dialog
-                mResultHandler.handleResult(ResultHandler.PROCESS_RES_GYM_NOT_INIT);
+                mResultHandler.handleResult(ResultHandler.GYM_NOT_INIT);
             }
         } else {
             Log.d(LOG_TAG, "mLocation == null !");
         }
     }
 
+    @Override
+    public void FetchTransitCallback(Date backAtHome) {
+        mBackAtHomeTime = backAtHome;
+        mResultHandler.handleResult(ResultHandler.FETCH_TRANSIT_DONE);
+    }
 
     /**
      * Class used to factor all the functions and parameters related to handling the result of
@@ -216,9 +230,10 @@ public class MotivationFragment extends Fragment implements LocationListener {
     private class ResultHandler {
 
         // Constant fields to pass to handleResult(...)
-        private static final int PROCESS_RES_LOC_OK = 0;
-        private static final int PROCESS_RES_LOC_FAIL = 1;
-        private static final int PROCESS_RES_GYM_NOT_INIT = 2;
+        private static final int LOC_OK = 0;
+        private static final int LOC_FAIL = 1;
+        private static final int GYM_NOT_INIT = 2;
+        private static final int FETCH_TRANSIT_DONE = 3;
 
         /**
          * Handle the result of the processing.
@@ -227,7 +242,7 @@ public class MotivationFragment extends Fragment implements LocationListener {
          */
         private void handleResult(int result) {
             switch (result) {
-                case PROCESS_RES_LOC_OK:
+                case LOC_OK:
                     // Stop the expiration timer
                     mHandler.removeCallbacks(mExpiredRunnable);
 
@@ -238,17 +253,30 @@ public class MotivationFragment extends Fragment implements LocationListener {
                     MotivationFragment.this.handleNewLocation();
 
                     break;
-                case PROCESS_RES_LOC_FAIL:
+                case LOC_FAIL:
                     // Dismiss the currently displayed progress dialog
                     mProgressDialog.dismiss();
 
                     showUnableToObtainLocation();
                     break;
-                case PROCESS_RES_GYM_NOT_INIT:
+                case GYM_NOT_INIT:
                     // Dismiss the currently displayed progress dialog
                     mProgressDialog.dismiss();
 
                     showGymNotInit();
+                    break;
+                case FETCH_TRANSIT_DONE:
+                    // TODO Use card
+                    // Update the UI
+                    TextView textView = (TextView) MotivationFragment.this
+                            .getActivity()
+                            .findViewById(R.id.motivation_text_view);
+
+                    textView.setText(
+                        DateFormat
+                                .getTimeFormat(MotivationFragment.this.getActivity())
+                                .format(mBackAtHomeTime)
+                );
                     break;
                 default:
                     Log.d(LOG_TAG, "handleResult : Result type not recognized");
