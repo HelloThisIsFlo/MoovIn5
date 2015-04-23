@@ -8,14 +8,11 @@ import android.view.ViewGroup;
 
 import com.shockn745.workoutmotivationaltool.R;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
-import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardAd;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardContact;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardSimple;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 
 public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements SwipeDismissRecyclerViewTouchListener.DismissCallbacks {
@@ -23,29 +20,10 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final String LOG_TAG = TestAdapter.class.getSimpleName();
 
     private final ArrayList<CardInterface> mDataSet;
-    private final ArrayDeque<CardInterface> mLifo;
 
     public CardAdapter(ArrayList<CardInterface> dataSet) {
         // Init the dataset
         mDataSet = dataSet;
-
-        // Init LIFO
-        mLifo = new ArrayDeque<>();
-        mLifo.push(new CardContact("NOM", "PRENOM", "06060606060"));
-        mLifo.push(new CardSimple("Texte 1 "));
-        mLifo.push(new CardSimple("Texte 2 "));
-        mLifo.push(new CardContact("QSDF", "QSDF", "06060606060"));
-        mLifo.push(new CardContact("PI", "ORANGE", "06060606060"));
-        mLifo.push(new CardSimple("Texte 3 "));
-        mLifo.push(new CardAd("Ad 1"));
-        mLifo.push(new CardContact("NO345M", "FGHGF", "06060606060"));
-        mLifo.push(new CardSimple("Texte 4 "));
-        mLifo.push(new CardContact("SAA", "VER", "06060606060"));
-        mLifo.push(new CardContact("MIIISDf", "sddgsfg", "06060606060"));
-        mLifo.push(new CardContact("hhhhh", "hhhhhhh", "06060606060"));
-        mLifo.push(new CardAd("Ad 2"));
-        mLifo.push(new CardContact("aaazaa", "cccc", "06060606060"));
-
     }
 
 
@@ -57,6 +35,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView;
+        // TODO implement cases for the cards actually used
         switch (viewType) {
             case CardInterface.CONTACT_VIEW_TYPE:
                 itemView = LayoutInflater
@@ -86,6 +65,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
+        // TODO implement cases for the cards actually used
         if (holder instanceof CardSimple.SimpleVH) {
             Log.d(LOG_TAG, "Simple VH");
 
@@ -109,13 +89,6 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Log.d(LOG_TAG, "ERROR VH not recognized");
         }
 
-        // Enable delete on click
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                removeCard(holder.getPosition());
-//            }
-//        });
     }
 
 
@@ -125,13 +98,16 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
 
-    // Handle multiple Layouts
-
+    /**
+     * Handles multiple layouts <br>
+     * Returns the viewType used in : {@link #onCreateViewHolder(android.view.ViewGroup, int)}
+     * @param position Position of the card
+     * @return Type of the card layout
+     */
     @Override
     public int getItemViewType(int position) {
         return mDataSet.get(position).getViewType();
     }
-
 
 
 
@@ -159,7 +135,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     ///////////////////////////////////
 
     /**
-     * Method used to add a card.
+     * Method used to add a card at the end.
      * Handle the insertion in the dataset and in the adapter.
      * Triggers the animation.
      * @param toAdd Card to add at the end
@@ -171,7 +147,6 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         mDataSet.add(toAdd);
         notifyItemInserted(position);
-
     }
 
     /**
@@ -184,24 +159,10 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         // Remove from dataset
         CardInterface toCache = mDataSet.remove(position);
 
-        // Cache in LIFO
-        mLifo.push(toCache);
-
         // Notify Adapter to refresh (also starts the animation)
         notifyItemRemoved(position);
-
-        Log.d(LOG_TAG, "Item deleted : " + toCache.toString());
     }
 
-    public void addCardFromLIFO() {
-        try {
-            CardInterface toAdd = mLifo.pop();
-            addCard(toAdd);
-            Log.d(LOG_TAG, "Item added : " + toAdd.toString());
-        } catch (NoSuchElementException e) {
-            Log.d(LOG_TAG, "Empty LIFO");
-        }
-    }
 
     public void clearLoadingScreen() {
         //
@@ -213,8 +174,5 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
         notifyItemRangeRemoved(0, 2);
     }
-
-
-
 
 }
