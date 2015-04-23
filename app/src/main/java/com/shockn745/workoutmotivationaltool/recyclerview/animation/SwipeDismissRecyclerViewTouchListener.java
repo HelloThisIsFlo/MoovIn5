@@ -161,7 +161,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     return false;
                 }
 
-                // TODO: ensure this is a finger, and set a flag
+                // EXTERNAL TODO : ensure this is a finger, and set a flag
 
                 // Find the child view that was touched (perform a hit test)
                 // cf : http://stackoverflow.com/questions/13296162/what-is-the-definition-of-the-value-supplied-by-the-android-function-view-gethit

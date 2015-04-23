@@ -20,10 +20,10 @@ import java.util.NoSuchElementException;
 public class TestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements SwipeDismissRecyclerViewTouchListener.DismissCallbacks {
 
-    public static final String LOG_TAG = TestAdapter.class.getSimpleName();
+    private static final String LOG_TAG = TestAdapter.class.getSimpleName();
 
-    private ArrayList<CardInterface> mDataSet;
-    private ArrayDeque<CardInterface> mLifo;
+    private final ArrayList<CardInterface> mDataSet;
+    private final ArrayDeque<CardInterface> mLifo;
 
     public TestAdapter(ArrayList<CardInterface> dataSet) {
         // Init the dataset
@@ -146,7 +146,6 @@ public class TestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
      */
     @Override
     public boolean canDismiss(int position) {
-        //TODO uncomment
         return mDataSet.get(position).canDismiss();
     }
 

@@ -50,7 +50,7 @@ public class TestActivity extends Activity {
         private TestAnimator mAnimator;
         private ArrayList<CardInterface> mDataset;
 
-        private Handler mHandler = new Handler();
+        private final Handler mHandler = new Handler();
 
         public TestFragment() {
         }
