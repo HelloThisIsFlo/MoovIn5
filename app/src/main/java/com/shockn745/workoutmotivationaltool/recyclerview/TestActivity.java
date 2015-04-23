@@ -67,6 +67,8 @@ public class TestActivity extends Activity {
         public boolean onOptionsItemSelected(MenuItem item) {
             if (item.getItemId() == R.id.action_add_card) {
                 mAdapter.addCardFromLIFO();
+            } else if (item.getItemId() == R.id.action_remove_card) {
+                mAdapter.removeCard(Math.max(0, mAdapter.getItemCount() - 2));
             } else {
                 Log.d(LOG_TAG, "Error : MenuItem not recognized");
             }
@@ -88,6 +90,12 @@ public class TestActivity extends Activity {
         }
 
         private void initRecyclerView() {
+            // Set the adapter with empty dataset
+            ArrayList<CardInterface> testDataset= new ArrayList<>();
+
+            mAdapter = new TestAdapter(testDataset);
+            mRecyclerView.setAdapter(mAdapter);
+
             // Set recyclerView
             mLayoutManager = new LinearLayoutManager(getActivity());
             mRecyclerView.setLayoutManager(mLayoutManager);
@@ -107,11 +115,6 @@ public class TestActivity extends Activity {
             mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
 
 
-            // Set the adapter with empty dataset
-            ArrayList<CardInterface> testDataset= new ArrayList<>();
-
-            mAdapter = new TestAdapter(testDataset);
-            mRecyclerView.setAdapter(mAdapter);
         }
 
         /**
