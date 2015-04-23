@@ -4,7 +4,7 @@
 Reveal effect : Use it to display "add card" card when add FAB is pressed (on motivation activity).
 ---------------
 
-View myView = findViewById(R.id.container); //TODO remove
+View myView = findViewById(R.id.container);
 
     // get the center for the clipping circle
     int cx = (myView.getLeft() + myView.getRight()) / 2;
@@ -24,3 +24,7 @@ View myView = findViewById(R.id.container); //TODO remove
 //                    myView.setVisibility(View.VISIBLE);
     anim.setDuration(3000);
     anim.start();
+
+
+Temp :
+------

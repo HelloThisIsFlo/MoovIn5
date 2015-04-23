@@ -11,4 +11,6 @@
     <!-- Added margin for dynamic slide in reveal effect -->
     <dimen name="fab_dynamic_margin">56dp</dimen>
 
+    <dimen name="card_elevation">2dp</dimen>
+
 </resources>
