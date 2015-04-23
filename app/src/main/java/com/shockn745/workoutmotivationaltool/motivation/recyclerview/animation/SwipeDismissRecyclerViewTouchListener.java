@@ -1,4 +1,4 @@
-package com.shockn745.workoutmotivationaltool.recyclerview.animation;
+package com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

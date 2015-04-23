@@ -1,4 +1,4 @@
-package com.shockn745.workoutmotivationaltool.recyclerview.cards;
+package com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards;
 
 /**
  * Created by Shock on 21.04.15.

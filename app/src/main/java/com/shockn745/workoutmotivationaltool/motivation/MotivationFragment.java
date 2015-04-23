@@ -24,8 +24,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.shockn745.workoutmotivationaltool.R;
-import com.shockn745.workoutmotivationaltool.settings.PreferencesUtils;
 import com.shockn745.workoutmotivationaltool.motivation.background.FetchTransitTask;
+import com.shockn745.workoutmotivationaltool.settings.PreferencesUtils;
 
 import java.util.Date;
 
@@ -212,6 +212,10 @@ public class MotivationFragment extends Fragment
         }
     }
 
+    /**
+     * Callback called when FetchTransitTask is done
+     * @param backAtHome Time back at home
+     */
     @Override
     public void FetchTransitCallback(Date backAtHome) {
         mBackAtHomeTime = backAtHome;
@@ -273,10 +277,10 @@ public class MotivationFragment extends Fragment
                             .findViewById(R.id.motivation_text_view);
 
                     textView.setText(
-                        DateFormat
-                                .getTimeFormat(MotivationFragment.this.getActivity())
-                                .format(mBackAtHomeTime)
-                );
+                            DateFormat
+                                    .getTimeFormat(MotivationFragment.this.getActivity())
+                                    .format(mBackAtHomeTime)
+                    );
                     break;
                 default:
                     Log.d(LOG_TAG, "handleResult : Result type not recognized");

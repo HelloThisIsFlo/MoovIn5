@@ -1,4 +1,4 @@
-package com.shockn745.workoutmotivationaltool.recyclerview;
+package com.shockn745.workoutmotivationaltool.motivation.recyclerview;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -15,14 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.shockn745.workoutmotivationaltool.R;
-import com.shockn745.workoutmotivationaltool.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
-import com.shockn745.workoutmotivationaltool.recyclerview.animation.TestAnimator;
-import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardAd;
-import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardInterface;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.CardAnimator;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardAd;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
 
 import java.util.ArrayList;
 
-
+// TODO DELETE TestActivity
 public class TestActivity extends Activity {
 
     @Override
@@ -47,7 +47,7 @@ public class TestActivity extends Activity {
         private RecyclerView mRecyclerView;
         private TestAdapter mAdapter;
         private RecyclerView.LayoutManager mLayoutManager;
-        private TestAnimator mAnimator;
+        private CardAnimator mAnimator;
         private ArrayList<CardInterface> mDataset;
 
         private final Handler mHandler = new Handler();
@@ -105,7 +105,7 @@ public class TestActivity extends Activity {
             mRecyclerView.setLayoutManager(mLayoutManager);
             // Notify the recyclerView that its size won't change (better perfs)
             mRecyclerView.setHasFixedSize(true);
-            mAnimator = new TestAnimator(getActivity(), TestAnimator.STYLE_LOADING);
+            mAnimator = new CardAnimator(getActivity(), CardAnimator.STYLE_LOADING);
             mAnimator.setRemoveDuration(500);
             mRecyclerView.setItemAnimator(mAnimator);
 
@@ -164,7 +164,7 @@ public class TestActivity extends Activity {
                         @Override
                         public void run() {
                             // Set remove animation
-                            mAnimator.setmAnimationStyle(TestAnimator.STYLE_POST_LOADING);
+                            mAnimator.setmAnimationStyle(CardAnimator.STYLE_POST_LOADING);
 
                             // Display first card
                             mAdapter.addCardFromLIFO();

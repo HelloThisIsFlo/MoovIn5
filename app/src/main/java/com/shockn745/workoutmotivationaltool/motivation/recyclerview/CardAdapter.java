@@ -1,4 +1,4 @@
-package com.shockn745.workoutmotivationaltool.recyclerview;
+package com.shockn745.workoutmotivationaltool.motivation.recyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -7,17 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.shockn745.workoutmotivationaltool.R;
-import com.shockn745.workoutmotivationaltool.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
-import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardAd;
-import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardContact;
-import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardInterface;
-import com.shockn745.workoutmotivationaltool.recyclerview.cards.CardSimple;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardAd;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardContact;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardSimple;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-public class TestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements SwipeDismissRecyclerViewTouchListener.DismissCallbacks {
 
     private static final String LOG_TAG = TestAdapter.class.getSimpleName();
@@ -25,7 +25,7 @@ public class TestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final ArrayList<CardInterface> mDataSet;
     private final ArrayDeque<CardInterface> mLifo;
 
-    public TestAdapter(ArrayList<CardInterface> dataSet) {
+    public CardAdapter(ArrayList<CardInterface> dataSet) {
         // Init the dataset
         mDataSet = dataSet;
 

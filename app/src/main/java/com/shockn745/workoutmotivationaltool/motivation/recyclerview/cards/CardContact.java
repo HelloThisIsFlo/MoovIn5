@@ -1,4 +1,4 @@
-package com.shockn745.workoutmotivationaltool.recyclerview.cards;
+package com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
