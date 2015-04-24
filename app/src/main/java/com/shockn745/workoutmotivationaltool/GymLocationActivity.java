@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.ImageButton;
@@ -239,7 +238,12 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
                             0,
                             1f,
                             0).setDuration(1000);
-                    flashAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+
+                    Interpolator interpolator = AnimationUtils.loadInterpolator(
+                            GymLocationActivity.this,
+                            android.R.interpolator.fast_out_slow_in
+                    );
+                    flashAnimation.setInterpolator(interpolator);
 
                     // Handle visibility of Highlight FAB
                     setLocationButtonHighlight.setVisibility(View.VISIBLE);

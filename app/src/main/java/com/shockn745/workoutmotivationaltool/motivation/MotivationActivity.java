@@ -7,7 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.view.animation.DecelerateInterpolator;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 import android.widget.ImageButton;
 import android.widget.Toolbar;
 
@@ -55,13 +56,13 @@ public class MotivationActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                 final int REVEAL_DURATION =
+                final int REVEAL_DURATION =
                         getResources().getInteger(R.integer.card_menu_reveal_duration);
 
                 if (!mAddCardMenuDisplayed) {
                     // Show the addCardMenu
                     mAddCardMenuDisplayed = true;
-                    View addCardMenu = findViewById(R.id.card_view);
+                    View addCardMenu = findViewById(R.id.add_card_menu_card_view);
 
                     // Get the center for the clipping circle
                     /// Get dimensions
@@ -80,7 +81,11 @@ public class MotivationActivity extends Activity {
                     Animator revealCardMenuAnim = ViewAnimationUtils
                             .createCircularReveal(addCardMenu, cx, cy, 0, finalRadius)
                             .setDuration(REVEAL_DURATION);
-                    revealCardMenuAnim.setInterpolator(new DecelerateInterpolator());
+                    Interpolator interpolator = AnimationUtils.loadInterpolator(
+                            MotivationActivity.this,
+                            android.R.interpolator.fast_out_slow_in
+                    );
+                    revealCardMenuAnim.setInterpolator(interpolator);
 
                     // Make the view visible
                     addCardMenu.setVisibility(View.VISIBLE);
@@ -94,7 +99,7 @@ public class MotivationActivity extends Activity {
                             0,
                             -45f
                     ).setDuration(REVEAL_DURATION);
-                    rotateFAB.setInterpolator(new DecelerateInterpolator());
+                    rotateFAB.setInterpolator(interpolator);
 
                     // Start the animations
                     revealCardMenuAnim.start();
@@ -104,7 +109,7 @@ public class MotivationActivity extends Activity {
                     // Hide the addCardMenu
 
                     mAddCardMenuDisplayed = false;
-                    final View addCardMenu = findViewById(R.id.card_view);
+                    final View addCardMenu = findViewById(R.id.add_card_menu_card_view);
 
                     // Get the center for the clipping circle
                     /// Get dimensions
@@ -120,10 +125,14 @@ public class MotivationActivity extends Activity {
                     int startRadius = (int) Math.sqrt(Math.pow(height, 2) + Math.pow(width, 2));
 
                     // Create the animator for the cardMenu (the start radius is zero)
-                    Animator hideCardMenuAnim =ViewAnimationUtils
+                    Animator hideCardMenuAnim = ViewAnimationUtils
                             .createCircularReveal(addCardMenu, cx, cy, startRadius, 0)
                             .setDuration(REVEAL_DURATION);
-                    hideCardMenuAnim.setInterpolator(new DecelerateInterpolator());
+                    Interpolator interpolator = AnimationUtils.loadInterpolator(
+                            MotivationActivity.this,
+                            android.R.interpolator.fast_out_slow_in
+                    );
+                    hideCardMenuAnim.setInterpolator(interpolator);
 
                     // Add listener to hide the view when animation is done
                     hideCardMenuAnim.addListener(new Animator.AnimatorListener() {
@@ -156,7 +165,7 @@ public class MotivationActivity extends Activity {
                             -45f,
                             0
                     ).setDuration(REVEAL_DURATION);
-                    rotateFAB.setInterpolator(new DecelerateInterpolator());
+                    rotateFAB.setInterpolator(interpolator);
 
                     // Start the animations
                     hideCardMenuAnim.start();
