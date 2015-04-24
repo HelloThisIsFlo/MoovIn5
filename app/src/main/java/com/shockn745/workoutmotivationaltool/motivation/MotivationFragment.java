@@ -1,13 +1,16 @@
 package com.shockn745.workoutmotivationaltool.motivation;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,7 @@ import android.view.ViewGroup;
 import com.shockn745.workoutmotivationaltool.R;
 import com.shockn745.workoutmotivationaltool.motivation.background.BackgroundController;
 import com.shockn745.workoutmotivationaltool.motivation.background.ConnectionListener;
+import com.shockn745.workoutmotivationaltool.motivation.background.FetchWeatherTask;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.CardAdapter;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.CardAnimator;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
@@ -40,6 +44,7 @@ public class MotivationFragment extends Fragment
     private static final String LOG_TAG = MotivationFragment.class.getSimpleName();
 
     private BackgroundController mBackgroundController;
+    private ErrorHandler mErrorHandler;
 
     private RecyclerView mRecyclerView;
     private CardAdapter mAdapter;
@@ -47,6 +52,8 @@ public class MotivationFragment extends Fragment
     private Handler mHandler;
 
     private boolean mIsInLoadingState = true;
+    private boolean mFirstLoadingCardDisplayed = false;
+    private boolean mSecondLoadingCardDisplayed = false;
     private boolean mResultCardsDisplayed = false;
 
 
@@ -64,10 +71,9 @@ public class MotivationFragment extends Fragment
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cards_recycler_view);
 
         initRecyclerView();
+        mErrorHandler = new ErrorHandler();
         mBackgroundController = new BackgroundController(getActivity(), this);
         mHandler = new Handler();
-
-        showLoadingCards();
 
         return rootView;
     }
@@ -102,7 +108,7 @@ public class MotivationFragment extends Fragment
         super.onResume();
 
         // Connect the GoogleApiClient
-        mBackgroundController.handleResult(BackgroundController.CONN_REQ);
+        mBackgroundController.handleResult(BackgroundController.INIT_LOADING);
     }
 
     @Override
@@ -130,30 +136,39 @@ public class MotivationFragment extends Fragment
         if (requestCode == ConnectionListener.REQUEST_RESOLVE_ERROR) {
             if (resultCode == Activity.RESULT_OK) {
                 // Try to connect after resolution
-                mBackgroundController.handleResult(BackgroundController.CONN_REQ);
+                mBackgroundController.handleResult(BackgroundController.INIT_LOADING);
             }
         }
     }
 
     private void showLoadingCards() {
-        // After 0.5s : Add first card
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mIsInLoadingState) mAdapter.addCard(
+        // Check loading state at initiation
+        if (mIsInLoadingState) {
+            // After 0.5s : Add first card
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // Check loading state at execution
+                    if (mIsInLoadingState && !mFirstLoadingCardDisplayed) {
+                        mFirstLoadingCardDisplayed = true;
                         // TODO use random sentences from list
-                        new CardLoading("Contacting your coach in LA")
-                );
-            }
-        }, 500);
+                        mAdapter.addCard(new CardLoading("Contacting your coach in LA"));
+                    }
+                }
+            }, 500);
 
-        // After loc_req_expiration / 2 : Add second card
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mIsInLoadingState) mAdapter.addCard(new CardLoadingSimple("Almost done !"));
-            }
-        }, getResources().getInteger(R.integer.location_request_expiration) / 2);
+            // After loc_req_expiration / 2 : Add second card
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // Check loading state at execution
+                    if (mIsInLoadingState && !mSecondLoadingCardDisplayed) {
+                        mSecondLoadingCardDisplayed = true;
+                        mAdapter.addCard(new CardLoadingSimple("Almost done !"));
+                    }
+                }
+            }, getResources().getInteger(R.integer.location_request_expiration) / 2);
+        }
     }
 
 
@@ -162,13 +177,60 @@ public class MotivationFragment extends Fragment
     // BackgroundControllerListener Listener //
     ///////////////////////////////////////////
 
+
+    @Override
+    public void onLoadingStateInitiated() {
+        showLoadingCards();
+    }
+
+    /**
+     * Called when the application exits the loading state
+     */
+    @Override
+    public void onLoadingStateFinished() {
+        if (mIsInLoadingState) {
+            // Remove loading card(s)
+            mAdapter.clearLoadingScreen();
+            ((CardAnimator)mRecyclerView.getItemAnimator())
+                    .setAnimationStyle(CardAnimator.STYLE_POST_LOADING);
+        }
+
+        mIsInLoadingState = false;
+    }
+
+    /**
+     * Called when all the background processing is done.
+     * @param result Result of the background processing
+     */
+    @Override
+    public void onBackgroundProcessDone(BackgroundController.BackgroundProcessResult result) {
+        handleBackAtHomeTime(result.mBackAtHomeTime);
+        handleWeatherInfo(result.mWeatherInfos);
+        // TODO add other functions to handle the other type of result (if applicable)
+    }
+
+    /**
+     * Called when there is an error in the background process
+     *
+     * @param errorCode See interface
+     * {@link com.shockn745.workoutmotivationaltool.motivation.background.BackgroundController
+     * .BackgroundControllerListener} static fields.
+     */
+    @Override
+    public void onBackgroundProcessError(int errorCode) {
+        mErrorHandler.handleError(errorCode);
+    }
+
+    ////////////////////////////////////////////////////////////
+    // Methods to handle results of the background processing //
+    ////////////////////////////////////////////////////////////
+
     /**
      * Called when the "back at home time" is available
      * Update the UI
      * @param backAtHome Time back at home
      */
-    @Override
-    public void onBackAtHomeTimeRetrieved(Date backAtHome) {
+    private void handleBackAtHomeTime(Date backAtHome) {
         if (!mResultCardsDisplayed) {
             // Format backAtHome time
             final String formattedBackAtHomeTime = DateFormat
@@ -228,25 +290,141 @@ public class MotivationFragment extends Fragment
 
         }
         mResultCardsDisplayed = true;
+    }
+
+    private void handleWeatherInfo(FetchWeatherTask.WeatherInfos weatherInfos) {
+        // TODO handleWeatherInfo : do something . . .
 
     }
+
+
+
+    ///////////////////
+    // Error handler //
+    ///////////////////
 
     /**
-     * Called when the application exits the loading state
+     * Class used to handle all error that could happen during the background processing
      */
-    @Override
-    public void onLoadingStateFinished() {
-        if (mIsInLoadingState) {
-            // Remove loading card(s)
-            mAdapter.clearLoadingScreen();
-            ((CardAnimator)mRecyclerView.getItemAnimator())
-                    .setAnimationStyle(CardAnimator.STYLE_POST_LOADING);
+    private class ErrorHandler {
+
+        /**
+         * Called when there is an error in the background process
+         *
+         * @param errorCode See interface
+         * {@link com.shockn745.workoutmotivationaltool.motivation.background.BackgroundController
+         * .BackgroundControllerListener} static fields.
+         */
+        private void handleError(int errorCode) {
+            switch (errorCode) {
+                case ERROR_LOCATION_FAIL:
+                    showUnableToObtainLocationDialog();
+                    break;
+
+                case ERROR_TRANSIT_FAIL:
+                    showTransitFail();
+                    break;
+
+                case ERROR_TRANSIT_CONNECTION_FAIL:
+                    showTransitConnectionFail();
+                    break;
+
+                case ERROR_TRANSIT_NO_ROUTES:
+                    showTransitNoRoutes();
+                    break;
+
+                case ERROR_GYM_NOT_INITIALIZED:
+                    // Shouldn't happen, but just in case.
+                    showGymNotInitDialog();
+                    break;
+
+                default:
+                    Log.d(LOG_TAG, "Unknown error !");
+            }
         }
 
-        mIsInLoadingState = false;
-    }
 
-    public boolean isInLoadingState() {
-        return mIsInLoadingState;
+        ///////////////////////////////////////
+        // Show/dismiss dialog/cards methods //
+        ///////////////////////////////////////
+
+        /**
+         * Display a dialog informing the user that the location could not be retrieved, and gives
+         * him some hints to resolve the problem<br>
+         * The dialog can only be dismissed by a clicking the button, and it finishes the activity
+         * afterwards.
+         */
+        private void showUnableToObtainLocationDialog() {
+            showErrorDialog(
+                    getActivity().getResources().getString(R.string.alert_location_fail)
+            );
+        }
+
+        /**
+         * Display a dialog informing the user that the gym location has not been initialized,
+         * and invites him to initialize it.
+         * The dialog can only be dismissed by a clicking the button, and it finishes the activity
+         * afterwards.
+         */
+        private void showGymNotInitDialog() {
+            showErrorDialog(
+                    getActivity().getResources().getString(R.string.warning_not_initialized_edit_text)
+            );
+        }
+
+        private void showTransitFail() {
+            showErrorDialog(
+                    getActivity().getResources().getString(R.string.alert_transit_fail)
+            );
+        }
+
+        private void showTransitConnectionFail() {
+            showErrorDialog(
+                    getActivity().getResources().getString(R.string.alert_transit_connection_fail)
+            );
+        }
+
+        private void showTransitNoRoutes() {
+            showErrorDialog(
+                    getActivity().getResources().getString(R.string.alert_transit_no_routes)
+            );
+        }
+
+
+
+        ///////////////////
+        // Utility method//
+        ///////////////////
+
+        /**
+         * Shows an AlertDialog with a custom message.
+         * The AlertDialog can only be dismissed by a clicking the button, and it finishes the activity
+         * afterwards.
+         *
+         * @param message Message to display
+         * @return AlertDialog to show
+         */
+        private void showErrorDialog(String message) {
+            // Create the AlertDialog
+            AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                    .setMessage(message)
+                    .setPositiveButton(
+                            getActivity().getResources().getString(R.string.alert_dismiss),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    getActivity().finish();
+                                }
+                            }
+                    ).create();
+
+            // Prevent the dialog from being dismissed, so it can call finish() on the activity
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+
+            // Show the dialog
+            dialog.show();
+        }
+
     }
 }

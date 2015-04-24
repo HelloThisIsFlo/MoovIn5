@@ -36,19 +36,25 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
         /**
          * Callback called when FetchTransitTask is done
          * @param backAtHome Time back at home
+         * @param resultCode RESULT_OK if OK <br>
+         *                   ERROR if error <br>
+         *                   NO_ROUTES_ERROR if no routes <br>
+         *                   CONNECTION_ERROR if connection error
          */
-        public void onBackAtHomeTimeRetrieved(Date backAtHome);
+        public void onBackAtHomeTimeRetrieved(Date backAtHome, int resultCode);
 
     }
 
     private final String LOG_TAG = FetchTransitTask.class.getSimpleName();
 
-    private final static int ARG_ERROR = 0;
-    private final static int URL_ERROR = 1;
-    private final static int CONNECTION_ERROR = 2;
-    private final static int JSON_ERROR = 3;
-    private final static int EMPTY_ERROR = 4;
-    private final static int NO_ROUTES_ERROR = 5;
+    public final static int ERROR = -1;
+    public final static int RESULT_OK = 0;
+    private final static int ARG_ERROR = 1;
+    private final static int URL_ERROR = 2;
+    public final static int CONNECTION_ERROR = 3;
+    private final static int JSON_ERROR = 4;
+    private final static int EMPTY_ERROR = 5;
+    public final static int NO_ROUTES_ERROR = 6;
 
     private Activity mActivity;
     private OnBackAtHomeTimeRetrievedListener mListener;
@@ -196,23 +202,32 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
             case ARG_ERROR:
                 Log.d(LOG_TAG, "Please provide an array of 2 arguments : " +
                         "origin and destination !");
+                mListener.onBackAtHomeTimeRetrieved(null, ERROR);
                 break;
+
             case URL_ERROR:
                 Log.d(LOG_TAG, "Internal error : URL error");
+                mListener.onBackAtHomeTimeRetrieved(null, ERROR);
                 break;
+
             case CONNECTION_ERROR:
                 Log.d(LOG_TAG, "Connection error !");
-                // TODO notify user.
+                mListener.onBackAtHomeTimeRetrieved(null, CONNECTION_ERROR);
                 break;
+
             case JSON_ERROR:
                 Log.d(LOG_TAG, "Error with JSON parsing !");
+                mListener.onBackAtHomeTimeRetrieved(null, ERROR);
                 break;
+
             case EMPTY_ERROR:
                 Log.d(LOG_TAG, "Empty JSON string !");
+                mListener.onBackAtHomeTimeRetrieved(null, ERROR);
                 break;
+
             case NO_ROUTES_ERROR:
                 Log.d(LOG_TAG, "No routes => Warn the user !");
-                // TODO notify user
+                mListener.onBackAtHomeTimeRetrieved(null, NO_ROUTES_ERROR);
                 break;
             default:
                 break;
@@ -254,8 +269,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
             // Time back at home
             Date backAtHome = new Date(currentTime + timeSpent);
 
-            mListener.onBackAtHomeTimeRetrieved(backAtHome);
-
+            mListener.onBackAtHomeTimeRetrieved(backAtHome, RESULT_OK);
         }
     }
 

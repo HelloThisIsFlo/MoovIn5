@@ -18,13 +18,23 @@
 
     <!-- Alert dialog -->
     <string name="warning_not_initialized_edit_text">Please initialise the gym location !</string>
-    <string name="alert_location_message">Unable to obtain a location, please check the
+    <string name="alert_location_fail">Unable to obtain a location, please check the
         following elements and retry :\n
         - Turn on GPS\n
         - Turn on WiFi\n
         - Allow this application to access your location
     </string>
-    <string name="alert_location_dismiss">Dismiss</string>
+    <string name="alert_dismiss">Dismiss</string>
+    <string name="alert_transit_fail">Unknown error, please try again!</string>
+    <string name="alert_transit_connection_fail">Connection failed,
+        please check your internet connection</string>
+    <string name="alert_transit_no_routes">No route found between your location and your gym\n
+        Please check the gym location!</string>
+
+
+
+
+
 
     <!-- Preference name & key -->
     <string name="pref_warmup">Warmup duration</string>

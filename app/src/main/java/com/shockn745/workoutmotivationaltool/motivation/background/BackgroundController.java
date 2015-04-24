@@ -1,9 +1,6 @@
 package com.shockn745.workoutmotivationaltool.motivation.background;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Handler;
 import android.util.Log;
@@ -32,6 +29,52 @@ import java.util.Date;
 public class BackgroundController
         implements FetchTransitTask.OnBackAtHomeTimeRetrievedListener, LocationListener {
 
+    public static class BackgroundProcessResult {
+        public final Date mBackAtHomeTime;
+        public final FetchWeatherTask.WeatherInfos mWeatherInfos;
+
+        public BackgroundProcessResult(Date backAtHomeTime, FetchWeatherTask.WeatherInfos weatherInfos) {
+            this.mBackAtHomeTime = backAtHomeTime;
+            this.mWeatherInfos = weatherInfos;
+        }
+    }
+
+    public interface BackgroundControllerListener {
+
+        public static final int ERROR_LOCATION_FAIL = 10;
+
+        public static final int ERROR_TRANSIT_FAIL = 20;
+        public static final int ERROR_TRANSIT_CONNECTION_FAIL = 21;
+        public static final int ERROR_TRANSIT_NO_ROUTES = 22;
+
+        public static final int ERROR_GYM_NOT_INITIALIZED = 100;
+
+
+        /**
+         * Called when the application exits the loading state
+         */
+        public void onLoadingStateFinished();
+
+        /**
+         * Called when the application enters the loading state
+         */
+        public void onLoadingStateInitiated();
+
+        /**
+         * Called when all backgroung processing is finished
+         * @param result Result of the background processing
+         */
+        public void onBackgroundProcessDone(BackgroundProcessResult result);
+        //TODO add other functions
+
+        /**
+         * Called when there is an error in the processing
+         * @param errorCode See static fields
+         */
+        public void onBackgroundProcessError(int errorCode);
+
+    }
+
     private static final String LOG_TAG = BackgroundController.class.getSimpleName();
 
     // Client used to communicate with the Google API for the location
@@ -43,18 +86,27 @@ public class BackgroundController
     private static int LOC_REQ_EXPIRATION;
 
     // Constant fields to pass to handleResult(...)
-    public static final int CONN_REQ = 10;
+    public static final int INIT_LOADING = 0;
+
     public static final int CONN_OK = 11;
+
     public static final int LOC_OK = 20;
     public static final int LOC_FAIL = 21;
+
     public static final int FETCH_TRANSIT_DONE = 30;
+    public static final int FETCH_TRANSIT_FAIL = 31;
+    public static final int FETCH_TRANSIT_CONNECTION_FAIL = 32;
+    public static final int FETCH_TRANSIT_NO_ROUTES = 33;
+
     public static final int CLEAR_RESOURCES = 100;
-    private static final int PRIVATE_GYM_NOT_INIT = 200;
+    public static final int BG_PROCESS_SUCCESS = 101;
+    private static final int GYM_NOT_INIT = 102;
 
-    // Progress dialog shown during processing
-    private ProgressDialog mProgressDialog;
+    // Results of background tasks
+    private Date mBackAtHomeTime = null;
+    private FetchWeatherTask.WeatherInfos mWeatherInfos = null;
 
-    private Date mBackAtHomeTime;
+
     private Location mLocation; // Current location of the user
     private Runnable mExpiredRunnable; // Expiration timer for when the location is not available
 
@@ -62,25 +114,9 @@ public class BackgroundController
 
     private Activity mActivity;
     private BackgroundControllerListener mListener;
-//    private Handler mHandler;
-
-    public interface BackgroundControllerListener {
-
-        /**
-         * Called when the "back at home time" is available
-         * @param backAtHome Time back at home
-         */
-        public void onBackAtHomeTimeRetrieved(Date backAtHome);
 
 
-        /**
-         * Called when the application exits the loading state
-         */
-        public void onLoadingStateFinished();
 
-        //TODO add other functions
-
-    }
 
     public BackgroundController(Activity mActivity, BackgroundControllerListener mListener) {
         this.mActivity = mActivity;
@@ -105,12 +141,15 @@ public class BackgroundController
 
     /**
      * Handle the result of the processing.
+     * Everything comes back to this controller function.
+     * This way is way easier to understand the global workflow
      *
      * @param result Type of result, see constant fields
      */
     public void handleResult(int result) {
         switch (result) {
-            case CONN_REQ:
+            case INIT_LOADING:
+                mListener.onLoadingStateInitiated();
                 connectToGoogleApi();
                 break;
 
@@ -126,13 +165,35 @@ public class BackgroundController
 
             case LOC_FAIL:
                 mListener.onLoadingStateFinished();
-                showUnableToObtainLocationDialog();
+                mListener.onBackgroundProcessError(
+                        BackgroundControllerListener.ERROR_LOCATION_FAIL
+                );
                 break;
 
             case FETCH_TRANSIT_DONE:
                 // Update the UI
+                handleOnBackAtHomeTime(mBackAtHomeTime);
+                break;
+
+            case FETCH_TRANSIT_FAIL:
                 mListener.onLoadingStateFinished();
-                mListener.onBackAtHomeTimeRetrieved(mBackAtHomeTime);
+                mListener.onBackgroundProcessError(
+                        FETCH_TRANSIT_FAIL
+                );
+                break;
+
+            case FETCH_TRANSIT_CONNECTION_FAIL:
+                mListener.onLoadingStateFinished();
+                mListener.onBackgroundProcessError(
+                        FETCH_TRANSIT_CONNECTION_FAIL
+                );
+                break;
+
+            case FETCH_TRANSIT_NO_ROUTES:
+                mListener.onLoadingStateFinished();
+                mListener.onBackgroundProcessError(
+                        FETCH_TRANSIT_NO_ROUTES
+                );
                 break;
 
             case CLEAR_RESOURCES:
@@ -141,9 +202,18 @@ public class BackgroundController
                 disconnectFromGoogleApi();
                 break;
 
-            case PRIVATE_GYM_NOT_INIT:
+            case BG_PROCESS_SUCCESS:
                 mListener.onLoadingStateFinished();
-                showGymNotInitDialog();
+                mListener.onBackgroundProcessDone(
+                        new BackgroundProcessResult(mBackAtHomeTime, mWeatherInfos)
+                );
+                break;
+
+            case GYM_NOT_INIT:
+                mListener.onLoadingStateFinished();
+                mListener.onBackgroundProcessError(
+                        BackgroundControllerListener.ERROR_GYM_NOT_INITIALIZED
+                );
                 break;
 
             default:
@@ -171,13 +241,40 @@ public class BackgroundController
                 fetchTask.execute(mLocLatLng, gymLoc);
 
             } catch (PreferencesUtils.PreferenceNotInitializedException e) {
-                handleResult(PRIVATE_GYM_NOT_INIT);
+                handleResult(GYM_NOT_INIT);
             }
         } else {
             Log.d(LOG_TAG, "mLocation == null !");
         }
     }
 
+
+
+    ///////////////////////////////////////////////////////////
+    // Methods to handle the results of the background tasks //
+    ///////////////////////////////////////////////////////////
+
+    /**
+     * Check if all AsyncTasks have been successfully executed,
+     * if so notify the listener that the result is ready
+     */
+    private void sendResultIfAllProcessingDone() {
+        // TODO add other type of result (if applicable)
+        // Check that all variable have been successfully initialized
+        if (mBackAtHomeTime != null && mWeatherInfos != null) {
+            handleResult(BG_PROCESS_SUCCESS);
+        }
+    }
+
+    private void handleOnBackAtHomeTime(Date backAtHomeTime) {
+        mBackAtHomeTime = backAtHomeTime;
+        sendResultIfAllProcessingDone();
+    }
+
+    private void handleWeatherInfos(FetchWeatherTask.WeatherInfos weatherInfos) {
+        mWeatherInfos = weatherInfos;
+        sendResultIfAllProcessingDone();
+    }
 
 
     //////////////////////////////////////////
@@ -247,70 +344,6 @@ public class BackgroundController
 
 
 
-    ///////////////////////////////////////
-    // Show/dismiss dialog/cards methods //
-    ///////////////////////////////////////
-
-
-    /**
-     * Display a dialog informing the user that the location could not be retrieved, and gives
-     * him some hints to resolve the problem<br>
-     * The dialog can only be dismissed by a clicking the button, and it finishes the activity
-     * afterwards.
-     */
-    private void showUnableToObtainLocationDialog() {
-        // Create the AlertDialog
-        AlertDialog dialog = new AlertDialog.Builder(mActivity)
-                .setMessage(mActivity.getResources().getString(R.string.alert_location_message))
-                .setPositiveButton(mActivity.getResources().getString(R.string.alert_location_dismiss),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mActivity.finish();
-                            }
-                        })
-                .create();
-
-        // Prevent the dialog from being dismissed, so it can call finish() on the activity
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
-
-        // Show the dialog
-        dialog.show();
-    }
-
-    /**
-     * Display a dialog informing the user that the gym location has not been initialized,
-     * and invites him to initialize it.
-     * The dialog can only be dismissed by a clicking the button, and it finishes the activity
-     * afterwards.
-     */
-    private void showGymNotInitDialog() {
-        // Create the AlertDialog
-        AlertDialog dialog = new AlertDialog.Builder(mActivity)
-                .setMessage(
-                        mActivity.getResources().getString(R.string.warning_not_initialized_edit_text)
-                )
-                .setPositiveButton(
-                        mActivity.getResources().getString(R.string.alert_location_dismiss),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mActivity.finish();
-                            }
-                        }
-                ).create();
-
-        // Prevent the dialog from being dismissed, so it can call finish() on the activity
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
-
-        // Show the dialog
-        dialog.show();
-    }
-
-
-
     ////////////////////////////////////////
     // OnBackAtHomeTimeRetrieved Listener //
     ////////////////////////////////////////
@@ -320,9 +353,25 @@ public class BackgroundController
      * @param backAtHome Time back at home
      */
     @Override
-    public void onBackAtHomeTimeRetrieved(Date backAtHome) {
-        mBackAtHomeTime = backAtHome;
-        handleResult(BackgroundController.FETCH_TRANSIT_DONE);
+    public void onBackAtHomeTimeRetrieved(Date backAtHome, int resultCode) {
+        switch (resultCode) {
+            case FetchTransitTask.RESULT_OK:
+                mBackAtHomeTime = backAtHome;
+                handleResult(BackgroundController.FETCH_TRANSIT_DONE);
+                break;
+
+            case FetchTransitTask.CONNECTION_ERROR:
+                handleResult(BackgroundController.FETCH_TRANSIT_CONNECTION_FAIL);
+                break;
+
+            case FetchTransitTask.NO_ROUTES_ERROR:
+                handleResult(BackgroundController.FETCH_TRANSIT_NO_ROUTES);
+                break;
+
+            case FetchTransitTask.ERROR:
+                handleResult(BackgroundController.FETCH_TRANSIT_FAIL);
+                break;
+        }
     }
 
 
