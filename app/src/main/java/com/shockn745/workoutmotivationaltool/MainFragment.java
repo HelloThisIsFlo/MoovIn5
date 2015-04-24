@@ -14,6 +14,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.shockn745.workoutmotivationaltool.motivation.MotivationActivity;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.TestActivity;
 
 /**
  * The main fragment of the application
@@ -24,6 +25,7 @@ public class MainFragment extends Fragment {
     private Button mChangeLocationButton;
     private NumberPicker mDurationPicker;
     private TextView mWarningEditText;
+    private Button mTestRecyclerviewButton;
 
     // Components for the timer used by mDurationPicker
     private Handler mHandler;
@@ -43,6 +45,7 @@ public class MainFragment extends Fragment {
         mChangeLocationButton = (Button) rootView.findViewById(R.id.change_location_button);
         mDurationPicker = (NumberPicker) rootView.findViewById(R.id.duration_picker);
         mWarningEditText = (TextView) rootView.findViewById(R.id.warning_edit_text);
+        mTestRecyclerviewButton = (Button) rootView.findViewById(R.id.test_recycler_view_button);
 
         // Configure mDurationPicker
         mDurationPicker.setMinValue(getResources().getInteger(R.integer.main_duration_min));
@@ -99,6 +102,14 @@ public class MainFragment extends Fragment {
                 mHandler.removeCallbacks(mSavePreferencesTimer);
                 mSavePreferencesTimer.setWorkoutDuration(newVal);
                 mHandler.postDelayed(mSavePreferencesTimer, SAVE_PREFERENCES_TIMER_DELAY);
+            }
+        });
+
+        mTestRecyclerviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startTestRecyclerview = new Intent(getActivity(), TestActivity.class);
+                startActivity(startTestRecyclerview);
             }
         });
 

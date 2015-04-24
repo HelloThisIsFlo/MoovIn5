@@ -31,9 +31,13 @@ import java.util.Date;
  */
 public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
 
-    public interface FetchTransitCallback {
+    public interface OnBackAtHomeTimeRetrievedListener {
 
-        public void FetchTransitCallback(Date backAtHome);
+        /**
+         * Callback called when FetchTransitTask is done
+         * @param backAtHome Time back at home
+         */
+        public void onBackAtHomeTimeRetrieved(Date backAtHome);
 
     }
 
@@ -47,11 +51,11 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
     private final static int NO_ROUTES_ERROR = 5;
 
     private Activity mActivity;
-    private FetchTransitCallback mCallback;
+    private OnBackAtHomeTimeRetrievedListener mListener;
 
-    public FetchTransitTask(Activity mActivity, FetchTransitCallback mCallback) {
+    public FetchTransitTask(Activity mActivity, OnBackAtHomeTimeRetrievedListener mListener) {
         this.mActivity = mActivity;
-        this.mCallback = mCallback;
+        this.mListener = mListener;
     }
 
     /**
@@ -250,7 +254,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
             // Time back at home
             Date backAtHome = new Date(currentTime + timeSpent);
 
-            mCallback.FetchTransitCallback(backAtHome);
+            mListener.onBackAtHomeTimeRetrieved(backAtHome);
 
         }
     }
