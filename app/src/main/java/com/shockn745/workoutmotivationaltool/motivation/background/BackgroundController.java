@@ -26,8 +26,10 @@ import java.util.Date;
  * - . . .<br><br>
  * Note : Not related to Android Handler
  */
-public class BackgroundController
-        implements FetchTransitTask.OnBackAtHomeTimeRetrievedListener, LocationListener {
+public class BackgroundController implements
+        FetchTransitTask.OnBackAtHomeTimeRetrievedListener,
+        FetchWeatherTask.OnWeatherInfoRetrievedListener,
+        LocationListener {
 
     public static class BackgroundProcessResult {
         public final Date mBackAtHomeTime;
@@ -46,6 +48,9 @@ public class BackgroundController
         public static final int ERROR_TRANSIT_FAIL = 20;
         public static final int ERROR_TRANSIT_CONNECTION_FAIL = 21;
         public static final int ERROR_TRANSIT_NO_ROUTES = 22;
+
+        public static final int ERROR_WEATHER_FAIL = 30;
+        public static final int ERROR_WEATHER_CONNECTION_FAIL = 31;
 
         public static final int ERROR_GYM_NOT_INITIALIZED = 100;
 
@@ -94,9 +99,14 @@ public class BackgroundController
     public static final int LOC_FAIL = 21;
 
     public static final int FETCH_TRANSIT_DONE = 30;
-    public static final int FETCH_TRANSIT_FAIL = 31;
-    public static final int FETCH_TRANSIT_CONNECTION_FAIL = 32;
+    public static final int FETCH_TRANSIT_ERROR = 31;
+    public static final int FETCH_TRANSIT_CONNECTION_ERROR = 32;
     public static final int FETCH_TRANSIT_NO_ROUTES = 33;
+
+    public static final int FETCH_WEATHER_DONE = 40;
+    public static final int FETCH_WEATHER_ERROR = 41;
+    public static final int FETCH_WEATHER_CONNECTION_ERROR = 42;
+    //TODO Add error codes for fetch weather
 
     public static final int CLEAR_RESOURCES = 100;
     public static final int BG_PROCESS_SUCCESS = 101;
@@ -151,6 +161,7 @@ public class BackgroundController
             case INIT_LOADING:
                 mListener.onLoadingStateInitiated();
                 connectToGoogleApi();
+                startFetchWeatherTaskWithGymLocation();
                 break;
 
             case CONN_OK:
@@ -171,28 +182,45 @@ public class BackgroundController
                 break;
 
             case FETCH_TRANSIT_DONE:
-                // Update the UI
-                handleOnBackAtHomeTime(mBackAtHomeTime);
+                sendResultToListenerIfAllProcessingDone();
                 break;
 
-            case FETCH_TRANSIT_FAIL:
+            case FETCH_TRANSIT_ERROR:
                 mListener.onLoadingStateFinished();
                 mListener.onBackgroundProcessError(
-                        FETCH_TRANSIT_FAIL
+                        BackgroundControllerListener.ERROR_TRANSIT_FAIL
                 );
                 break;
 
-            case FETCH_TRANSIT_CONNECTION_FAIL:
+            case FETCH_TRANSIT_CONNECTION_ERROR:
                 mListener.onLoadingStateFinished();
                 mListener.onBackgroundProcessError(
-                        FETCH_TRANSIT_CONNECTION_FAIL
+                        BackgroundControllerListener.ERROR_TRANSIT_CONNECTION_FAIL
                 );
                 break;
 
             case FETCH_TRANSIT_NO_ROUTES:
                 mListener.onLoadingStateFinished();
                 mListener.onBackgroundProcessError(
-                        FETCH_TRANSIT_NO_ROUTES
+                        BackgroundControllerListener.ERROR_TRANSIT_NO_ROUTES
+                );
+                break;
+
+            case FETCH_WEATHER_DONE:
+                sendResultToListenerIfAllProcessingDone();
+                break;
+
+            case FETCH_WEATHER_ERROR:
+                mListener.onLoadingStateFinished();
+                mListener.onBackgroundProcessError(
+                        BackgroundControllerListener.ERROR_WEATHER_FAIL
+                );
+                break;
+
+            case FETCH_WEATHER_CONNECTION_ERROR:
+                mListener.onLoadingStateFinished();
+                mListener.onBackgroundProcessError(
+                        BackgroundControllerListener.ERROR_WEATHER_CONNECTION_FAIL
                 );
                 break;
 
@@ -249,31 +277,32 @@ public class BackgroundController
     }
 
 
+    /**
+     * Starts the FetchWeatherTask
+     */
+    private void startFetchWeatherTaskWithGymLocation() {
+        // Retrieve gym location
+        try {
+            LatLng coordGym = PreferencesUtils.getCoordinatesFromPreferences(mActivity);
 
-    ///////////////////////////////////////////////////////////
-    // Methods to handle the results of the background tasks //
-    ///////////////////////////////////////////////////////////
+            new FetchWeatherTask(mActivity, this).execute(coordGym);
+
+        } catch (PreferencesUtils.PreferenceNotInitializedException e) {
+            handleResult(GYM_NOT_INIT);
+        }
+    }
+
 
     /**
      * Check if all AsyncTasks have been successfully executed,
      * if so notify the listener that the result is ready
      */
-    private void sendResultIfAllProcessingDone() {
+    private void sendResultToListenerIfAllProcessingDone() {
         // TODO add other type of result (if applicable)
         // Check that all variable have been successfully initialized
         if (mBackAtHomeTime != null && mWeatherInfos != null) {
             handleResult(BG_PROCESS_SUCCESS);
         }
-    }
-
-    private void handleOnBackAtHomeTime(Date backAtHomeTime) {
-        mBackAtHomeTime = backAtHomeTime;
-        sendResultIfAllProcessingDone();
-    }
-
-    private void handleWeatherInfos(FetchWeatherTask.WeatherInfos weatherInfos) {
-        mWeatherInfos = weatherInfos;
-        sendResultIfAllProcessingDone();
     }
 
 
@@ -351,6 +380,9 @@ public class BackgroundController
     /**
      * Callback called when FetchTransitTask is done
      * @param backAtHome Time back at home
+     * @param resultCode RESULT_OK if OK <br>
+     *                   ERROR if error <br>
+     *                   NO_ROUTES_ERROR if no routes <br>
      */
     @Override
     public void onBackAtHomeTimeRetrieved(Date backAtHome, int resultCode) {
@@ -361,7 +393,7 @@ public class BackgroundController
                 break;
 
             case FetchTransitTask.CONNECTION_ERROR:
-                handleResult(BackgroundController.FETCH_TRANSIT_CONNECTION_FAIL);
+                handleResult(BackgroundController.FETCH_TRANSIT_CONNECTION_ERROR);
                 break;
 
             case FetchTransitTask.NO_ROUTES_ERROR:
@@ -369,9 +401,46 @@ public class BackgroundController
                 break;
 
             case FetchTransitTask.ERROR:
-                handleResult(BackgroundController.FETCH_TRANSIT_FAIL);
+                handleResult(BackgroundController.FETCH_TRANSIT_ERROR);
                 break;
+
+            default:
+                Log.d(LOG_TAG, "Error code not recognized!");
         }
+    }
+
+
+
+    ////////////////////////////////////////
+    // OnBackAtHomeTimeRetrieved Listener //
+    ////////////////////////////////////////
+
+    /**
+     * Callback called when FetchWeatherTask is done
+     * @param weatherInfos Current weather at the gym location
+     * @param resultCode RESULT_OK if OK <br>
+     *                   ERROR if error <br>
+     */
+    @Override
+    public void OnWeatherInfoRetrieved(FetchWeatherTask.WeatherInfos weatherInfos, int resultCode) {
+        switch (resultCode) {
+            case FetchWeatherTask.RESULT_OK:
+                mWeatherInfos = weatherInfos;
+                handleResult(BackgroundController.FETCH_WEATHER_DONE);
+                break;
+
+            case FetchWeatherTask.CONNECTION_ERROR:
+                handleResult(BackgroundController.FETCH_WEATHER_CONNECTION_ERROR);
+                break;
+
+            case FetchWeatherTask.ERROR:
+                handleResult(BackgroundController.FETCH_WEATHER_ERROR);
+                break;
+
+            default:
+                Log.d(LOG_TAG, "Error code not recognized!");
+        }
+
     }
 
 

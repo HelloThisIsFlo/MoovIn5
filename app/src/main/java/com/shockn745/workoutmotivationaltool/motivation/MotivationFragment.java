@@ -307,6 +307,9 @@ public class MotivationFragment extends Fragment
      * Class used to handle all error that could happen during the background processing
      */
     private class ErrorHandler {
+        // Boolean to prevent displaying two different dialogs, one on top of the other
+        // Eg. Connection error
+        private boolean mIsErrorDialogAlreadyDisplayed = false;
 
         /**
          * Called when there is an error in the background process
@@ -322,15 +325,21 @@ public class MotivationFragment extends Fragment
                     break;
 
                 case ERROR_TRANSIT_FAIL:
-                    showTransitFail();
+                    showFail();
                     break;
-
                 case ERROR_TRANSIT_CONNECTION_FAIL:
-                    showTransitConnectionFail();
+                    showConnectionFail();
                     break;
-
                 case ERROR_TRANSIT_NO_ROUTES:
                     showTransitNoRoutes();
+                    break;
+
+                case ERROR_WEATHER_FAIL:
+                    showFail();
+                    break;
+
+                case ERROR_WEATHER_CONNECTION_FAIL:
+                    showConnectionFail();
                     break;
 
                 case ERROR_GYM_NOT_INITIALIZED:
@@ -372,15 +381,15 @@ public class MotivationFragment extends Fragment
             );
         }
 
-        private void showTransitFail() {
+        private void showFail() {
             showErrorDialog(
-                    getActivity().getResources().getString(R.string.alert_transit_fail)
+                    getActivity().getResources().getString(R.string.alert_fail)
             );
         }
 
-        private void showTransitConnectionFail() {
+        private void showConnectionFail() {
             showErrorDialog(
-                    getActivity().getResources().getString(R.string.alert_transit_connection_fail)
+                    getActivity().getResources().getString(R.string.alert_connection_fail)
             );
         }
 
@@ -405,25 +414,28 @@ public class MotivationFragment extends Fragment
          * @return AlertDialog to show
          */
         private void showErrorDialog(String message) {
-            // Create the AlertDialog
-            AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                    .setMessage(message)
-                    .setPositiveButton(
-                            getActivity().getResources().getString(R.string.alert_dismiss),
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    getActivity().finish();
+            if (!mIsErrorDialogAlreadyDisplayed) {
+                mIsErrorDialogAlreadyDisplayed = true;
+                // Create the AlertDialog
+                AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                        .setMessage(message)
+                        .setPositiveButton(
+                                getActivity().getResources().getString(R.string.alert_dismiss),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        getActivity().finish();
+                                    }
                                 }
-                            }
-                    ).create();
+                        ).create();
 
-            // Prevent the dialog from being dismissed, so it can call finish() on the activity
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
+                // Prevent the dialog from being dismissed, so it can call finish() on the activity
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.setCancelable(false);
 
-            // Show the dialog
-            dialog.show();
+                // Show the dialog
+                dialog.show();
+            }
         }
 
     }

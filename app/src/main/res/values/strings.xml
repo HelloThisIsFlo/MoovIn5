@@ -25,8 +25,8 @@
         - Allow this application to access your location
     </string>
     <string name="alert_dismiss">Dismiss</string>
-    <string name="alert_transit_fail">Unknown error, please try again!</string>
-    <string name="alert_transit_connection_fail">Connection failed,
+    <string name="alert_fail">Unknown error, please try again!</string>
+    <string name="alert_connection_fail">Connection failed,
         please check your internet connection</string>
     <string name="alert_transit_no_routes">No route found between your location and your gym\n
         Please check the gym location!</string>
