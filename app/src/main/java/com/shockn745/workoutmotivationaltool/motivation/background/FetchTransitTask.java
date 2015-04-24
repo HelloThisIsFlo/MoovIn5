@@ -1,13 +1,11 @@
-package com.shockn745.workoutmotivationaltool.motivation;
+package com.shockn745.workoutmotivationaltool.motivation.background;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.text.format.DateFormat;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.shockn745.workoutmotivationaltool.R;
@@ -31,7 +29,18 @@ import java.util.Date;
  * LatLng[0] : start point<br>
  * LatLng[1] : destination<br>
  */
-class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
+public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
+
+    public interface OnBackAtHomeTimeRetrievedListener {
+
+        /**
+         * Callback called when FetchTransitTask is done
+         * @param backAtHome Time back at home
+         */
+        public void onBackAtHomeTimeRetrieved(Date backAtHome);
+
+    }
+
     private final String LOG_TAG = FetchTransitTask.class.getSimpleName();
 
     private final static int ARG_ERROR = 0;
@@ -41,10 +50,12 @@ class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
     private final static int EMPTY_ERROR = 4;
     private final static int NO_ROUTES_ERROR = 5;
 
-    private final Activity mActivity;
+    private Activity mActivity;
+    private OnBackAtHomeTimeRetrievedListener mListener;
 
-    public FetchTransitTask(Activity mActivity) {
+    public FetchTransitTask(Activity mActivity, OnBackAtHomeTimeRetrievedListener mListener) {
         this.mActivity = mActivity;
+        this.mListener = mListener;
     }
 
     /**
@@ -218,8 +229,6 @@ class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
         if (transitTime != null) {
             Log.d(LOG_TAG, "Transit time (in seconds) : " + transitTime);
 
-            TextView textView = (TextView) mActivity.findViewById(R.id.motivation_text_view);
-
             // Get workout, warmup & stretching times
             SharedPreferences prefs = PreferenceManager
                     .getDefaultSharedPreferences(mActivity);
@@ -245,14 +254,7 @@ class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
             // Time back at home
             Date backAtHome = new Date(currentTime + timeSpent);
 
-
-            // Update the UI
-            textView.setText(
-                    DateFormat
-                            .getTimeFormat(mActivity)
-                            .format(backAtHome)
-            );
-
+            mListener.onBackAtHomeTimeRetrieved(backAtHome);
 
         }
     }

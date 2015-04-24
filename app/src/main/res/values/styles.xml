@@ -28,6 +28,7 @@
         <item name="android:windowActionBar">false</item>
     </style>
 
+    <!-- Styles for FABs -->
     <style name="FloatingActionButton" parent="android:Widget.Material.Button">
         <item name="android:layout_width">@dimen/fab_size</item>
         <item name="android:layout_height">@dimen/fab_size</item>
@@ -40,6 +41,16 @@
 
     <style name="FloatingActionButton.Highlight">
         <item name="android:background">@drawable/fab_background_highlight</item>
+    </style>
+
+    <!-- Style for cards -->
+    <style name="Card" parent="CardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginBottom">@dimen/card_margin</item>
+        <item name="android:layout_marginTop">@dimen/card_margin</item>
+        <item name="android:layout_marginStart">@dimen/card_side_margin</item>
+        <item name="android:layout_marginEnd">@dimen/card_side_margin</item>
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
     </style>
 
 </resources>

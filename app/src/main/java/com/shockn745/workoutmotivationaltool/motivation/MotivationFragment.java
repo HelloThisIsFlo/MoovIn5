@@ -1,92 +1,58 @@
 package com.shockn745.workoutmotivationaltool.motivation;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 import com.shockn745.workoutmotivationaltool.R;
-import com.shockn745.workoutmotivationaltool.settings.PreferencesUtils;
+import com.shockn745.workoutmotivationaltool.motivation.background.BackgroundController;
+import com.shockn745.workoutmotivationaltool.motivation.background.ConnectionListener;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.CardAdapter;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.CardAnimator;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardAd;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardBackAtHome;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardCalories;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoading;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoadingSimple;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardRoute;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardWeather;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Fragment of MotivationActivity
  * see the {@link MotivationActivity} class
  */
-public class MotivationFragment extends Fragment implements LocationListener {
+public class MotivationFragment extends Fragment
+        implements BackgroundController.BackgroundControllerListener{
 
     private static final String LOG_TAG = MotivationFragment.class.getSimpleName();
 
-    private static final int LOC_REQ_INTERVAL = 1000;
-    private static final int LOC_REQ_FASTEST_INTERVAL = 500;
-    // TODO check if 30 sec is enough
-    private static final int LOC_REQ_EXPIRATION = 30000;
+    private BackgroundController mBackgroundController;
 
-    // Client used to communicate with the Google API for the location
-    private GoogleApiClient mGoogleApiClient;
-
-    // Location request used to query the location of the user
-    private LocationRequest mLocationRequest;
-
+    private RecyclerView mRecyclerView;
+    private CardAdapter mAdapter;
+    private ArrayList<CardInterface> mDataset;
     private Handler mHandler;
 
-    // Progress dialog shown during processing
-    private ProgressDialog mProgressDialog;
+    private boolean mIsInLoadingState = true;
+    private boolean mResultCardsDisplayed = false;
 
-    // Runnable to display a dialog when the location is unavailable
-    private Runnable mExpiredRunnable;
-
-    // ResultHandler handles the result of the processing : loc. fetch, route process, etc...
-    private ResultHandler mResultHandler;
-
-    // Current location of the user
-    private Location mLocation;
-
-    public MotivationFragment() {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        buildGoogleApiClient();
-
-        mHandler = new Handler();
-
-        // Create the LocationRequest object
-        mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setNumUpdates(1)
-                .setInterval(LOC_REQ_INTERVAL)
-                .setFastestInterval(LOC_REQ_FASTEST_INTERVAL)
-                .setExpirationDuration(LOC_REQ_EXPIRATION);
-
-        // Initialize the resultHandler
-        mResultHandler = new ResultHandler();
-
-        // Initialize the expiration timer
-        mExpiredRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mResultHandler.handleResult(ResultHandler.PROCESS_RES_LOC_FAIL);
-            }
-        };
-
     }
 
     @Override
@@ -94,14 +60,41 @@ public class MotivationFragment extends Fragment implements LocationListener {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_motivation, container, false);
 
-        // Set up & show the progress dialog
-        mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setCanceledOnTouchOutside(false);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
+        // Find views by id
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cards_recycler_view);
+
+        initRecyclerView();
+        mBackgroundController = new BackgroundController(getActivity(), this);
+        mHandler = new Handler();
+
+        showLoadingCards();
 
         return rootView;
+    }
+
+    private void initRecyclerView() {
+        // Set the adapter with empty dataset
+        mAdapter = new CardAdapter(new ArrayList<CardInterface>());
+        mRecyclerView.setAdapter(mAdapter);
+
+        // Set recyclerView
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        // Notify the recyclerView that its size won't change (better perfs)
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setItemAnimator(
+                new CardAnimator(getActivity(), CardAnimator.STYLE_LOADING)
+        );
+
+        // Set the OnTouchListener
+        SwipeDismissRecyclerViewTouchListener touchListener =
+                new SwipeDismissRecyclerViewTouchListener(
+                        mRecyclerView,
+                        mAdapter
+                );
+        mRecyclerView.setOnTouchListener(touchListener);
+        // Setting this scroll listener is required to ensure that during ListView scrolling,
+        // we don't look for swipes.
+        mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
     }
 
     @Override
@@ -109,23 +102,15 @@ public class MotivationFragment extends Fragment implements LocationListener {
         super.onResume();
 
         // Connect the GoogleApiClient
-        mGoogleApiClient.connect();
+        mBackgroundController.handleResult(BackgroundController.CONN_REQ);
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        // Stop expiration timer
-        mHandler.removeCallbacks(mExpiredRunnable);
-
-        // Remove the location updates
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-
-        // Disconnect the GoogleApiClient
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
+        // Clear resources
+        mBackgroundController.handleResult(BackgroundController.CLEAR_RESOURCES);
     }
 
     /**
@@ -145,244 +130,123 @@ public class MotivationFragment extends Fragment implements LocationListener {
         if (requestCode == ConnectionListener.REQUEST_RESOLVE_ERROR) {
             if (resultCode == Activity.RESULT_OK) {
                 // Try to connect after resolution
-                if (!mGoogleApiClient.isConnecting() &&
-                        !mGoogleApiClient.isConnected()) {
-                    mGoogleApiClient.connect();
-                }
+                mBackgroundController.handleResult(BackgroundController.CONN_REQ);
             }
         }
     }
 
-    /**
-     * Initialize the mGoogleApiClient used to communicate with the Google API for the location
-     */
-    protected synchronized void buildGoogleApiClient() {
-        // Initialize the GoogleApiClient. This fragment is set as the connection listener
-        // for succeeded and failed connections
-        ConnectionListener listener = new ConnectionListener();
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(listener)
-                .addOnConnectionFailedListener(listener)
-                .addApi(LocationServices.API)
-                .build();
+    private void showLoadingCards() {
+        // After 0.5s : Add first card
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mIsInLoadingState) mAdapter.addCard(
+                        // TODO use random sentences from list
+                        new CardLoading("Contacting your coach in LA")
+                );
+            }
+        }, 500);
+
+        // After loc_req_expiration / 2 : Add second card
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mIsInLoadingState) mAdapter.addCard(new CardLoadingSimple("Almost done !"));
+            }
+        }, getResources().getInteger(R.integer.location_request_expiration) / 2);
     }
 
+
+
+    ///////////////////////////////////////////
+    // BackgroundControllerListener Listener //
+    ///////////////////////////////////////////
+
     /**
-     * Callback called when a new location is available
-     *
-     * @param location New location
+     * Called when the "back at home time" is available
+     * Update the UI
+     * @param backAtHome Time back at home
      */
     @Override
-    public void onLocationChanged(Location location) {
-        mLocation = location;
-        mResultHandler.handleResult(ResultHandler.PROCESS_RES_LOC_OK);
-    }
+    public void onBackAtHomeTimeRetrieved(Date backAtHome) {
+        if (!mResultCardsDisplayed) {
+            // Format backAtHome time
+            final String formattedBackAtHomeTime = DateFormat
+                    .getTimeFormat(MotivationFragment.this.getActivity())
+                    .format(backAtHome);
 
-    /**
-     * Handle the newly generated location, accessible vie the mLocation field
-     */
-    private void handleNewLocation() {
-        if (mLocation != null) {
-            Log.d(LOG_TAG, mLocation.toString());
-
-            try {
-                // Get gym location from preferences
-                LatLng gymLoc = PreferencesUtils.getCoordinatesFromPreferences(getActivity());
-
-                // Fetch transit time from Google Directions API
-                FetchTransitTask fetchTask = new FetchTransitTask(getActivity());
-                LatLng mLocLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
-                fetchTask.execute(mLocLatLng, gymLoc);
-
-            } catch (PreferencesUtils.PreferenceNotInitializedException e) {
-                // Show error dialog
-                mResultHandler.handleResult(ResultHandler.PROCESS_RES_GYM_NOT_INIT);
-            }
-        } else {
-            Log.d(LOG_TAG, "mLocation == null !");
-        }
-    }
-
-
-    /**
-     * Class used to factor all the functions and parameters related to handling the result of
-     * the processing.<br>
-     * The following scenarios are possible :<br>
-     * - Location succeeded<br>
-     * - Location failed<br>
-     * - . . .<br><br>
-     * Note : Not related to Android Handler
-     */
-    private class ResultHandler {
-
-        // Constant fields to pass to handleResult(...)
-        private static final int PROCESS_RES_LOC_OK = 0;
-        private static final int PROCESS_RES_LOC_FAIL = 1;
-        private static final int PROCESS_RES_GYM_NOT_INIT = 2;
-
-        /**
-         * Handle the result of the processing.
-         *
-         * @param result Type of result, see constant fields
-         */
-        private void handleResult(int result) {
-            switch (result) {
-                case PROCESS_RES_LOC_OK:
-                    // Stop the expiration timer
-                    mHandler.removeCallbacks(mExpiredRunnable);
-
-                    // Dismiss the currently displayed progress dialog
-                    mProgressDialog.dismiss();
-
-                    // Handle location
-                    MotivationFragment.this.handleNewLocation();
-
-                    break;
-                case PROCESS_RES_LOC_FAIL:
-                    // Dismiss the currently displayed progress dialog
-                    mProgressDialog.dismiss();
-
-                    showUnableToObtainLocation();
-                    break;
-                case PROCESS_RES_GYM_NOT_INIT:
-                    // Dismiss the currently displayed progress dialog
-                    mProgressDialog.dismiss();
-
-                    showGymNotInit();
-                    break;
-                default:
-                    Log.d(LOG_TAG, "handleResult : Result type not recognized");
-                    break;
-            }
-        }
-
-
-        /**
-         * Display a dialog informing the user that the location could not be retrieved, and gives
-         * him some hints to resolve the problem<br>
-         * The dialog can only be dismissed by a clicking the button, and it finishes the activity
-         * afterwards.
-         */
-        private void showUnableToObtainLocation() {
-            // Create the AlertDialog
-            AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                    .setMessage(getResources().getString(R.string.alert_location_message))
-                    .setPositiveButton(getResources().getString(R.string.alert_location_dismiss),
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    MotivationFragment.this.getActivity().finish();
-                                }
-                            })
-                    .create();
-
-            // Prevent the dialog from being dismissed, so it can call finish() on the activity
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-
-            // Show the dialog
-            dialog.show();
-        }
-
-        /**
-         * Display a dialof informing the user that the gym location has not been initialized,
-         * and invites him to initialize it.
-         * The dialog can only be dismissed by a clicking the button, and it finishes the activity
-         * afterwards.
-         */
-        private void showGymNotInit() {
-            // Create the AlertDialog
-            AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                    .setMessage(
-                            getResources().getString(R.string.warning_not_initialized_edit_text)
-                    )
-                    .setPositiveButton(getResources().getString(R.string.alert_location_dismiss),
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    MotivationFragment.this.getActivity().finish();
-                                }
-                            })
-                    .create();
-
-            // Prevent the dialog from being dismissed, so it can call finish() on the activity
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-
-            // Show the dialog
-            dialog.show();
-        }
-    }
-
-    /**
-     * Connection listener used for the communication with the Google API.
-     * For more information check the "See also" section.
-     *
-     * @see <a href="http://developer.android.com/google/auth/api-client.html">
-     * Accessing Google APIs</a>
-     */
-    private class ConnectionListener
-            implements GoogleApiClient.ConnectionCallbacks,
-            GoogleApiClient.OnConnectionFailedListener {
-
-        // Request code to use when launching the resolution activity
-        // Checked in MotivationFragment.OnActivityResult(...)
-        private static final int REQUEST_RESOLVE_ERROR = 1001;
-
-        /**
-         * Callback called when the connection to the location API succeeded
-         *
-         * @param bundle Not used
-         */
-        @Override
-        public void onConnected(Bundle bundle) {
-            Log.i(LOG_TAG, "Location service connected");
-
-            // Request location
-            LocationServices
-                    .FusedLocationApi
-                    .requestLocationUpdates(mGoogleApiClient,
-                            mLocationRequest,
-                            MotivationFragment.this);
-
-            // Set the timer for expiration
-            mHandler.postDelayed(mExpiredRunnable, LOC_REQ_EXPIRATION);
-        }
-
-        /**
-         * Callback called when the connection to the location API is suspended
-         *
-         * @param i Not used
-         */
-        @Override
-        public void onConnectionSuspended(int i) {
-            Log.i(LOG_TAG, "Location service suspended! Please reconnect");
-        }
-
-        /**
-         * Callback called when the connection to the location API fails
-         *
-         * @param connectionResult Used to start resolution
-         */
-        @Override
-        public void onConnectionFailed(ConnectionResult connectionResult) {
-            // Check if the connection result is able to request the user to take immediate
-            // action to resolve the error
-            if (connectionResult.hasResolution()) {
-                try {
-                    connectionResult
-                            .startResolutionForResult(getActivity(), REQUEST_RESOLVE_ERROR);
-                } catch (IntentSender.SendIntentException e) {
-                    e.printStackTrace();
+            // Show backAtHome card
+            // Wait after animation remove duration
+            // to allow the animations from clearLoadingScreen to unfold
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.addCard(new CardBackAtHome(
+                            "You'll be back at home at : "
+                                    + formattedBackAtHomeTime
+                    ));
                 }
-            } else {
-                // TODO implement dialogError
-                // See : http://developer.android.com/google/auth/api-client.html
-                Log.i(LOG_TAG, "Location services connection failed with code "
-                        + connectionResult.getErrorCode());
-            }
+            }, mRecyclerView.getItemAnimator().getRemoveDuration());
+
+
+            // TODO TEST SCENARIO : REMOVE
+            // Time schedule
+            long removeDuration = mRecyclerView.getItemAnimator().getRemoveDuration();
+            long addDuration = mRecyclerView.getItemAnimator().getAddDuration();
+            long addTimes[] = new long[]{
+                    removeDuration + addDuration,
+                    removeDuration + addDuration * 2,
+                    removeDuration + addDuration * 3,
+                    removeDuration + addDuration * 4,
+            };
+
+            // Display the rest of the test cards
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.addCard(new CardWeather("Sunny"));
+                }
+            }, addTimes[0]);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.addCard(new CardRoute("This way"));
+                }
+            }, addTimes[1]);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.addCard(new CardAd("PUB"));
+                }
+            }, addTimes[2]);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.addCard(new CardCalories("543"));
+                }
+            }, addTimes[3]);
 
         }
+        mResultCardsDisplayed = true;
+
     }
 
+    /**
+     * Called when the application exits the loading state
+     */
+    @Override
+    public void onLoadingStateFinished() {
+        if (mIsInLoadingState) {
+            // Remove loading card(s)
+            mAdapter.clearLoadingScreen();
+            ((CardAnimator)mRecyclerView.getItemAnimator())
+                    .setAnimationStyle(CardAnimator.STYLE_POST_LOADING);
+        }
+
+        mIsInLoadingState = false;
+    }
+
+    public boolean isInLoadingState() {
+        return mIsInLoadingState;
+    }
 }
