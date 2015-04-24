@@ -12,7 +12,7 @@ import com.shockn745.workoutmotivationaltool.GymLocationActivity;
  *
  * @author Florian Kempenich
  */
-public class PreferencesUtility {
+public class PreferencesUtils {
 
     /**
      * Get the coordinates stored in the default shared preferences.
