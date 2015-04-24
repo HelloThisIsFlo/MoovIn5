@@ -18,10 +18,13 @@ import com.shockn745.workoutmotivationaltool.motivation.background.ConnectionLis
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.CardAdapter;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.CardAnimator;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardAd;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardBackAtHome;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardCalories;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoading;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoadingSimple;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardRoute;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardWeather;
 
 import java.util.ArrayList;
@@ -194,28 +197,34 @@ public class MotivationFragment extends Fragment
                     removeDuration + addDuration,
                     removeDuration + addDuration * 2,
                     removeDuration + addDuration * 3,
-
+                    removeDuration + addDuration * 4,
             };
 
             // Display the rest of the test cards
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mAdapter.addCard(new CardWeather("WEATHER"));
+                    mAdapter.addCard(new CardWeather("Sunny"));
                 }
             }, addTimes[0]);
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mAdapter.addCard(new CardWeather("SWITCH TO ROUTE CARD"));
+                    mAdapter.addCard(new CardRoute("This way"));
                 }
             }, addTimes[1]);
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mAdapter.addCard(new CardWeather("SWITCH TO CALORIES CARD"));
+                    mAdapter.addCard(new CardAd("PUB"));
                 }
             }, addTimes[2]);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.addCard(new CardCalories("543"));
+                }
+            }, addTimes[3]);
 
         }
         mResultCardsDisplayed = true;

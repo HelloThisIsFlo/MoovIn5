@@ -7,33 +7,33 @@ import android.widget.TextView;
 import com.shockn745.workoutmotivationaltool.R;
 
 /**
- * Card that display weather information
+ * Card that display ads
  */
-public class CardWeather implements CardInterface {
+public class CardAd implements CardInterface {
 
-    public static class WeatherVH extends RecyclerView.ViewHolder {
+    public static class AdVH extends RecyclerView.ViewHolder {
         public TextView mTextView;
 
-        public WeatherVH(View itemView) {
+        public AdVH(View itemView) {
             super(itemView);
-            this.mTextView = (TextView) itemView.findViewById(R.id.weather_text_view);
+            this.mTextView = (TextView) itemView.findViewById(R.id.ad_text_view);
         }
     }
 
     private String mText;
 
-    public CardWeather(String text) {
-        this.mText = "Weather : " + text;
+    public CardAd(String text) {
+        this.mText = "Ad : " + text;
     }
 
     @Override
     public int getViewType() {
-        return WEATHER_VIEW_TYPE;
+        return AD_VIEW_TYPE;
     }
 
     @Override
     public boolean canDismiss() {
-        return true;
+        return false;
     }
 
     public String getText() {

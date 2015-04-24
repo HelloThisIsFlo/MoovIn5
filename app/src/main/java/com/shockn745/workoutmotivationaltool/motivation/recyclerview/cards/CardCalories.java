@@ -7,28 +7,28 @@ import android.widget.TextView;
 import com.shockn745.workoutmotivationaltool.R;
 
 /**
- * Card that display weather information
+ * Card that display calories information
  */
-public class CardWeather implements CardInterface {
+public class CardCalories implements CardInterface {
 
-    public static class WeatherVH extends RecyclerView.ViewHolder {
+    public static class CaloriesVH extends RecyclerView.ViewHolder {
         public TextView mTextView;
 
-        public WeatherVH(View itemView) {
+        public CaloriesVH(View itemView) {
             super(itemView);
-            this.mTextView = (TextView) itemView.findViewById(R.id.weather_text_view);
+            this.mTextView = (TextView) itemView.findViewById(R.id.calories_text_view);
         }
     }
 
     private String mText;
 
-    public CardWeather(String text) {
-        this.mText = "Weather : " + text;
+    public CardCalories(String text) {
+        this.mText = "Calories" + text;
     }
 
     @Override
     public int getViewType() {
-        return WEATHER_VIEW_TYPE;
+        return CALORIES_VIEW_TYPE;
     }
 
     @Override

@@ -8,10 +8,13 @@ import android.view.ViewGroup;
 
 import com.shockn745.workoutmotivationaltool.R;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardAd;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardBackAtHome;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardCalories;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoading;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoadingSimple;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardRoute;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardWeather;
 
 import java.util.ArrayList;
@@ -62,6 +65,23 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         .inflate(R.layout.card_weather, parent, false);
                 return new CardWeather.WeatherVH(itemView);
 
+            case CardInterface.ROUTE_VIEW_TYPE:
+                itemView = LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(R.layout.card_route, parent, false);
+                return new CardRoute.RouteVH(itemView);
+
+            case CardInterface.CALORIES_VIEW_TYPE:
+                itemView = LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(R.layout.card_calories, parent, false);
+                return new CardCalories.CaloriesVH(itemView);
+
+            case CardInterface.AD_VIEW_TYPE:
+                itemView = LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(R.layout.card_ad, parent, false);
+                return new CardAd.AdVH(itemView);
             default:
                 return null;
         }
@@ -105,6 +125,28 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             CardWeather card = (CardWeather) mDataSet.get(position);
 
             weatherVH.mTextView.setText(card.getText());
+
+        } else if (holder instanceof CardRoute.RouteVH) {
+            CardRoute.RouteVH routeVH = (CardRoute.RouteVH) holder;
+
+            CardRoute card = (CardRoute) mDataSet.get(position);
+
+            routeVH.mTextView.setText(card.getText());
+
+        } else if (holder instanceof CardCalories.CaloriesVH) {
+            CardCalories.CaloriesVH caloriesVH = (CardCalories.CaloriesVH) holder;
+
+            CardCalories card = (CardCalories) mDataSet.get(position);
+
+            caloriesVH.mTextView.setText(card.getText());
+
+        } else if (holder instanceof CardAd.AdVH) {
+            CardAd.AdVH adVH = (CardAd.AdVH) holder;
+
+            CardAd card = (CardAd) mDataSet.get(position);
+
+            adVH.mTextView.setText(card.getText());
+
         } else {
             Log.d(LOG_TAG, "ERROR VH not recognized");
         }

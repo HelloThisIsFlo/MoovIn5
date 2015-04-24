@@ -13,6 +13,9 @@ public interface CardInterface {
     public final static int LOADING_SIMPLE_VIEW_TYPE = 101;
     public final static int BACK_AT_HOME_VIEW_TYPE = 200;
     public final static int WEATHER_VIEW_TYPE = 300;
+    public final static int ROUTE_VIEW_TYPE = 400;
+    public final static int CALORIES_VIEW_TYPE = 500;
+    public final static int AD_VIEW_TYPE = 600;
 
 
     public int getViewType();
