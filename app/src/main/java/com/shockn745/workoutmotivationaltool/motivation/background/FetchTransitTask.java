@@ -31,9 +31,13 @@ import java.util.Date;
  */
 public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
 
-    public interface FetchTransitCallback {
+    public interface OnBackAtHomeTimeRetrievedListener {
 
-        public void FetchTransitCallback(Date backAtHome);
+        /**
+         * Callback called when FetchTransitTask is done
+         * @param backAtHome Time back at home
+         */
+        public void onBackAtHomeTimeRetrieved(Date backAtHome);
 
     }
 
@@ -47,11 +51,11 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
     private final static int NO_ROUTES_ERROR = 5;
 
     private Activity mActivity;
-    private FetchTransitCallback mCallback;
+    private OnBackAtHomeTimeRetrievedListener mListener;
 
-    public FetchTransitTask(Activity mActivity, FetchTransitCallback mCallback) {
+    public FetchTransitTask(Activity mActivity, OnBackAtHomeTimeRetrievedListener mListener) {
         this.mActivity = mActivity;
-        this.mCallback = mCallback;
+        this.mListener = mListener;
     }
 
     /**
@@ -154,14 +158,14 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
             }
 
             // Parse the JSON String to retrieve transit time
-            // Return result if succesful
+            // Return result if successful
             if (jsonString != null) {
                 try {
                     // String too long to log => using debug mode instead
                     // Log.d(LOG_TAG, jsonString);
                     int transitTime = parseTransitTime(jsonString);
                     if (transitTime == -1) {
-                        // No routes availables
+                        // No routes available
                         publishProgress(NO_ROUTES_ERROR);
                         return null;
                     } else {
@@ -223,8 +227,6 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
     @Override
     protected void onPostExecute(Integer transitTime) {
         if (transitTime != null) {
-            // Do sthg
-            Log.d(LOG_TAG, "On est dans post execute !");
             Log.d(LOG_TAG, "Transit time (in seconds) : " + transitTime);
 
             // Get workout, warmup & stretching times
@@ -252,7 +254,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
             // Time back at home
             Date backAtHome = new Date(currentTime + timeSpent);
 
-            mCallback.FetchTransitCallback(backAtHome);
+            mListener.onBackAtHomeTimeRetrieved(backAtHome);
 
         }
     }
