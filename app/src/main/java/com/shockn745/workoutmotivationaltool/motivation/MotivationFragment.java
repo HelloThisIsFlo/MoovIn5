@@ -22,6 +22,7 @@ import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardB
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoading;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoadingSimple;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardWeather;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +44,7 @@ public class MotivationFragment extends Fragment
     private Handler mHandler;
 
     private boolean mIsInLoadingState = true;
+    private boolean mResultCardsDisplayed = false;
 
 
     @Override
@@ -164,25 +166,59 @@ public class MotivationFragment extends Fragment
      */
     @Override
     public void onBackAtHomeTimeRetrieved(Date backAtHome) {
+        if (!mResultCardsDisplayed) {
+            // Format backAtHome time
+            final String formattedBackAtHomeTime = DateFormat
+                    .getTimeFormat(MotivationFragment.this.getActivity())
+                    .format(backAtHome);
 
-        // Format backAtHome time
-        final String formattedBackAtHomeTime = DateFormat
-                .getTimeFormat(MotivationFragment.this.getActivity())
-                .format(backAtHome);
+            // Show backAtHome card
+            // Wait after animation remove duration
+            // to allow the animations from clearLoadingScreen to unfold
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.addCard(new CardBackAtHome(
+                            "You'll be back at home at : "
+                                    + formattedBackAtHomeTime
+                    ));
+                }
+            }, mRecyclerView.getItemAnimator().getRemoveDuration());
 
-        // Show backAtHome card
-        // Wait after animation remove duration
-        // to allow the animations from clearLoadingScreen to unfold
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAdapter.addCard(new CardBackAtHome(
-                        "You'll be back at home at : "
-                        + formattedBackAtHomeTime
-                ));
-            }
-        }, mRecyclerView.getItemAnimator().getRemoveDuration());
 
+            // TODO TEST SCENARIO : REMOVE
+            // Time schedule
+            long removeDuration = mRecyclerView.getItemAnimator().getRemoveDuration();
+            long addDuration = mRecyclerView.getItemAnimator().getAddDuration();
+            long addTimes[] = new long[]{
+                    removeDuration + addDuration,
+                    removeDuration + addDuration * 2,
+                    removeDuration + addDuration * 3,
+
+            };
+
+            // Display the rest of the test cards
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.addCard(new CardWeather("WEATHER"));
+                }
+            }, addTimes[0]);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.addCard(new CardWeather("SWITCH TO ROUTE CARD"));
+                }
+            }, addTimes[1]);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.addCard(new CardWeather("SWITCH TO CALORIES CARD"));
+                }
+            }, addTimes[2]);
+
+        }
+        mResultCardsDisplayed = true;
 
     }
 
@@ -199,5 +235,9 @@ public class MotivationFragment extends Fragment
         }
 
         mIsInLoadingState = false;
+    }
+
+    public boolean isInLoadingState() {
+        return mIsInLoadingState;
     }
 }

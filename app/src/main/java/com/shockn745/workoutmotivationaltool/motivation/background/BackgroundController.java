@@ -121,7 +121,7 @@ public class BackgroundController
 
             case LOC_OK:
                 cancelExpirationTimer();
-                handleNewLocation();
+                startFetchTransitTaskWithNewLocation();
                 break;
 
             case LOC_FAIL:
@@ -157,7 +157,7 @@ public class BackgroundController
     /**
      * Handle the newly generated location, accessible vie the mLocation field
      */
-    private void handleNewLocation() {
+    private void startFetchTransitTaskWithNewLocation() {
         if (mLocation != null) {
             Log.d(LOG_TAG, mLocation.toString());
 
@@ -219,9 +219,11 @@ public class BackgroundController
         // Request location
         LocationServices
                 .FusedLocationApi
-                .requestLocationUpdates(mGoogleApiClient,
+                .requestLocationUpdates(
+                        mGoogleApiClient,
                         request,
-                        this);
+                        this
+                );
     }
 
     private void removeLocationUpdates() {

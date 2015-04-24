@@ -12,13 +12,14 @@ import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardB
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoading;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoadingSimple;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardWeather;
 
 import java.util.ArrayList;
 
 public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements SwipeDismissRecyclerViewTouchListener.DismissCallbacks {
 
-    private static final String LOG_TAG = TestAdapter.class.getSimpleName();
+    private static final String LOG_TAG = CardAdapter.class.getSimpleName();
 
     private final ArrayList<CardInterface> mDataSet;
 
@@ -54,6 +55,12 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         .from(parent.getContext())
                         .inflate(R.layout.card_back_at_home, parent, false);
                 return new CardBackAtHome.BackAtHomeVH(itemView);
+
+            case CardInterface.WEATHER_VIEW_TYPE:
+                itemView = LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(R.layout.card_weather, parent, false);
+                return new CardWeather.WeatherVH(itemView);
 
             default:
                 return null;
@@ -91,6 +98,13 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             CardBackAtHome card = (CardBackAtHome) mDataSet.get(position);
 
             backAtHomeVH.mTextView.setText(card.getText());
+
+        } else if (holder instanceof CardWeather.WeatherVH) {
+            CardWeather.WeatherVH weatherVH = (CardWeather.WeatherVH) holder;
+
+            CardWeather card = (CardWeather) mDataSet.get(position);
+
+            weatherVH.mTextView.setText(card.getText());
         } else {
             Log.d(LOG_TAG, "ERROR VH not recognized");
         }

@@ -41,12 +41,4 @@
         android:layout_centerHorizontal="true"
         android:visibility="gone"/>
 
-    <Button
-        android:id="@+id/test_recycler_view_button"
-        android:text="Test RecyclerView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/warning_edit_text"
-        android:layout_centerHorizontal="true"/>
-
 </RelativeLayout>

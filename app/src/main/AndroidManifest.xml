@@ -65,14 +65,6 @@
 
         <uses-library android:name="com.google.android.maps" />
 
-        <activity
-            android:name=".motivation.recyclerview.TestActivity"
-            android:label="@string/title_activity_test_recyclerview"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.shockn745.workoutmotivationaltool.MainActivity" />
-        </activity>
     </application>
 
 </manifest>
