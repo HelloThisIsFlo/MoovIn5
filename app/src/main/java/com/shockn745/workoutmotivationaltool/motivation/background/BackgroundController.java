@@ -37,20 +37,19 @@ public class BackgroundController
     // Client used to communicate with the Google API for the location
     private GoogleApiClient mGoogleApiClient;
 
-    // Connection parameters
-    private static final int LOC_REQ_INTERVAL = 1000;
-    private static final int LOC_REQ_FASTEST_INTERVAL = 500;
-    // TODO check if 30 sec is enough
-    private static final int LOC_REQ_EXPIRATION = 30000;
+    // Location request parameters
+    private static int LOC_REQ_INTERVAL;
+    private static int LOC_REQ_FASTEST_INTERVAL;
+    private static int LOC_REQ_EXPIRATION;
 
     // Constant fields to pass to handleResult(...)
     public static final int CONN_REQ = 10;
     public static final int CONN_OK = 11;
-    public static final int LOC_INIT = 20;
-    public static final int LOC_OK = 21;
-    public static final int LOC_FAIL = 22;
+    public static final int LOC_OK = 20;
+    public static final int LOC_FAIL = 21;
     public static final int FETCH_TRANSIT_DONE = 30;
     public static final int CLEAR_RESOURCES = 100;
+    private static final int PRIVATE_GYM_NOT_INIT = 200;
 
     // Progress dialog shown during processing
     private ProgressDialog mProgressDialog;
@@ -73,6 +72,12 @@ public class BackgroundController
          */
         public void onBackAtHomeTimeRetrieved(Date backAtHome);
 
+
+        /**
+         * Called when the application exits the loading state
+         */
+        public void onLoadingStateFinished();
+
         //TODO add other functions
 
     }
@@ -81,6 +86,13 @@ public class BackgroundController
         this.mActivity = mActivity;
         this.mListener = mListener;
         mHandler = new Handler();
+
+        // Init the parameters for the location request
+        LOC_REQ_INTERVAL = mActivity.getResources().getInteger(R.integer.location_request_interval);
+        LOC_REQ_FASTEST_INTERVAL =
+                mActivity.getResources().getInteger(R.integer.location_request_fastest_interval);
+        LOC_REQ_EXPIRATION =
+                mActivity.getResources().getInteger(R.integer.location_request_expiration);
 
         // Initialize the GoogleApiClient.
         ConnectionListener listener = new ConnectionListener(mActivity, this);
@@ -107,23 +119,19 @@ public class BackgroundController
                 startExpirationTimer();
                 break;
 
-            case LOC_INIT:
-                showLoadingDialog();
-                break;
-
             case LOC_OK:
                 cancelExpirationTimer();
-                dismissLoadingDialog();
                 handleNewLocation();
                 break;
 
             case LOC_FAIL:
-                dismissLoadingDialog();
+                mListener.onLoadingStateFinished();
                 showUnableToObtainLocationDialog();
                 break;
 
             case FETCH_TRANSIT_DONE:
                 // Update the UI
+                mListener.onLoadingStateFinished();
                 mListener.onBackAtHomeTimeRetrieved(mBackAtHomeTime);
                 break;
 
@@ -131,6 +139,11 @@ public class BackgroundController
                 cancelExpirationTimer();
                 removeLocationUpdates();
                 disconnectFromGoogleApi();
+                break;
+
+            case PRIVATE_GYM_NOT_INIT:
+                mListener.onLoadingStateFinished();
+                showGymNotInitDialog();
                 break;
 
             default:
@@ -158,10 +171,7 @@ public class BackgroundController
                 fetchTask.execute(mLocLatLng, gymLoc);
 
             } catch (PreferencesUtils.PreferenceNotInitializedException e) {
-                // Dismiss the currently displayed progress dialog
-                dismissLoadingDialog();
-                // Show error dialog
-                showGymNotInitDialog();
+                handleResult(PRIVATE_GYM_NOT_INIT);
             }
         } else {
             Log.d(LOG_TAG, "mLocation == null !");
@@ -235,28 +245,10 @@ public class BackgroundController
 
 
 
-    /////////////////////////////////
-    // Show/dismiss dialog methods //
-    /////////////////////////////////
+    ///////////////////////////////////////
+    // Show/dismiss dialog/cards methods //
+    ///////////////////////////////////////
 
-    /**
-     * Show a card that indicates the user that the application is loadoing something. <br>
-     * Here what's being loaded is : <br>
-     *     - Retrieve current location <br>
-     *     - Fetch transit time <br>
-     */
-    private void showLoadingDialog() {
-        // Set up & show the progress dialog
-        mProgressDialog = new ProgressDialog(mActivity);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setCanceledOnTouchOutside(false);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
-    }
-
-    private void dismissLoadingDialog() {
-        mProgressDialog.dismiss();
-    }
 
     /**
      * Display a dialog informing the user that the location could not be retrieved, and gives

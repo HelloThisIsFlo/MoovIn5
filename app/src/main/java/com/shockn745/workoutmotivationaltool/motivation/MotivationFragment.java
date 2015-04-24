@@ -4,16 +4,26 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.shockn745.workoutmotivationaltool.R;
 import com.shockn745.workoutmotivationaltool.motivation.background.BackgroundController;
 import com.shockn745.workoutmotivationaltool.motivation.background.ConnectionListener;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.CardAdapter;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.CardAnimator;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardBackAtHome;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoading;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoadingSimple;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -25,19 +35,19 @@ public class MotivationFragment extends Fragment
 
     private static final String LOG_TAG = MotivationFragment.class.getSimpleName();
 
-    // Runnable to display a dialog when the location is unavailable
-    private Runnable mExpiredRunnable;
-
     private BackgroundController mBackgroundController;
+
+    private RecyclerView mRecyclerView;
+    private CardAdapter mAdapter;
+    private ArrayList<CardInterface> mDataset;
+    private Handler mHandler;
+
+    private boolean mIsInLoadingState = true;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Initialize the backgroundController
-        mBackgroundController = new BackgroundController(getActivity(), this);
-
     }
 
     @Override
@@ -45,9 +55,41 @@ public class MotivationFragment extends Fragment
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_motivation, container, false);
 
-        mBackgroundController.handleResult(BackgroundController.LOC_INIT);
+        // Find views by id
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cards_recycler_view);
+
+        initRecyclerView();
+        mBackgroundController = new BackgroundController(getActivity(), this);
+        mHandler = new Handler();
+
+        showLoadingCards();
 
         return rootView;
+    }
+
+    private void initRecyclerView() {
+        // Set the adapter with empty dataset
+        mAdapter = new CardAdapter(new ArrayList<CardInterface>());
+        mRecyclerView.setAdapter(mAdapter);
+
+        // Set recyclerView
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        // Notify the recyclerView that its size won't change (better perfs)
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setItemAnimator(
+                new CardAnimator(getActivity(), CardAnimator.STYLE_LOADING)
+        );
+
+        // Set the OnTouchListener
+        SwipeDismissRecyclerViewTouchListener touchListener =
+                new SwipeDismissRecyclerViewTouchListener(
+                        mRecyclerView,
+                        mAdapter
+                );
+        mRecyclerView.setOnTouchListener(touchListener);
+        // Setting this scroll listener is required to ensure that during ListView scrolling,
+        // we don't look for swipes.
+        mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
     }
 
     @Override
@@ -88,6 +130,28 @@ public class MotivationFragment extends Fragment
         }
     }
 
+    private void showLoadingCards() {
+        // After 0.5s : Add first card
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mIsInLoadingState) mAdapter.addCard(
+                        // TODO use random sentences from list
+                        new CardLoading("Contacting your coach in LA")
+                );
+            }
+        }, 500);
+
+        // After loc_req_expiration / 2 : Add second card
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mIsInLoadingState) mAdapter.addCard(new CardLoadingSimple("Almost done !"));
+            }
+        }, getResources().getInteger(R.integer.location_request_expiration) / 2);
+    }
+
+
 
     ///////////////////////////////////////////
     // BackgroundControllerListener Listener //
@@ -100,15 +164,40 @@ public class MotivationFragment extends Fragment
      */
     @Override
     public void onBackAtHomeTimeRetrieved(Date backAtHome) {
-        // TODO Use card
-        TextView textView = (TextView) getActivity()
-                .findViewById(R.id.motivation_text_view);
 
-        textView.setText(
-                DateFormat
-                        .getTimeFormat(MotivationFragment.this.getActivity())
-                        .format(backAtHome)
-        );
+        // Format backAtHome time
+        final String formattedBackAtHomeTime = DateFormat
+                .getTimeFormat(MotivationFragment.this.getActivity())
+                .format(backAtHome);
+
+        // Show backAtHome card
+        // Wait after animation remove duration
+        // to allow the animations from clearLoadingScreen to unfold
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.addCard(new CardBackAtHome(
+                        "You'll be back at home at : "
+                        + formattedBackAtHomeTime
+                ));
+            }
+        }, mRecyclerView.getItemAnimator().getRemoveDuration());
+
+
     }
 
+    /**
+     * Called when the application exits the loading state
+     */
+    @Override
+    public void onLoadingStateFinished() {
+        if (mIsInLoadingState) {
+            // Remove loading card(s)
+            mAdapter.clearLoadingScreen();
+            ((CardAnimator)mRecyclerView.getItemAnimator())
+                    .setAnimationStyle(CardAnimator.STYLE_POST_LOADING);
+        }
+
+        mIsInLoadingState = false;
+    }
 }

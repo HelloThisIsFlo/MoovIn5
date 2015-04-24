@@ -40,6 +40,7 @@ import java.util.List;
  * @see RecyclerView.ItemAnimator
  */
 public class CardAnimator extends RecyclerView.ItemAnimator {
+
     private static final String LOG_TAG = CardAnimator.class.getSimpleName();
     private static final boolean DEBUG = false;
     public static final int STYLE_LOADING = 0;
@@ -744,7 +745,7 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
      * Set the animation style
      * @param mAnimationStyle Either STYLE_LOADING or STYLE_POST_LOADING
      */
-    public void setmAnimationStyle(int mAnimationStyle) {
+    public void setAnimationStyle(int AnimationStyle) {
         this.mAnimationStyle = mAnimationStyle;
     }
 

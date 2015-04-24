@@ -8,9 +8,10 @@ import android.view.ViewGroup;
 
 import com.shockn745.workoutmotivationaltool.R;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
-import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardContact;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardBackAtHome;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
-import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardSimple;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoading;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoadingSimple;
 
 import java.util.ArrayList;
 
@@ -35,21 +36,24 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView;
-        // TODO implement cases for the cards actually used
         switch (viewType) {
-            case CardInterface.CONTACT_VIEW_TYPE:
+            case CardInterface.LOADING_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
-                        .inflate(R.layout.card_contact, parent, false);
+                        .inflate(R.layout.card_loading, parent, false);
+                return new CardLoading.LoadingVH(itemView);
 
-                return new CardContact.ContactVH(itemView);
-
-            case CardInterface.SIMPLE_VIEW_TYPE:
+            case CardInterface.LOADING_SIMPLE_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
-                        .inflate(R.layout.card_simple, parent, false);
+                        .inflate(R.layout.card_loading_simple, parent, false);
+                return new CardLoadingSimple.LoadingSimpleVH(itemView);
 
-                return new CardSimple.SimpleVH(itemView);
+            case CardInterface.BACK_AT_HOME_VIEW_TYPE:
+                itemView = LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(R.layout.card_back_at_home, parent, false);
+                return new CardBackAtHome.BackAtHomeVH(itemView);
 
             default:
                 return null;
@@ -65,26 +69,28 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
-        // TODO implement cases for the cards actually used
-        if (holder instanceof CardSimple.SimpleVH) {
-            Log.d(LOG_TAG, "Simple VH");
+        if (holder instanceof CardLoading.LoadingVH) {
+            CardLoading.LoadingVH loadingHolder = (CardLoading.LoadingVH) holder;
 
-            CardSimple.SimpleVH simpleHolder = (CardSimple.SimpleVH) holder;
+            CardLoading card = (CardLoading) mDataSet.get(position);
 
-            CardSimple card = (CardSimple) mDataSet.get(position);
+            loadingHolder.mTextView.setText(card.getText());
 
-            simpleHolder.mSimpleTextView.setText(card.getSimpleText());
+        } else if (holder instanceof CardLoadingSimple.LoadingSimpleVH) {
+            // Includes also CardLoading.LoadingVH
+            CardLoadingSimple.LoadingSimpleVH loadingSimpleHolder =
+                    (CardLoadingSimple.LoadingSimpleVH) holder;
 
-        } else if (holder instanceof CardContact.ContactVH) {
-            Log.d(LOG_TAG, "Contact VH");
+            CardLoadingSimple card = (CardLoadingSimple) mDataSet.get(position);
 
-            CardContact.ContactVH contactHolder = (CardContact.ContactVH) holder;
+            loadingSimpleHolder.mTextView.setText(card.getText());
 
-            CardContact card = (CardContact) mDataSet.get(position);
+        } else if (holder instanceof CardBackAtHome.BackAtHomeVH) {
+            CardBackAtHome.BackAtHomeVH backAtHomeVH = (CardBackAtHome.BackAtHomeVH) holder;
 
-            contactHolder.mNomTextView.setText(card.getNom());
-            contactHolder.mPrenomTextView.setText(card.getPrenom());
-            contactHolder.mTelTextView.setText(card.getTelephone());
+            CardBackAtHome card = (CardBackAtHome) mDataSet.get(position);
+
+            backAtHomeVH.mTextView.setText(card.getText());
         } else {
             Log.d(LOG_TAG, "ERROR VH not recognized");
         }
@@ -164,15 +170,27 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
 
+    /**
+     * Remove the loading card(s)
+     */
     public void clearLoadingScreen() {
-        //
-        mDataSet.remove(0);
+        boolean bothCardsShown = false;
         try {
             mDataSet.remove(0);
         } catch (IndexOutOfBoundsException e) {
-            Log.d(LOG_TAG, "Second card was not shown");
+            Log.d(LOG_TAG, "First loading card was not yet shown");
         }
-        notifyItemRangeRemoved(0, 2);
+        try {
+            mDataSet.remove(0);
+            bothCardsShown = true;
+        } catch (IndexOutOfBoundsException e) {
+            Log.d(LOG_TAG, "Second loading card was not yet shown");
+            // Only first card removed
+            notifyItemRemoved(0);
+        }
+        if (bothCardsShown) {
+            notifyItemRangeRemoved(0, 2);
+        }
     }
 
 }

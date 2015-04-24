@@ -164,7 +164,7 @@ public class TestActivity extends Activity {
                         @Override
                         public void run() {
                             // Set remove animation
-                            mAnimator.setmAnimationStyle(CardAnimator.STYLE_POST_LOADING);
+                            mAnimator.setAnimationStyle(CardAnimator.STYLE_POST_LOADING);
 
                             // Display first card
                             mAdapter.addCardFromLIFO();
