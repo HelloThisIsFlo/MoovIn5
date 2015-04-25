@@ -28,5 +28,9 @@
     <!-- TODO check if 30 sec is enough -->
     <integer name="location_request_expiration">30000</integer>
 
+    <!-- Parameter for the calories processing -->
+    <!-- TODO Update with more accurate coefficient -->
+    <integer name="coeff_calories">10</integer>
+
 
 </resources>

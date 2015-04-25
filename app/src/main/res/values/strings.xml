@@ -12,8 +12,6 @@
     <string name="motivate_button">Motivate Me!</string>
     <string name="change_location_button">Change location</string>
 
-    <!-- MotivationActivity -->
-    <string name="hello_world">Hello world!</string>
 
 
     <!-- Alert dialog -->
@@ -28,13 +26,8 @@
     <string name="alert_fail">Unknown error, please try again!</string>
     <string name="alert_connection_fail">Connection failed,
         please check your internet connection</string>
-    <string name="alert_transit_no_routes">No route found between your location and your gym\n
-        Please check the gym location!</string>
-
-
-
-
-
+    <string name="alert_transit_no_routes">No route found between your location and your gym
+        \nPlease check the gym location!</string>
 
     <!-- Preference name & key -->
     <string name="pref_warmup">Warmup duration</string>
@@ -44,4 +37,14 @@
     <string name="pref_summary_minute">Minutes</string>
     <string name="pref_workout_key">workout</string>
     <string name="title_activity_test_recyclerview">TestRecyclerview</string>
+
+
+    <!-- MotivationActivity -->
+    <string name="calories_text_part_1">You\'ll have burnt : </string>
+    <string name="calories_text_part_2"> Cals !</string>
+
+
+
+
+
 </resources>

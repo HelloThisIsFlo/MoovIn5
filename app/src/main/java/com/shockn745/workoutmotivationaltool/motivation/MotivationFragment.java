@@ -24,12 +24,12 @@ import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.C
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardAd;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardBackAtHome;
-import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardCalories;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoading;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoadingSimple;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardRoute;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardWeather;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.calories.CardCalories;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -284,7 +284,7 @@ public class MotivationFragment extends Fragment
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mAdapter.addCard(new CardCalories("543"));
+                    mAdapter.addCard(new CardCalories(getActivity()));
                 }
             }, addTimes[3]);
 

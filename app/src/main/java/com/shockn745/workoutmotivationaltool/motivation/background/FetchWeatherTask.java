@@ -208,7 +208,7 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
         int weatherId = weatherJSONObject.getInt(JSON_WEATHER_ID);
         String temperatureString = root
                 .getJSONObject(JSON_TEMP_ROOT)
-                .getString(JSON_TEMPERATURE);
+                .getString(JSON_TEMPERATURE);//TODO check if it works with getDouble
         float temperatureFloat = Float.parseFloat(temperatureString);
         int temperature = Math.round(temperatureFloat);
 

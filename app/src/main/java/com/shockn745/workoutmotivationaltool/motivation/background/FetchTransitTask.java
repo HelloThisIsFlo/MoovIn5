@@ -252,7 +252,8 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
                     mActivity.getResources().getInteger(R.integer.pref_warmup_default));
             int stretching = prefs.getInt(mActivity.getString(R.string.pref_stretching_key),
                     mActivity.getResources().getInteger(R.integer.pref_stretching_default));
-            int workout = prefs.getInt(mActivity.getString(R.string.pref_workout_key), 0);
+            int workout = prefs.getInt(mActivity.getString(R.string.pref_workout_key),
+                    mActivity.getResources().getInteger(R.integer.workout_default));
 
             // Calculate the time spent and add it to the current time
             // Time spent (in milliseconds)

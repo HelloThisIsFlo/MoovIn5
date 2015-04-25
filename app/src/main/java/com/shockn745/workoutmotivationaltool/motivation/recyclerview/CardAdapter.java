@@ -1,5 +1,6 @@
 package com.shockn745.workoutmotivationaltool.motivation.recyclerview;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,12 +11,13 @@ import com.shockn745.workoutmotivationaltool.R;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardAd;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardBackAtHome;
-import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardCalories;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoading;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoadingSimple;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardRoute;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardWeather;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.calories.CaloriesAdapter;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.calories.CardCalories;
 
 import java.util.ArrayList;
 
@@ -134,11 +136,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             routeVH.mTextView.setText(card.getText());
 
         } else if (holder instanceof CardCalories.CaloriesVH) {
-            CardCalories.CaloriesVH caloriesVH = (CardCalories.CaloriesVH) holder;
-
-            CardCalories card = (CardCalories) mDataSet.get(position);
-
-            caloriesVH.mTextView.setText(card.getText());
+            bindCaloriesCard((CardCalories.CaloriesVH) holder, position);
 
         } else if (holder instanceof CardAd.AdVH) {
             CardAd.AdVH adVH = (CardAd.AdVH) holder;
@@ -247,6 +245,32 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (bothCardsShown) {
             notifyItemRangeRemoved(0, 2);
         }
+    }
+
+
+
+    ////////////////////
+    // Bind method(s) //
+    ////////////////////
+
+    private void bindCaloriesCard(CardCalories.CaloriesVH holder, int position) {
+
+        CardCalories card = (CardCalories) mDataSet.get(position);
+
+        holder.mTextView.setText(card.getText());
+
+        // Set the recycler view
+        CardCalories.CaloriesItem[] caloriesDataSet = card.getItems();
+        CaloriesAdapter adapter = new CaloriesAdapter(caloriesDataSet);
+        holder.mRecyclerView.setAdapter(adapter);
+
+        holder.mRecyclerView.setLayoutManager(
+                new LinearLayoutManager(holder.itemView.getContext())
+        );
+
+        // Notify the recyclerView that its size won't change (better perfs)
+        holder.mRecyclerView.setHasFixedSize(true);
+        holder.mRecyclerView.setItemAnimator(null); //Deactivate animations
     }
 
 }

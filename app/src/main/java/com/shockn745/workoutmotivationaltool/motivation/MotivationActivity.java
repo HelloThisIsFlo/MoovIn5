@@ -20,11 +20,11 @@ public class MotivationActivity extends Activity {
         setContentView(R.layout.activity_motivation);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new MotivationFragment())
+                    .add(R.id.motivation_container, new MotivationFragment())
                     .commit();
         }
 
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.motivation_toolbar);
 
         // Add toolbar
         setActionBar(mToolbar);
