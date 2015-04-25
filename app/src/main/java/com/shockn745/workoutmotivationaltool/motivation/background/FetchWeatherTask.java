@@ -178,7 +178,9 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
 
     @Override
     protected void onPostExecute(WeatherInfos weatherInfos) {
-        mListener.OnWeatherInfoRetrieved(weatherInfos, RESULT_OK);
+        if (weatherInfos != null) {
+            mListener.OnWeatherInfoRetrieved(weatherInfos, RESULT_OK);
+        }
     }
 
     /**
