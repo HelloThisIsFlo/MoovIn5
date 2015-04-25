@@ -152,7 +152,7 @@ public class MotivationFragment extends Fragment
                     if (mIsInLoadingState && !mFirstLoadingCardDisplayed) {
                         mFirstLoadingCardDisplayed = true;
                         // TODO use random sentences from list
-                        mAdapter.addCard(new CardLoading("Contacting your coach in LA"));
+                        mAdapter.addCard(new CardLoading("Contacting your coach ..."));
                     }
                 }
             }, 500);
@@ -256,19 +256,19 @@ public class MotivationFragment extends Fragment
             long removeDuration = mRecyclerView.getItemAnimator().getRemoveDuration();
             long addDuration = mRecyclerView.getItemAnimator().getAddDuration();
             long addTimes[] = new long[]{
-                    removeDuration + addDuration,
+                    removeDuration + addDuration, //Not used here anymore
                     removeDuration + addDuration * 2,
                     removeDuration + addDuration * 3,
                     removeDuration + addDuration * 4,
             };
 
+//            mHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mAdapter.addCard(new CardWeather("Sunny"));
+//                }
+//            }, addTimes[0]);
             // Display the rest of the test cards
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mAdapter.addCard(new CardWeather("Sunny"));
-                }
-            }, addTimes[0]);
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -292,9 +292,15 @@ public class MotivationFragment extends Fragment
         mResultCardsDisplayed = true;
     }
 
-    private void handleWeatherInfo(FetchWeatherTask.WeatherInfos weatherInfos) {
-        // TODO handleWeatherInfo : do something . . .
-
+    private void handleWeatherInfo(final FetchWeatherTask.WeatherInfos weatherInfos) {
+        long removeDuration = mRecyclerView.getItemAnimator().getRemoveDuration();
+        long addDuration = mRecyclerView.getItemAnimator().getAddDuration();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.addCard(new CardWeather(weatherInfos.mForecast));
+            }
+        }, removeDuration + addDuration);
     }
 
 

@@ -227,7 +227,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
 
             case NO_ROUTES_ERROR:
                 Log.d(LOG_TAG, "No routes => Warn the user !");
-                mListener.onBackAtHomeTimeRetrieved(null, ERROR);
+                mListener.onBackAtHomeTimeRetrieved(null, NO_ROUTES_ERROR);
                 break;
             default:
                 break;
