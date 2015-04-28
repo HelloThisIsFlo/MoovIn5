@@ -171,7 +171,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     // Hide toolbar
                     int toolbarHeight = mToolbar.getHeight();
 
-                    currentTranslationY = Math.min(Math.abs(currentTranslationY - dy), toolbarHeight);
+                    currentTranslationY = -Math.min(Math.abs(currentTranslationY - dy), toolbarHeight);
 
 
                     mToolbar.setTranslationY(currentTranslationY);

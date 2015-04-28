@@ -109,7 +109,9 @@ public class MotivationFragment extends Fragment
         super.onResume();
 
         // Connect the GoogleApiClient
-        mBackgroundController.handleResult(BackgroundController.INIT_LOADING);
+        // TODO Uncomment
+//        mBackgroundController.handleResult(BackgroundController.INIT_LOADING);
+        mBackgroundController.handleResult(BackgroundController.TEST_SCENARIO);
     }
 
     @Override
