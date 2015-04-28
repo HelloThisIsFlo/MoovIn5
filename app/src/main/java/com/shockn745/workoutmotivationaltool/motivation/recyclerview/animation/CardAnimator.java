@@ -143,7 +143,7 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
         mPendingRemovals.clear();
         // Next, move stuff
         if (movesPending) {
-            final ArrayList<MoveInfo> moves = new ArrayList<MoveInfo>();
+            final ArrayList<MoveInfo> moves = new ArrayList<>();
             moves.addAll(mPendingMoves);
             mMovesList.add(moves);
             mPendingMoves.clear();
@@ -167,7 +167,7 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
         }
         // Next, change stuff, to run in parallel with move animations
         if (changesPending) {
-            final ArrayList<ChangeInfo> changes = new ArrayList<ChangeInfo>();
+            final ArrayList<ChangeInfo> changes = new ArrayList<>();
             changes.addAll(mPendingChanges);
             mChangesList.add(changes);
             mPendingChanges.clear();
@@ -190,7 +190,7 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
         }
         // Next, add stuff
         if (additionsPending) {
-            final ArrayList<AddInfo> additions = new ArrayList<AddInfo>();
+            final ArrayList<AddInfo> additions = new ArrayList<>();
             additions.addAll(mPendingAdditions);
             mAdditionsList.add(additions);
             mPendingAdditions.clear();
@@ -245,19 +245,14 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
         final View view = holder.itemView;
 
         // Compute translation distance
-        float viewY = view.getY();
-        float viewHeight = view.getHeight();
-
-        float translationDistance = -viewY - viewHeight;
-
-        // Get the screen dimensions
+        /// Get the screen dimensions
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
 
-        translationDistance = - height;
+        int translationDistance = - height;
 
 
         final ViewPropertyAnimatorCompat animation = ViewCompat.animate(view);
@@ -743,10 +738,10 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
 
     /**
      * Set the animation style
-     * @param mAnimationStyle Either STYLE_LOADING or STYLE_POST_LOADING
+     * @param animationStyle Either STYLE_LOADING or STYLE_POST_LOADING
      */
-    public void setAnimationStyle(int AnimationStyle) {
-        this.mAnimationStyle = mAnimationStyle;
+    public void setAnimationStyle(int animationStyle) {
+        this.mAnimationStyle = animationStyle;
     }
 
     private static class VpaListenerAdapter implements ViewPropertyAnimatorListener {
