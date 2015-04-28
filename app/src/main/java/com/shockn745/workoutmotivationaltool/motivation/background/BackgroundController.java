@@ -106,11 +106,12 @@ public class BackgroundController implements
     public static final int FETCH_WEATHER_DONE = 40;
     public static final int FETCH_WEATHER_ERROR = 41;
     public static final int FETCH_WEATHER_CONNECTION_ERROR = 42;
-    //TODO Add error codes for fetch weather
 
     public static final int CLEAR_RESOURCES = 100;
     public static final int BG_PROCESS_SUCCESS = 101;
     private static final int GYM_NOT_INIT = 102;
+
+    public static final int TEST_SCENARIO = 999;
 
     // Results of background tasks
     private Date mBackAtHomeTime = null;
@@ -243,6 +244,15 @@ public class BackgroundController implements
                         BackgroundControllerListener.ERROR_GYM_NOT_INITIALIZED
                 );
                 break;
+
+            case TEST_SCENARIO:
+                mListener.onLoadingStateFinished();
+                mListener.onBackgroundProcessDone(
+                        new BackgroundProcessResult(
+                                new Date(2015, 04, 28),
+                                new FetchWeatherTask.WeatherInfos(19, "Test forecast", 800)
+                        )
+                );
 
             default:
                 Log.d(LOG_TAG, "handleResult : Result type not recognized");

@@ -80,7 +80,7 @@ public class MotivationFragment extends Fragment
 
     private void initRecyclerView() {
         // Set the adapter with empty dataset
-        mAdapter = new CardAdapter(new ArrayList<CardInterface>());
+        mAdapter = new CardAdapter(new ArrayList<CardInterface>(), getActivity());
         mRecyclerView.setAdapter(mAdapter);
 
         // Set recyclerView
@@ -95,7 +95,8 @@ public class MotivationFragment extends Fragment
         SwipeDismissRecyclerViewTouchListener touchListener =
                 new SwipeDismissRecyclerViewTouchListener(
                         mRecyclerView,
-                        mAdapter
+                        mAdapter,
+                        getActivity()
                 );
         mRecyclerView.setOnTouchListener(touchListener);
         // Setting this scroll listener is required to ensure that during ListView scrolling,
@@ -108,7 +109,9 @@ public class MotivationFragment extends Fragment
         super.onResume();
 
         // Connect the GoogleApiClient
-        mBackgroundController.handleResult(BackgroundController.INIT_LOADING);
+        // TODO Uncomment
+//        mBackgroundController.handleResult(BackgroundController.INIT_LOADING);
+        mBackgroundController.handleResult(BackgroundController.TEST_SCENARIO);
     }
 
     @Override
