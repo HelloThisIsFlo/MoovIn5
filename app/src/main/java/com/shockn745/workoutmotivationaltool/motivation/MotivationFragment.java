@@ -80,7 +80,7 @@ public class MotivationFragment extends Fragment
 
     private void initRecyclerView() {
         // Set the adapter with empty dataset
-        mAdapter = new CardAdapter(new ArrayList<CardInterface>());
+        mAdapter = new CardAdapter(new ArrayList<CardInterface>(), getActivity());
         mRecyclerView.setAdapter(mAdapter);
 
         // Set recyclerView

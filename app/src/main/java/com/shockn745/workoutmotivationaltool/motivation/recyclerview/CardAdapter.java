@@ -1,5 +1,6 @@
 package com.shockn745.workoutmotivationaltool.motivation.recyclerview;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,10 +26,12 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final String LOG_TAG = CardAdapter.class.getSimpleName();
 
     private final ArrayList<CardInterface> mDataSet;
+    private final Activity mActivity;
 
-    public CardAdapter(ArrayList<CardInterface> dataSet) {
+    public CardAdapter(ArrayList<CardInterface> dataSet, Activity activity) {
         // Init the dataset
         mDataSet = dataSet;
+        mActivity = activity;
     }
 
 
@@ -116,6 +119,13 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             CardBackAtHome.BackAtHomeVH backAtHomeVH = (CardBackAtHome.BackAtHomeVH) holder;
 
             CardBackAtHome card = (CardBackAtHome) mDataSet.get(position);
+
+            View cardView = holder.itemView;
+            int toolbarHeight = mActivity.findViewById(R.id.motivation_toolbar).getHeight();
+            ViewGroup.MarginLayoutParams marginLayoutParams =
+                    (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
+            marginLayoutParams.topMargin += toolbarHeight;
+            cardView.setLayoutParams(marginLayoutParams);
 
             backAtHomeVH.mTextView.setText(card.getText());
 
