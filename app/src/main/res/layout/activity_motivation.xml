@@ -19,7 +19,6 @@
         android:id="@+id/motivation_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
         tools:context="com.shockn745.workoutmotivationaltool.motivation.MotivationActivity"
         tools:ignore="MergeRootFrame" />
         <!--android:layout_below="@id/motivation_toolbar"-->

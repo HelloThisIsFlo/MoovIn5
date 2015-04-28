@@ -1,7 +1,7 @@
 package com.shockn745.workoutmotivationaltool.motivation.recyclerview;
 
-import android.support.v7.widget.LinearLayoutManager;
 import android.app.Activity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,7 +62,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.card_back_at_home, parent, false);
-                return new CardBackAtHome.BackAtHomeVH(itemView);
+                return createBackAtHomeVH(itemView);
 
             case CardInterface.WEATHER_VIEW_TYPE:
                 itemView = LayoutInflater
@@ -121,13 +121,6 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             CardBackAtHome.BackAtHomeVH backAtHomeVH = (CardBackAtHome.BackAtHomeVH) holder;
 
             CardBackAtHome card = (CardBackAtHome) mDataSet.get(position);
-
-            View cardView = holder.itemView;
-            int toolbarHeight = mActivity.findViewById(R.id.motivation_toolbar).getHeight();
-            ViewGroup.MarginLayoutParams marginLayoutParams =
-                    (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
-            marginLayoutParams.topMargin += toolbarHeight;
-            cardView.setLayoutParams(marginLayoutParams);
 
             backAtHomeVH.mTextView.setText(card.getText());
 
@@ -259,9 +252,9 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 
 
-    ////////////////////
-    // Bind method(s) //
-    ////////////////////
+    ///////////////////////////
+    // Bind/create method(s) //
+    ///////////////////////////
 
     private void bindCaloriesCard(CardCalories.CaloriesVH holder, int position) {
 
@@ -281,6 +274,36 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         // Notify the recyclerView that its size won't change (better perfs)
         holder.mRecyclerView.setHasFixedSize(true);
         holder.mRecyclerView.setItemAnimator(null); //Deactivate animations
+
+        // Set the height of the recyclerview depending on the number of elements
+        ViewGroup.LayoutParams layoutParams = holder.mRecyclerView.getLayoutParams();
+        float test = mActivity.getResources().getDimension(R.dimen.calories_recycler_view_list_item_height);
+        layoutParams.height = (int) (card.getItems().length
+                * mActivity.getResources().getDimension(R.dimen.calories_recycler_view_list_item_height));
+
+        holder.mRecyclerView.setLayoutParams(layoutParams);
+
+    }
+
+    /**
+     * Creates the BackAtHome holder and sets the margin for the cardView.
+     * @param itemView Base layout (here cardView)
+     * @return the holder created
+     */
+    private CardBackAtHome.BackAtHomeVH createBackAtHomeVH(View itemView) {
+        CardBackAtHome.BackAtHomeVH holder = new CardBackAtHome.BackAtHomeVH(itemView);
+
+        // Set the margin for the cardview
+        View cardView = holder.itemView;
+
+        int toolbarHeight = mActivity.findViewById(R.id.motivation_toolbar).getHeight();
+
+        ViewGroup.MarginLayoutParams marginLayoutParams =
+                (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
+        marginLayoutParams.topMargin += toolbarHeight;
+        cardView.setLayoutParams(marginLayoutParams);
+
+        return holder;
     }
 
 }
