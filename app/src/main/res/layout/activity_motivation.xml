@@ -5,7 +5,7 @@
     android:layout_width="match_parent">
 
     <Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/motivation_toolbar"
         android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
         android:popupTheme="@style/AppTheme.NoActionBar"
         android:layout_height="wrap_content"
@@ -16,12 +16,12 @@
         />
 
     <FrameLayout
-        android:id="@+id/container"
+        android:id="@+id/motivation_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
         tools:context="com.shockn745.workoutmotivationaltool.motivation.MotivationActivity"
         tools:ignore="MergeRootFrame" />
+        <!--android:layout_below="@id/motivation_toolbar"-->
 
 
 </RelativeLayout>

@@ -51,7 +51,7 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
         // Find elements by id
         mSetLocationButton = (ImageButton) findViewById(R.id.set_location_button);
         mChangeMaptypeButton = (ImageButton) findViewById(R.id.change_maptype_button);
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.motivation_toolbar);
 
         // Add toolbar
         setActionBar(mToolbar);
@@ -93,7 +93,7 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
         MapFragment mapFragment = MapFragment.newInstance(options);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, mapFragment)
+                    .add(R.id.motivation_container, mapFragment)
                     .commit();
         }
 
@@ -169,7 +169,7 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
             @Override
             public void onMapLongClick(LatLng latLng) {
                 // Perform haptic feedback (not handled by GoogleMap)
-                findViewById(R.id.container)
+                findViewById(R.id.motivation_container)
                         .performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
 
                 // Show "accept" button & display the marker or change its location

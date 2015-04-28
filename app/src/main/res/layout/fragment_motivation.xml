@@ -2,8 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="?android:attr/actionBarSize"
     tools:context="com.shockn745.workoutmotivationaltool.motivation.MotivationActivity.MotivationFragment">
 
+    <!-- test with margin / padding / etc -->
+    <!-- Otherwise set margin/padding on BackAtHome Card ! -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cards_recycler_view"
         android:layout_width="match_parent"

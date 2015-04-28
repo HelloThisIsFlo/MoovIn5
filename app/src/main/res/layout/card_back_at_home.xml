@@ -3,6 +3,7 @@
     style="@style/Card"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_view"
+    android:layout_marginTop="?android:attr/actionBarSize"
     android:layout_height="wrap_content">
 
     <TextView

@@ -22,7 +22,7 @@ public class SettingsActivity extends Activity {
         setContentView(R.layout.activity_setting);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new SettingsFragment())
+                    .add(R.id.motivation_container, new SettingsFragment())
                     .commit();
         }
     }

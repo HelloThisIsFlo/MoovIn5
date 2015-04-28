@@ -95,7 +95,8 @@ public class MotivationFragment extends Fragment
         SwipeDismissRecyclerViewTouchListener touchListener =
                 new SwipeDismissRecyclerViewTouchListener(
                         mRecyclerView,
-                        mAdapter
+                        mAdapter,
+                        getActivity()
                 );
         mRecyclerView.setOnTouchListener(touchListener);
         // Setting this scroll listener is required to ensure that during ListView scrolling,
