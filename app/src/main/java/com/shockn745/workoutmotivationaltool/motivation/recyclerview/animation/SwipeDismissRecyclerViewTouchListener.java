@@ -7,7 +7,6 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -153,7 +152,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             private final static String LOG_TAG = "OnScrollListener";
 
             private int currentTranslationY;
-            private boolean toolbarIsDown = false;
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 setEnabled(newState != AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
@@ -161,8 +159,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                Log.d(LOG_TAG, "dx = " + dx + "dy = " + dy);
-
                 if (dy > 0) { // Scroll UP detected
                     // Hide toolbar
                     int toolbarHeight = mToolbar.getHeight();
@@ -171,22 +167,14 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
 
 
                     mToolbar.setTranslationY(currentTranslationY);
-                    Log.d(LOG_TAG, "Current translation = " + currentTranslationY);
 
                 } else { //Scroll DOWN detected
                     // Animate toolbar down
                     currentTranslationY = Math.min(currentTranslationY - dy, 0);
 
                     mToolbar.setTranslationY(currentTranslationY);
-                    Log.d(LOG_TAG, "Current translation = " + currentTranslationY);
-//                    //TODO gerer le cas ou currentTranslation < height
-////                    currentTranslationY = mToolbar.getHeight();
-//                    mToolbar.setTranslationY(currentTranslationY);
-//                    mToolbar.animate().translationY(0).setDuration(1000).start();
                 }
             }
-
-
         };
     }
 
