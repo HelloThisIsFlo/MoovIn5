@@ -157,10 +157,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 setEnabled(newState != AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
-
-                // Reset currentTranslationY (for test purposes)
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
-                    currentTranslationY = 0;
             }
 
             @Override
@@ -178,7 +174,11 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     Log.d(LOG_TAG, "Current translation = " + currentTranslationY);
 
                 } else { //Scroll DOWN detected
-//                    // Animate toolbar down
+                    // Animate toolbar down
+                    currentTranslationY = Math.min(currentTranslationY - dy, 0);
+
+                    mToolbar.setTranslationY(currentTranslationY);
+                    Log.d(LOG_TAG, "Current translation = " + currentTranslationY);
 //                    //TODO gerer le cas ou currentTranslation < height
 ////                    currentTranslationY = mToolbar.getHeight();
 //                    mToolbar.setTranslationY(currentTranslationY);
