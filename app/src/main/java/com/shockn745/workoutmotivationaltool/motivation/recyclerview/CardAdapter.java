@@ -125,11 +125,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             backAtHomeVH.mTextView.setText(card.getText());
 
         } else if (holder instanceof CardWeather.WeatherVH) {
-            CardWeather.WeatherVH weatherVH = (CardWeather.WeatherVH) holder;
-
-            CardWeather card = (CardWeather) mDataSet.get(position);
-
-            weatherVH.mTextView.setText(card.getText());
+            bindWeatherCard((CardWeather.WeatherVH) holder, position);
 
         } else if (holder instanceof CardRoute.RouteVH) {
             CardRoute.RouteVH routeVH = (CardRoute.RouteVH) holder;
@@ -256,6 +252,11 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     // Bind/create method(s) //
     ///////////////////////////
 
+    /**
+     * Binds the calorie card : set the recyclerView (adapter + dynamic height)
+     * @param holder Calorie card holder
+     * @param position position of calorieCard in dataset
+     */
     private void bindCaloriesCard(CardCalories.CaloriesVH holder, int position) {
 
         CardCalories card = (CardCalories) mDataSet.get(position);
@@ -282,6 +283,20 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 * mActivity.getResources().getDimension(R.dimen.calories_recycler_view_list_item_height));
 
         holder.mRecyclerView.setLayoutParams(layoutParams);
+
+    }
+
+    /**
+     * Binds the weather card, set the temp & forecast texts and set the corresponding image
+     * @param weatherVH Weather card holder
+     * @param position position of the WeatherCard in the dataset
+     */
+    private void bindWeatherCard(CardWeather.WeatherVH weatherVH, int position) {
+        CardWeather card = (CardWeather) mDataSet.get(position);
+
+        weatherVH.mTempTextView.setText(card.getmTempText());
+        weatherVH.mForecastTextView.setText(card.getmForecastText());
+        weatherVH.mImageView.setImageResource(card.getmImageResId());
 
     }
 

@@ -301,7 +301,7 @@ public class MotivationFragment extends Fragment
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mAdapter.addCard(new CardWeather(weatherInfos.mForecast));
+                mAdapter.addCard(new CardWeather(weatherInfos));
             }
         }, removeDuration + addDuration);
     }
@@ -420,7 +420,6 @@ public class MotivationFragment extends Fragment
          * afterwards.
          *
          * @param message Message to display
-         * @return AlertDialog to show
          */
         private void showErrorDialog(String message) {
             if (!mIsErrorDialogAlreadyDisplayed) {
