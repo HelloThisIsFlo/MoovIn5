@@ -50,7 +50,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.card_loading, parent, false);
-                return new CardLoading.LoadingVH(itemView);
+                return createLoadingVH(itemView);
 
             case CardInterface.LOADING_SIMPLE_VIEW_TYPE:
                 itemView = LayoutInflater
@@ -292,6 +292,27 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
      */
     private CardBackAtHome.BackAtHomeVH createBackAtHomeVH(View itemView) {
         CardBackAtHome.BackAtHomeVH holder = new CardBackAtHome.BackAtHomeVH(itemView);
+
+        // Set the margin for the cardview
+        View cardView = holder.itemView;
+
+        int toolbarHeight = mActivity.findViewById(R.id.motivation_toolbar).getHeight();
+
+        ViewGroup.MarginLayoutParams marginLayoutParams =
+                (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
+        marginLayoutParams.topMargin += toolbarHeight;
+        cardView.setLayoutParams(marginLayoutParams);
+
+        return holder;
+    }
+
+    /**
+     * Creates the LoadingCard holder and sets the margin for the cardView.
+     * @param itemView Base layout (here cardView)
+     * @return the holder created
+     */
+    private CardLoading.LoadingVH createLoadingVH(View itemView) {
+        CardLoading.LoadingVH holder = new CardLoading.LoadingVH(itemView);
 
         // Set the margin for the cardview
         View cardView = holder.itemView;

@@ -109,9 +109,9 @@ public class MotivationFragment extends Fragment
         super.onResume();
 
         // Connect the GoogleApiClient
-        // TODO Uncomment
-//        mBackgroundController.handleResult(BackgroundController.INIT_LOADING);
-        mBackgroundController.handleResult(BackgroundController.TEST_SCENARIO);
+        // TODO Uncomment for test scenario
+//        mBackgroundController.handleResult(BackgroundController.TEST_SCENARIO);
+        mBackgroundController.handleResult(BackgroundController.INIT_LOADING);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class MotivationFragment extends Fragment
                     if (mIsInLoadingState && !mFirstLoadingCardDisplayed) {
                         mFirstLoadingCardDisplayed = true;
                         // TODO use random sentences from list
-                        mAdapter.addCard(new CardLoading("Contacting your coach ..."));
+                        mAdapter.addCard(new CardLoading("Contacting your coach"));
                     }
                 }
             }, 500);
