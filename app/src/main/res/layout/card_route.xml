@@ -5,12 +5,17 @@
     android:id="@+id/route_card_view"
     android:layout_height="200dp">
 
+    <FrameLayout
+        android:id="@+id/route_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <!--
     <com.google.android.gms.maps.MapView
         xmlns:map="http://schemas.android.com/apk/res-auto"
         android:id="@+id/route_map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         map:liteMode="true"
-        map:mapType="normal" />
+        map:mapType="normal" /> -->
 
 </android.support.v7.widget.CardView>
