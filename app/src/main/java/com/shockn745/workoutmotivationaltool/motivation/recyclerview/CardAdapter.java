@@ -74,7 +74,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.card_route, parent, false);
-                return new CardRoute.RouteVH(itemView);
+                return createRouteVH(itemView);
 
             case CardInterface.CALORIES_VIEW_TYPE:
                 itemView = LayoutInflater
@@ -132,11 +132,9 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             weatherVH.mTextView.setText(card.getText());
 
         } else if (holder instanceof CardRoute.RouteVH) {
-            CardRoute.RouteVH routeVH = (CardRoute.RouteVH) holder;
-
-            CardRoute card = (CardRoute) mDataSet.get(position);
-
-            routeVH.mTextView.setText(card.getText());
+//            final CardRoute.RouteVH routeVH = (CardRoute.RouteVH) holder;
+//
+//            CardRoute card = (CardRoute) mDataSet.get(position);
 
         } else if (holder instanceof CardCalories.CaloriesVH) {
             bindCaloriesCard((CardCalories.CaloriesVH) holder, position);
@@ -323,6 +321,21 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
         marginLayoutParams.topMargin += toolbarHeight;
         cardView.setLayoutParams(marginLayoutParams);
+
+        return holder;
+    }
+
+    /**
+     * Creates the RouteCard holder and init the mapview
+     * @param itemView Base layout (here cardView)
+     * @return the holder created
+     */
+    private CardRoute.RouteVH createRouteVH(View itemView) {
+        CardRoute.RouteVH holder = new CardRoute.RouteVH(itemView);
+
+        // Init the mapView
+        holder.mMapView.onCreate(null);
+        holder.mMapView.getMapAsync(holder);
 
         return holder;
     }

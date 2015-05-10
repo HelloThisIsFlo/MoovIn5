@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.motivation_container, new MainFragment())
+                    .add(R.id.main_container, new MainFragment())
                     .commit();
         }
 

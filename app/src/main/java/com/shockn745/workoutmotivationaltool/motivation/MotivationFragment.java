@@ -71,6 +71,11 @@ public class MotivationFragment extends Fragment
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cards_recycler_view);
 
         initRecyclerView();
+
+        // Init the route view holder
+        // This is to prevent frame skip when adding the route card to the recyclerview
+        mAdapter.createViewHolder(mRecyclerView, CardInterface.ROUTE_VIEW_TYPE);
+
         mErrorHandler = new ErrorHandler();
         mBackgroundController = new BackgroundController(getActivity(), this);
         mHandler = new Handler();
@@ -420,7 +425,6 @@ public class MotivationFragment extends Fragment
          * afterwards.
          *
          * @param message Message to display
-         * @return AlertDialog to show
          */
         private void showErrorDialog(String message) {
             if (!mIsErrorDialogAlreadyDisplayed) {
