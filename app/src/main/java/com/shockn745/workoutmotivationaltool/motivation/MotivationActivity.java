@@ -2,13 +2,11 @@ package com.shockn745.workoutmotivationaltool.motivation;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toolbar;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.shockn745.workoutmotivationaltool.R;
 
 /**
@@ -17,20 +15,20 @@ import com.shockn745.workoutmotivationaltool.R;
  *
  * @author Florian Kempenich
  */
-public class MotivationActivity extends Activity implements OnMapReadyCallback {
+public class MotivationActivity extends Activity {
 
     private static final String LOG_TAG = MotivationActivity.class.getSimpleName();
 
     private MapView mMapView;
-    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_motivation);
+        MotivationFragment motivationFragment = new MotivationFragment();
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.motivation_container, new MotivationFragment())
+                    .add(R.id.motivation_container, motivationFragment)
                     .commit();
         }
 
@@ -52,16 +50,11 @@ public class MotivationActivity extends Activity implements OnMapReadyCallback {
                 .mapType(GoogleMap.MAP_TYPE_NORMAL);
         mMapView = new MapView(this, options);
         mMapView.onCreate(savedInstanceState);
-        mMapView.getMapAsync(this);
+        mMapView.getMapAsync(motivationFragment);
     }
 
     public MapView getMapView() {
         return mMapView;
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        Log.d(LOG_TAG, "OnMapReady called");
-    }
 }

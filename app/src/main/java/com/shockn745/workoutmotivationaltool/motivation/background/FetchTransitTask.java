@@ -29,20 +29,47 @@ import java.util.Date;
  * LatLng[0] : start point<br>
  * LatLng[1] : destination<br>
  */
-public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
+public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTask.TransitInfos> {
 
     public interface OnBackAtHomeTimeRetrievedListener {
 
         /**
          * Callback called when FetchTransitTask is done
-         * @param backAtHome Time back at home
+         * @param transitInfos Transit infos
          * @param resultCode RESULT_OK if OK <br>
          *                   ERROR if error <br>
          *                   NO_ROUTES_ERROR if no routes <br>
          *                   CONNECTION_ERROR if connection error
          */
-        public void onBackAtHomeTimeRetrieved(Date backAtHome, int resultCode);
+        public void onBackAtHomeTimeRetrieved(TransitInfos transitInfos, int resultCode);
 
+    }
+
+    public static class TransitInfos {
+        private int mTransitTime;
+        private String mPolylineRoute;
+        private Date backAtHomeDate;
+
+        public TransitInfos(int transitTime, String polylineRoute) {
+            this.mPolylineRoute = polylineRoute;
+            this.mTransitTime = transitTime;
+        }
+
+        public int getTransitTime() {
+            return mTransitTime;
+        }
+
+        public String getPolylineRoute() {
+            return mPolylineRoute;
+        }
+
+        public Date getBackAtHomeDate() {
+            return backAtHomeDate;
+        }
+
+        public void setBackAtHomeDate(Date backAtHomeDate) {
+            this.backAtHomeDate = backAtHomeDate;
+        }
     }
 
     private final String LOG_TAG = FetchTransitTask.class.getSimpleName();
@@ -71,7 +98,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
      * @return Transit time between the two points
      */
     @Override
-    protected Integer doInBackground(LatLng... params) {
+    protected TransitInfos doInBackground(LatLng... params) {
         // Check if both origin & destination are provided
         if (params.length == 2) {
 
@@ -169,13 +196,13 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
                 try {
                     // String too long to log => using debug mode instead
                     // Log.d(LOG_TAG, jsonString);
-                    int transitTime = parseTransitTime(jsonString);
-                    if (transitTime == -1) {
+                    TransitInfos transitInfos = parseTransitInfos(jsonString);
+                    if (transitInfos == null) {
                         // No routes available
                         publishProgress(NO_ROUTES_ERROR);
                         return null;
                     } else {
-                        return transitTime;
+                        return transitInfos;
                     }
                 } catch (JSONException e) {
                     publishProgress(JSON_ERROR);
@@ -237,12 +264,12 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
     /**
      * Updates the UI of MotivationFragment/
      *
-     * @param transitTime Result of doInBackground method
+     * @param transitInfos Result of doInBackground method
      */
     @Override
-    protected void onPostExecute(Integer transitTime) {
-        if (transitTime != null) {
-            Log.d(LOG_TAG, "Transit time (in seconds) : " + transitTime);
+    protected void onPostExecute(TransitInfos transitInfos) {
+        if (transitInfos != null) {
+            Log.d(LOG_TAG, "Transit time (in seconds) : " + transitInfos.getTransitTime());
 
             // Get workout, warmup & stretching times
             SharedPreferences prefs = PreferenceManager
@@ -260,7 +287,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
             // TODO calculate 2 different transit times : to go & to come back (do it in the same FetchTransitTask)
             long timeSpent = (warmup * 60 * 1000)
                     + (stretching * 60 * 1000)
-                    + 2 * (transitTime * 1000)
+                    + 2 * (transitInfos.getTransitTime() * 1000)
                     + (workout * 60 * 1000);
 
             // Current time
@@ -270,7 +297,9 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
             // Time back at home
             Date backAtHome = new Date(currentTime + timeSpent);
 
-            mListener.onBackAtHomeTimeRetrieved(backAtHome, RESULT_OK);
+            transitInfos.setBackAtHomeDate(backAtHome);
+
+            mListener.onBackAtHomeTimeRetrieved(transitInfos, RESULT_OK);
         }
     }
 
@@ -281,28 +310,39 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, Integer> {
      * @return Transit time (in seconds)
      * @throws JSONException When there is a problem parsing the JSON String
      */
-    private int parseTransitTime(String jsonString) throws JSONException {
+    private TransitInfos parseTransitInfos(String jsonString) throws JSONException {
 
         final String JSON_ROUTES = "routes";
         final String JSON_LEGS = "legs";
         final String JSON_DURATION = "duration";
         final String JSON_DURATION_VALUE = "value";
         final String JSON_STATUS = "status";
+        final String JSON_POLYLINE = "overview_polyline";
+        final String JSON_POINTS = "points";
 
         JSONObject root = new JSONObject(jsonString);
 
         // Check that there are routes availables
         if (root.getString(JSON_STATUS).equals("ZERO_RESULTS")) {
-            return -1;
+            return null;
         }
 
         // Return the transit time
-        return root.getJSONArray(JSON_ROUTES)
-                .getJSONObject(0)
+
+        JSONObject firstRoute = root.getJSONArray(JSON_ROUTES)
+                .getJSONObject(0);
+
+        int transitTime = firstRoute
                 .getJSONArray(JSON_LEGS)
                 .getJSONObject(0)
                 .getJSONObject(JSON_DURATION)
                 .getInt(JSON_DURATION_VALUE);
+
+        String polyline = firstRoute
+                .getJSONObject(JSON_POLYLINE)
+                .getString(JSON_POINTS);
+
+        return new TransitInfos(transitTime, polyline);
     }
 
 }

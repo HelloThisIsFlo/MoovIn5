@@ -15,6 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
 import com.shockn745.workoutmotivationaltool.R;
 import com.shockn745.workoutmotivationaltool.motivation.background.BackgroundController;
 import com.shockn745.workoutmotivationaltool.motivation.background.ConnectionListener;
@@ -33,13 +41,16 @@ import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.calor
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Fragment of MotivationActivity
  * see the {@link MotivationActivity} class
  */
-public class MotivationFragment extends Fragment
-        implements BackgroundController.BackgroundControllerListener{
+public class MotivationFragment extends Fragment implements
+        BackgroundController.BackgroundControllerListener,
+        OnMapReadyCallback,
+        GoogleMap.OnMapLoadedCallback {
 
     private static final String LOG_TAG = MotivationFragment.class.getSimpleName();
 
@@ -55,6 +66,12 @@ public class MotivationFragment extends Fragment
     private boolean mFirstLoadingCardDisplayed = false;
     private boolean mSecondLoadingCardDisplayed = false;
     private boolean mResultCardsDisplayed = false;
+
+    // Add times to schedule initial add animations
+    private long addTimes[];
+
+    private GoogleMap mMap = null;
+    private String mPolylineRoute = null;
 
 
     @Override
@@ -79,6 +96,16 @@ public class MotivationFragment extends Fragment
         mErrorHandler = new ErrorHandler();
         mBackgroundController = new BackgroundController(getActivity(), this);
         mHandler = new Handler();
+
+        // Init the add times
+        long removeDuration = mRecyclerView.getItemAnimator().getRemoveDuration();
+        long addDuration = mRecyclerView.getItemAnimator().getAddDuration();
+        addTimes = new long[]{
+                removeDuration + addDuration, //Not used here anymore
+                removeDuration + addDuration * 2,
+                removeDuration + addDuration * 3,
+                removeDuration + addDuration * 4,
+        };
 
         return rootView;
     }
@@ -212,7 +239,8 @@ public class MotivationFragment extends Fragment
      */
     @Override
     public void onBackgroundProcessDone(BackgroundController.BackgroundProcessResult result) {
-        handleBackAtHomeTime(result.mBackAtHomeTime);
+        handleBackAtHomeTime(result.mTransitInfos.getBackAtHomeDate());
+        handlePolylineRoute(result.mTransitInfos.getPolylineRoute());
         handleWeatherInfo(result.mWeatherInfos);
         // TODO add other functions to handle the other type of result (if applicable)
     }
@@ -228,6 +256,8 @@ public class MotivationFragment extends Fragment
     public void onBackgroundProcessError(int errorCode) {
         mErrorHandler.handleError(errorCode);
     }
+
+
 
     ////////////////////////////////////////////////////////////
     // Methods to handle results of the background processing //
@@ -260,29 +290,7 @@ public class MotivationFragment extends Fragment
 
 
             // TODO TEST SCENARIO : REMOVE
-            // Time schedule
-            long removeDuration = mRecyclerView.getItemAnimator().getRemoveDuration();
-            long addDuration = mRecyclerView.getItemAnimator().getAddDuration();
-            long addTimes[] = new long[]{
-                    removeDuration + addDuration, //Not used here anymore
-                    removeDuration + addDuration * 2,
-                    removeDuration + addDuration * 3,
-                    removeDuration + addDuration * 4,
-            };
-
-//            mHandler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    mAdapter.addCard(new CardWeather("Sunny"));
-//                }
-//            }, addTimes[0]);
             // Display the rest of the test cards
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mAdapter.addCard(new CardRoute("This way"));
-                }
-            }, addTimes[1]);
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -300,15 +308,33 @@ public class MotivationFragment extends Fragment
         mResultCardsDisplayed = true;
     }
 
+    /**
+     * Add the Route card
+     * The polyline is not drawn yet, it will be automatically drawn when the map is displayed
+     * cf. onMapLoaded()
+     * @param polyline Route to draw
+     */
+    private void handlePolylineRoute(String polyline) {
+        mPolylineRoute = polyline;
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.addCard(new CardRoute("This way"));
+            }
+        }, addTimes[1]);
+    }
+
+    /**
+     * Add the weather card
+     * @param weatherInfos weather infos
+     */
     private void handleWeatherInfo(final FetchWeatherTask.WeatherInfos weatherInfos) {
-        long removeDuration = mRecyclerView.getItemAnimator().getRemoveDuration();
-        long addDuration = mRecyclerView.getItemAnimator().getAddDuration();
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mAdapter.addCard(new CardWeather(weatherInfos.mForecast));
             }
-        }, removeDuration + addDuration);
+        }, addTimes[0]);
     }
 
 
@@ -451,5 +477,64 @@ public class MotivationFragment extends Fragment
             }
         }
 
+    }
+
+
+
+    /////////////////////////
+    // Map related methods //
+    /////////////////////////
+
+    /**
+     * Called when the map is ready to be used
+     * If the polyline route is already available, calls drawPolylineRoute()
+     * @param googleMap map
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        // Initialize the map here because we have to work with the map before it is displayed
+        // cf. drawPolylineRoute()
+        MapsInitializer.initialize(getActivity());
+        Log.d(LOG_TAG, "OnMapReady called");
+        if (mPolylineRoute != null) {
+            drawPolylineRoute();
+        }
+        mMap.setOnMapLoadedCallback(this);
+    }
+
+    /**
+     * Called when the map has finished rendering
+     * This is where the polyline is drawn.
+     */
+    @Override
+    public void onMapLoaded() {
+        drawPolylineRoute();
+    }
+
+    /**
+     * Draw the polyline route onto the map and adjust the zoom level
+     */
+    private void drawPolylineRoute() {
+        Log.d(LOG_TAG, "drawPolylineRoute()");
+
+        // Clean Map
+        mMap.clear();
+
+        // Draw polyline
+        List<LatLng> polylineList = PolyUtil.decode(mPolylineRoute);
+        PolylineOptions polylineOptions = new PolylineOptions();
+        polylineOptions.addAll(polylineList);
+        mMap.addPolyline(polylineOptions);
+
+        // Move camera
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+        for (LatLng latLng : polylineList) {
+            builder.include(latLng);
+        }
+
+        int padding = 0;
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), padding));
+        Log.d(LOG_TAG, "Camera moved");
     }
 }

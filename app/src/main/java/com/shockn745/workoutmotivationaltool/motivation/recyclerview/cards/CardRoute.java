@@ -21,8 +21,6 @@ public class CardRoute implements CardInterface {
             super(itemView);
             this.mFrameLayout = (FrameLayout) itemView.findViewById(R.id.route_frame_layout);
         }
-
-
     }
 
     private String mPolyline;
