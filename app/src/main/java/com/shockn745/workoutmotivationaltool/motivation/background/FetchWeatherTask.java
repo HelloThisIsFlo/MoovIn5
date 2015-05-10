@@ -48,7 +48,6 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
         public void OnWeatherInfoRetrieved(WeatherInfos weatherInfos, int resultCode);
     }
 
-    // TODO Clean
     public final static int ERROR = -1;
     public final static int RESULT_OK = 0;
     public final static int CONNECTION_ERROR = 1;

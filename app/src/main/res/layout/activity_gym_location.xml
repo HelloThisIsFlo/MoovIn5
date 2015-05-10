@@ -6,7 +6,7 @@
     android:layout_width="match_parent">
 
     <Toolbar
-        android:id="@+id/motivation_toolbar"
+        android:id="@+id/gym_toolbar"
         android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
         android:popupTheme="@style/AppTheme.NoActionBar"
         android:layout_height="wrap_content"
@@ -17,10 +17,10 @@
         />
 
     <FrameLayout
-        android:id="@+id/motivation_container"
+        android:id="@+id/gym_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/motivation_toolbar"
+        android:layout_below="@id/gym_toolbar"
         />
 
 

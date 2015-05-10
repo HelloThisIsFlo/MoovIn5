@@ -7,8 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 
 import com.shockn745.workoutmotivationaltool.R;
+import com.shockn745.workoutmotivationaltool.motivation.MotivationActivity;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardAd;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardBackAtHome;
@@ -28,12 +31,21 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final String LOG_TAG = CardAdapter.class.getSimpleName();
 
     private final ArrayList<CardInterface> mDataSet;
-    private final Activity mActivity;
+    private final MotivationActivity mActivity;
 
-    public CardAdapter(ArrayList<CardInterface> dataSet, Activity activity) {
+    private DrawPolylineCallback mDrawPolylineCallback;
+
+    public interface DrawPolylineCallback {
+        void drawPolylineCallback();
+    }
+
+    public CardAdapter(ArrayList<CardInterface> dataSet,
+                       Activity activity,
+                       DrawPolylineCallback drawPolylineCallback) {
         // Init the dataset
         mDataSet = dataSet;
-        mActivity = activity;
+        mActivity = (MotivationActivity) activity;
+        mDrawPolylineCallback = drawPolylineCallback;
     }
 
 
@@ -74,6 +86,22 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.card_route, parent, false);
+
+                ViewTreeObserver vto = itemView.getViewTreeObserver();
+
+                // Draw polyline after the map is displayed
+                // Required because the lite mode does not support the extended version of :
+                // CameraUpdateFactory.newLatLngBounds()
+                vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        try {
+                            mDrawPolylineCallback.drawPolylineCallback();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
                 return new CardRoute.RouteVH(itemView);
 
             case CardInterface.CALORIES_VIEW_TYPE:
@@ -132,7 +160,12 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             CardRoute card = (CardRoute) mDataSet.get(position);
 
-            routeVH.mTextView.setText(card.getText());
+            // Add the MapView to the FrameLayout
+            // if necessary remove from the previous FrameLayout
+            if (mActivity.getMapView().getParent() != null) {
+                ((FrameLayout) mActivity.getMapView().getParent()).removeAllViews();
+            }
+            routeVH.mFrameLayout.addView(mActivity.getMapView());
 
         } else if (holder instanceof CardCalories.CaloriesVH) {
             bindCaloriesCard((CardCalories.CaloriesVH) holder, position);
@@ -341,5 +374,6 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         return holder;
     }
+
 
 }

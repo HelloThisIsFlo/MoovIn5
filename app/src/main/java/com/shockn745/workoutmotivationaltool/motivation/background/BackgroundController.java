@@ -32,11 +32,13 @@ public class BackgroundController implements
         LocationListener {
 
     public static class BackgroundProcessResult {
-        public final Date mBackAtHomeTime;
+        public final FetchTransitTask.TransitInfos mTransitInfos;
         public final FetchWeatherTask.WeatherInfos mWeatherInfos;
 
-        public BackgroundProcessResult(Date backAtHomeTime, FetchWeatherTask.WeatherInfos weatherInfos) {
-            this.mBackAtHomeTime = backAtHomeTime;
+        public BackgroundProcessResult(
+                FetchTransitTask.TransitInfos transitInfos,
+                FetchWeatherTask.WeatherInfos weatherInfos) {
+            this.mTransitInfos = transitInfos;
             this.mWeatherInfos = weatherInfos;
         }
     }
@@ -114,7 +116,7 @@ public class BackgroundController implements
     public static final int TEST_SCENARIO = 999;
 
     // Results of background tasks
-    private Date mBackAtHomeTime = null;
+    private FetchTransitTask.TransitInfos mTransitInfos = null;
     private FetchWeatherTask.WeatherInfos mWeatherInfos = null;
 
 
@@ -234,7 +236,10 @@ public class BackgroundController implements
             case BG_PROCESS_SUCCESS:
                 mListener.onLoadingStateFinished();
                 mListener.onBackgroundProcessDone(
-                        new BackgroundProcessResult(mBackAtHomeTime, mWeatherInfos)
+                        new BackgroundProcessResult(
+                                mTransitInfos,
+                                mWeatherInfos
+                        )
                 );
                 break;
 
@@ -247,9 +252,14 @@ public class BackgroundController implements
 
             case TEST_SCENARIO:
                 mListener.onLoadingStateFinished();
+                FetchTransitTask.TransitInfos transitInfos = new FetchTransitTask.TransitInfos(
+                        -1,
+                        "s{j_I{itpANlEeLc@[fGFV@CcBfc@C{@Fi@J_A@EHq@CAYUCREJEVAPF@b@BZ@nE?j@O"
+                );
+                transitInfos.setBackAtHomeDate(new Date(2015, 04, 28));
                 mListener.onBackgroundProcessDone(
                         new BackgroundProcessResult(
-                                new Date(2015, 04, 28),
+                                transitInfos,
                                 new FetchWeatherTask.WeatherInfos(19, "Test forecast", 800)
                         )
                 );
@@ -310,7 +320,7 @@ public class BackgroundController implements
     private void sendResultToListenerIfAllProcessingDone() {
         // TODO add other type of result (if applicable)
         // Check that all variable have been successfully initialized
-        if (mBackAtHomeTime != null && mWeatherInfos != null) {
+        if (mTransitInfos != null && mWeatherInfos != null) {
             handleResult(BG_PROCESS_SUCCESS);
         }
     }
@@ -391,16 +401,17 @@ public class BackgroundController implements
 
     /**
      * Callback called when FetchTransitTask is done
-     * @param backAtHome Time back at home
+     * @param transitInfos Transit infos
      * @param resultCode RESULT_OK if OK <br>
      *                   ERROR if error <br>
      *                   NO_ROUTES_ERROR if no routes <br>
      */
     @Override
-    public void onBackAtHomeTimeRetrieved(Date backAtHome, int resultCode) {
+    public void onBackAtHomeTimeRetrieved(FetchTransitTask.TransitInfos transitInfos,
+                                          int resultCode) {
         switch (resultCode) {
             case FetchTransitTask.RESULT_OK:
-                mBackAtHomeTime = backAtHome;
+                mTransitInfos = transitInfos;
                 handleResult(BackgroundController.FETCH_TRANSIT_DONE);
                 break;
 
