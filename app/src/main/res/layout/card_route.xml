@@ -3,7 +3,7 @@
     style="@style/Card"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/route_card_view"
-    android:layout_height="200dp">
+    android:layout_height="@dimen/card_route_height">
 
     <FrameLayout
         android:id="@+id/route_frame_layout"

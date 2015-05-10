@@ -17,6 +17,14 @@
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_corner_radius">2dp</dimen>
 
+    <!-- Card Heights -->
+    <dimen name="card_back_at_home_height">70dp</dimen>
+    <dimen name="card_route_height">180dp</dimen>
+    <dimen name="card_ad_height">180dp</dimen>
+    <dimen name="card_loading_height">70dp</dimen>
+    <dimen name="card_loading_simple_height">100dp</dimen>
+    <dimen name="card_weather_height">180dp</dimen>
+
     <!-- Calories card : recyclerView -->
     <dimen name="calories_recycler_view_list_item_height">70dp</dimen>
 

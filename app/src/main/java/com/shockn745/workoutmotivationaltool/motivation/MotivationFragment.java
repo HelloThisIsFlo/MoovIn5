@@ -21,6 +21,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
 import com.shockn745.workoutmotivationaltool.R;
@@ -498,7 +499,11 @@ public class MotivationFragment extends Fragment implements
         MapsInitializer.initialize(getActivity());
         Log.d(LOG_TAG, "OnMapReady called");
         if (mPolylineRoute != null) {
-            drawPolylineRoute();
+            try {
+                drawPolylineRoute();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         mMap.setOnMapLoadedCallback(this);
     }
@@ -509,13 +514,17 @@ public class MotivationFragment extends Fragment implements
      */
     @Override
     public void onMapLoaded() {
-        drawPolylineRoute();
+        try {
+            drawPolylineRoute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Draw the polyline route onto the map and adjust the zoom level
      */
-    private void drawPolylineRoute() {
+    private void drawPolylineRoute() throws Exception {
         Log.d(LOG_TAG, "drawPolylineRoute()");
 
         // Clean Map
@@ -524,8 +533,13 @@ public class MotivationFragment extends Fragment implements
         // Draw polyline
         List<LatLng> polylineList = PolyUtil.decode(mPolylineRoute);
         PolylineOptions polylineOptions = new PolylineOptions();
-        polylineOptions.addAll(polylineList);
+        polylineOptions
+                .addAll(polylineList)
+                .width(15)
+                .color(getActivity().getResources().getColor(R.color.accent));
         mMap.addPolyline(polylineOptions);
+        mMap.addMarker(new MarkerOptions().position(polylineList.get(0)));
+        mMap.addMarker(new MarkerOptions().position(polylineList.get(polylineList.size() - 1)));
 
         // Move camera
         LatLngBounds.Builder builder = LatLngBounds.builder();
