@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
 import com.shockn745.workoutmotivationaltool.R;
@@ -32,10 +33,19 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final ArrayList<CardInterface> mDataSet;
     private final MotivationActivity mActivity;
 
-    public CardAdapter(ArrayList<CardInterface> dataSet, Activity activity) {
+    private DrawPolylineCallback mDrawPolylineCallback;
+
+    public interface DrawPolylineCallback {
+        void drawPolylineCallback();
+    }
+
+    public CardAdapter(ArrayList<CardInterface> dataSet,
+                       Activity activity,
+                       DrawPolylineCallback drawPolylineCallback) {
         // Init the dataset
         mDataSet = dataSet;
         mActivity = (MotivationActivity) activity;
+        mDrawPolylineCallback = drawPolylineCallback;
     }
 
 
@@ -76,6 +86,22 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.card_route, parent, false);
+
+                ViewTreeObserver vto = itemView.getViewTreeObserver();
+
+                // Draw polyline after the map is displayed
+                // Required because the lite mode does not support the extended version of :
+                // CameraUpdateFactory.newLatLngBounds()
+                vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        try {
+                            mDrawPolylineCallback.drawPolylineCallback();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
                 return new CardRoute.RouteVH(itemView);
 
             case CardInterface.CALORIES_VIEW_TYPE:

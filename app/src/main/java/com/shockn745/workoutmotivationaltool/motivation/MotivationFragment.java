@@ -51,7 +51,7 @@ import java.util.List;
 public class MotivationFragment extends Fragment implements
         BackgroundController.BackgroundControllerListener,
         OnMapReadyCallback,
-        GoogleMap.OnMapLoadedCallback {
+        CardAdapter.DrawPolylineCallback {
 
     private static final String LOG_TAG = MotivationFragment.class.getSimpleName();
 
@@ -113,7 +113,7 @@ public class MotivationFragment extends Fragment implements
 
     private void initRecyclerView() {
         // Set the adapter with empty dataset
-        mAdapter = new CardAdapter(new ArrayList<CardInterface>(), getActivity());
+        mAdapter = new CardAdapter(new ArrayList<CardInterface>(), getActivity(), this);
         mRecyclerView.setAdapter(mAdapter);
 
         // Set recyclerView
@@ -505,21 +505,9 @@ public class MotivationFragment extends Fragment implements
                 e.printStackTrace();
             }
         }
-        mMap.setOnMapLoadedCallback(this);
+//        mMap.setOnMapLoadedCallback(this);
     }
 
-    /**
-     * Called when the map has finished rendering
-     * This is where the polyline is drawn.
-     */
-    @Override
-    public void onMapLoaded() {
-        try {
-            drawPolylineRoute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Draw the polyline route onto the map and adjust the zoom level
@@ -550,5 +538,23 @@ public class MotivationFragment extends Fragment implements
         int padding = 0;
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), padding));
         Log.d(LOG_TAG, "Camera moved");
+    }
+
+
+
+    //////////////////////////
+    // DrawPolylineCallback //
+    //////////////////////////
+
+    /**
+     * Called when the map is displayed
+     */
+    @Override
+    public void drawPolylineCallback() {
+        try {
+            drawPolylineRoute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
