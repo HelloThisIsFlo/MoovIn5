@@ -72,7 +72,6 @@ public class BackgroundController implements
          * @param result Result of the background processing
          */
         public void onBackgroundProcessDone(BackgroundProcessResult result);
-        //TODO add other functions
 
         /**
          * Called when there is an error in the processing
@@ -135,6 +134,9 @@ public class BackgroundController implements
     private boolean mFetchingWeather = false;
     private boolean mFetchWeatherDone = false;
 
+    private boolean mFetchTransitSecondTry = false;
+    private boolean mFetchWeatherSecondTry = false;
+
 
 
     public BackgroundController(Activity mActivity, BackgroundControllerListener mListener) {
@@ -168,16 +170,21 @@ public class BackgroundController implements
     public void handleResult(int result) {
         switch (result) {
             case INIT_LOADING:
-                mListener.onLoadingStateInitiated();
-                connectToGoogleApi();
-                if (!mFetchWeatherDone) {
+                // If called on fetch tasks second try, do not notify listener
+                if (!mFetchTransitSecondTry && !mFetchWeatherSecondTry) {
+                    mListener.onLoadingStateInitiated();
+                }
+                if (!mFetchingLocation && !mFetchLocationDone){
+                    connectToGoogleApi();
+                }
+                if (!mFetchWeatherDone && !mFetchingWeather) {
                     startFetchWeatherTaskWithGymLocation();
                     mFetchingWeather = true;
                 }
                 break;
 
             case CONN_OK:
-                if (!mFetchLocationDone) {
+                if (!mFetchLocationDone && !mFetchingLocation) {
                     requestLocationUpdates();
                     startExpirationTimer();
                     mFetchingLocation = true;
@@ -188,7 +195,7 @@ public class BackgroundController implements
                 mFetchingLocation = false;
                 mFetchLocationDone = true;
                 cancelExpirationTimer();
-                if (!mFetchTransitDone) {
+                if (!mFetchTransitDone && !mFetchingTransit) {
                     startFetchTransitTaskWithNewLocation();
                     mFetchingTransit = true;
                 }
@@ -218,11 +225,16 @@ public class BackgroundController implements
 
             case FETCH_TRANSIT_CONNECTION_ERROR:
                 mFetchingTransit = false;
-                // TODO try one more time
-                mListener.onLoadingStateFinished();
-                mListener.onBackgroundProcessError(
-                        BackgroundControllerListener.ERROR_TRANSIT_CONNECTION_FAIL
-                );
+                if (mFetchTransitSecondTry) {
+                    mListener.onLoadingStateFinished();
+                    mListener.onBackgroundProcessError(
+                            BackgroundControllerListener.ERROR_TRANSIT_CONNECTION_FAIL
+                    );
+                } else {
+                    // Try one more time
+                    mFetchTransitSecondTry = true;
+                    handleResult(INIT_LOADING);
+                }
                 break;
 
             case FETCH_TRANSIT_NO_ROUTES:
@@ -249,16 +261,23 @@ public class BackgroundController implements
 
             case FETCH_WEATHER_CONNECTION_ERROR:
                 mFetchingWeather = false;
-                // TODO try again
-                mListener.onLoadingStateFinished();
-                mListener.onBackgroundProcessError(
-                        BackgroundControllerListener.ERROR_WEATHER_CONNECTION_FAIL
-                );
+                if (mFetchWeatherSecondTry) {
+                    mListener.onLoadingStateFinished();
+                    mListener.onBackgroundProcessError(
+                            BackgroundControllerListener.ERROR_WEATHER_CONNECTION_FAIL
+                    );
+                } else {
+                    // Try one more time
+                    mFetchWeatherSecondTry = true;
+                    handleResult(INIT_LOADING);
+                }
                 break;
 
             case CLEAR_RESOURCES:
-                cancelExpirationTimer();
                 mFetchingLocation = false;
+                mFetchingWeather = false;
+                mFetchingTransit = false;
+                cancelExpirationTimer();
                 removeLocationUpdates();
                 disconnectFromGoogleApi();
                 break;
@@ -348,7 +367,7 @@ public class BackgroundController implements
      * if so notify the listener that the result is ready
      */
     private void sendResultToListenerIfAllProcessingDone() {
-        // TODO add other type of result (if applicable)
+        // NOTE: Add other type of result (if applicable)
         // Check that all variable have been successfully initialized
         if (mTransitInfos != null && mWeatherInfos != null) {
             handleResult(BG_PROCESS_SUCCESS);
