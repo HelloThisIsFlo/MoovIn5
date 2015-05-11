@@ -66,7 +66,6 @@ public class MotivationFragment extends Fragment implements
     private boolean mIsInLoadingState = true;
     private boolean mFirstLoadingCardDisplayed = false;
     private boolean mSecondLoadingCardDisplayed = false;
-    private boolean mResultCardsDisplayed = false;
 
     // Add times to schedule initial add animations
     private long addTimes[];
@@ -270,43 +269,39 @@ public class MotivationFragment extends Fragment implements
      * @param backAtHome Time back at home
      */
     private void handleBackAtHomeTime(Date backAtHome) {
-        if (!mResultCardsDisplayed) {
-            // Format backAtHome time
-            final String formattedBackAtHomeTime = DateFormat
-                    .getTimeFormat(MotivationFragment.this.getActivity())
-                    .format(backAtHome);
+        // Format backAtHome time
+        final String formattedBackAtHomeTime = DateFormat
+                .getTimeFormat(MotivationFragment.this.getActivity())
+                .format(backAtHome);
 
-            // Show backAtHome card
-            // Wait after animation remove duration
-            // to allow the animations from clearLoadingScreen to unfold
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mAdapter.addCard(new CardBackAtHome(
-                            "You'll be back at home at : "
-                                    + formattedBackAtHomeTime
-                    ));
-                }
-            }, mRecyclerView.getItemAnimator().getRemoveDuration());
+        // Show backAtHome card
+        // Wait after animation remove duration
+        // to allow the animations from clearLoadingScreen to unfold
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.addCard(new CardBackAtHome(
+                        "You'll be back at home at : "
+                                + formattedBackAtHomeTime
+                ));
+            }
+        }, mRecyclerView.getItemAnimator().getRemoveDuration());
 
 
-            // TODO TEST SCENARIO : REMOVE
-            // Display the rest of the test cards
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mAdapter.addCard(new CardAd("PUB"));
-                }
-            }, addTimes[2]);
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mAdapter.addCard(new CardCalories(getActivity()));
-                }
-            }, addTimes[3]);
-
-        }
-        mResultCardsDisplayed = true;
+        // TODO TEST SCENARIO : REMOVE
+        // Display the rest of the test cards
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.addCard(new CardAd("PUB"));
+            }
+        }, addTimes[2]);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.addCard(new CardCalories(getActivity()));
+            }
+        }, addTimes[3]);
     }
 
     /**
