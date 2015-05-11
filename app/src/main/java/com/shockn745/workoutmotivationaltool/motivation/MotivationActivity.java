@@ -21,36 +21,55 @@ public class MotivationActivity extends Activity {
 
     private MapView mMapView;
 
+    /**
+     *  Called when the activity is first created, or after Destroy
+     *  If savedInstanceState is not null, go back to main activity
+     * @param savedInstanceState null if first created
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_motivation);
-        MotivationFragment motivationFragment = new MotivationFragment();
         if (savedInstanceState == null) {
+            setContentView(R.layout.activity_motivation);
+            MotivationFragment motivationFragment = new MotivationFragment();
             getFragmentManager().beginTransaction()
                     .add(R.id.motivation_container, motivationFragment)
                     .commit();
+
+            Toolbar mToolbar = (Toolbar) findViewById(R.id.motivation_toolbar);
+
+            // Add toolbar
+            setActionBar(mToolbar);
+
+            // Add the navigation arrow
+            /// Inspection removed, because it won't throw NullPointerException since the actionBar is
+            /// initialized just above.
+            //noinspection ConstantConditions
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+
+            // Init the MapView
+            // Init is done in the activity to tie the MapView lifecycle to the activity lifecycle
+            GoogleMapOptions options = new GoogleMapOptions();
+            options.liteMode(true)
+                    .mapType(GoogleMap.MAP_TYPE_NORMAL);
+            mMapView = new MapView(this, options);
+            mMapView.onCreate(savedInstanceState);
+            mMapView.getMapAsync(motivationFragment);
+
+        } else {
+            // If trying to restore : go back to main activity
+            finish();
         }
 
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.motivation_toolbar);
+    }
 
-        // Add toolbar
-        setActionBar(mToolbar);
-
-        // Add the navigation arrow
-        /// Inspection removed, because it won't throw NullPointerException since the actionBar is
-        /// initialized just above.
-        //noinspection ConstantConditions
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // Init the MapView
-        // Init is done in the activity to tie the MapView lifecycle to the activity lifecycle
-        GoogleMapOptions options = new GoogleMapOptions();
-        options.liteMode(true)
-                .mapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMapView = new MapView(this, options);
-        mMapView.onCreate(savedInstanceState);
-        mMapView.getMapAsync(motivationFragment);
+    /**
+     * Clear saveInstanceState to prevent activity from restoring.
+     * @param outState
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.clear();
     }
 
     public MapView getMapView() {

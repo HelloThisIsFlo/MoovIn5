@@ -445,7 +445,7 @@ public class BackgroundController implements
      *                   ERROR if error <br>
      */
     @Override
-    public void OnWeatherInfoRetrieved(FetchWeatherTask.WeatherInfos weatherInfos, int resultCode) {
+    public void onWeatherInfoRetrieved(FetchWeatherTask.WeatherInfos weatherInfos, int resultCode) {
         switch (resultCode) {
             case FetchWeatherTask.RESULT_OK:
                 mWeatherInfos = weatherInfos;

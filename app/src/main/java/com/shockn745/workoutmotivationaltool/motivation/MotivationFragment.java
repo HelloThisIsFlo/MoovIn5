@@ -526,8 +526,8 @@ public class MotivationFragment extends Fragment implements
                 .width(15)
                 .color(getActivity().getResources().getColor(R.color.accent));
         mMap.addPolyline(polylineOptions);
-        mMap.addMarker(new MarkerOptions().position(polylineList.get(0)));
-        mMap.addMarker(new MarkerOptions().position(polylineList.get(polylineList.size() - 1)));
+        mMap.addMarker(new MarkerOptions().position(polylineList.get(0)).title("Home"));
+        mMap.addMarker(new MarkerOptions().position(polylineList.get(polylineList.size() - 1)).title("Gym"));
 
         // Move camera
         LatLngBounds.Builder builder = LatLngBounds.builder();

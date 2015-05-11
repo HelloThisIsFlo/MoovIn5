@@ -45,7 +45,7 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
          *                   ERROR if error <br>
          *                   CONNECTION_ERROR if connection error
          */
-        public void OnWeatherInfoRetrieved(WeatherInfos weatherInfos, int resultCode);
+        public void onWeatherInfoRetrieved(WeatherInfos weatherInfos, int resultCode);
     }
 
     public final static int ERROR = -1;
@@ -165,10 +165,10 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
     protected void onProgressUpdate(Integer... errorCode) {
         switch (errorCode[0]) {
             case CONNECTION_ERROR :
-                mListener.OnWeatherInfoRetrieved(null, CONNECTION_ERROR);
+                mListener.onWeatherInfoRetrieved(null, CONNECTION_ERROR);
                 break;
             case ERROR :
-                mListener.OnWeatherInfoRetrieved(null, ERROR);
+                mListener.onWeatherInfoRetrieved(null, ERROR);
                 break;
             default:
                 Log.d(LOG_TAG, "Unknown errorCode!");
@@ -178,7 +178,7 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
     @Override
     protected void onPostExecute(WeatherInfos weatherInfos) {
         if (weatherInfos != null) {
-            mListener.OnWeatherInfoRetrieved(weatherInfos, RESULT_OK);
+            mListener.onWeatherInfoRetrieved(weatherInfos, RESULT_OK);
         }
     }
 
