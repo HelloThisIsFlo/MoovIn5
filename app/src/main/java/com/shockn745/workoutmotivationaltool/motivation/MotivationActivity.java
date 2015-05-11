@@ -42,8 +42,8 @@ public class MotivationActivity extends Activity {
             setActionBar(mToolbar);
 
             // Add the navigation arrow
-            /// Inspection removed, because it won't throw NullPointerException since the actionBar is
-            /// initialized just above.
+            /// Inspection removed, because it won't throw NullPointerException since the actionBar
+            /// is initialized just above.
             //noinspection ConstantConditions
             getActionBar().setDisplayHomeAsUpEnabled(true);
 

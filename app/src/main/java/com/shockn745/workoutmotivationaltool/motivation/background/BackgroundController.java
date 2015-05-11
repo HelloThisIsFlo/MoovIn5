@@ -128,6 +128,12 @@ public class BackgroundController implements
     private Activity mActivity;
     private BackgroundControllerListener mListener;
 
+    private boolean mFetchingLocation = false;
+    private boolean mFetchLocationDone = false;
+    private boolean mFetchingTransit = false;
+    private boolean mFetchTransitDone = false;
+    private boolean mFetchingWeather = false;
+    private boolean mFetchWeatherDone = false;
 
 
 
@@ -164,20 +170,32 @@ public class BackgroundController implements
             case INIT_LOADING:
                 mListener.onLoadingStateInitiated();
                 connectToGoogleApi();
-                startFetchWeatherTaskWithGymLocation();
+                if (!mFetchWeatherDone) {
+                    startFetchWeatherTaskWithGymLocation();
+                    mFetchingWeather = true;
+                }
                 break;
 
             case CONN_OK:
-                requestLocationUpdates();
-                startExpirationTimer();
+                if (!mFetchLocationDone) {
+                    requestLocationUpdates();
+                    startExpirationTimer();
+                    mFetchingLocation = true;
+                }
                 break;
 
             case LOC_OK:
+                mFetchingLocation = false;
+                mFetchLocationDone = true;
                 cancelExpirationTimer();
-                startFetchTransitTaskWithNewLocation();
+                if (!mFetchTransitDone) {
+                    startFetchTransitTaskWithNewLocation();
+                    mFetchingTransit = true;
+                }
                 break;
 
             case LOC_FAIL:
+                mFetchingLocation = false;
                 mListener.onLoadingStateFinished();
                 mListener.onBackgroundProcessError(
                         BackgroundControllerListener.ERROR_LOCATION_FAIL
@@ -185,10 +203,13 @@ public class BackgroundController implements
                 break;
 
             case FETCH_TRANSIT_DONE:
+                mFetchingTransit = false;
+                mFetchTransitDone = true;
                 sendResultToListenerIfAllProcessingDone();
                 break;
 
             case FETCH_TRANSIT_ERROR:
+                mFetchingTransit = false;
                 mListener.onLoadingStateFinished();
                 mListener.onBackgroundProcessError(
                         BackgroundControllerListener.ERROR_TRANSIT_FAIL
@@ -196,6 +217,8 @@ public class BackgroundController implements
                 break;
 
             case FETCH_TRANSIT_CONNECTION_ERROR:
+                mFetchingTransit = false;
+                // TODO try one more time
                 mListener.onLoadingStateFinished();
                 mListener.onBackgroundProcessError(
                         BackgroundControllerListener.ERROR_TRANSIT_CONNECTION_FAIL
@@ -203,6 +226,7 @@ public class BackgroundController implements
                 break;
 
             case FETCH_TRANSIT_NO_ROUTES:
+                mFetchingTransit = false;
                 mListener.onLoadingStateFinished();
                 mListener.onBackgroundProcessError(
                         BackgroundControllerListener.ERROR_TRANSIT_NO_ROUTES
@@ -210,10 +234,13 @@ public class BackgroundController implements
                 break;
 
             case FETCH_WEATHER_DONE:
+                mFetchingWeather = false;
+                mFetchWeatherDone = true;
                 sendResultToListenerIfAllProcessingDone();
                 break;
 
             case FETCH_WEATHER_ERROR:
+                mFetchingWeather = false;
                 mListener.onLoadingStateFinished();
                 mListener.onBackgroundProcessError(
                         BackgroundControllerListener.ERROR_WEATHER_FAIL
@@ -221,6 +248,8 @@ public class BackgroundController implements
                 break;
 
             case FETCH_WEATHER_CONNECTION_ERROR:
+                mFetchingWeather = false;
+                // TODO try again
                 mListener.onLoadingStateFinished();
                 mListener.onBackgroundProcessError(
                         BackgroundControllerListener.ERROR_WEATHER_CONNECTION_FAIL
@@ -229,6 +258,7 @@ public class BackgroundController implements
 
             case CLEAR_RESOURCES:
                 cancelExpirationTimer();
+                mFetchingLocation = false;
                 removeLocationUpdates();
                 disconnectFromGoogleApi();
                 break;
@@ -330,6 +360,11 @@ public class BackgroundController implements
     // Connect/disconnect to the Google API //
     //////////////////////////////////////////
 
+    /**
+     * This function connects to the google API,
+     * then once connected the transit infos are retrieved
+     * @see {com.shockn745.workoutmotivationaltool.motivation.background.ConnectionListener#onConnected}
+     */
     private void connectToGoogleApi() {
         if (!mGoogleApiClient.isConnecting() &&
                 !mGoogleApiClient.isConnected()) {
