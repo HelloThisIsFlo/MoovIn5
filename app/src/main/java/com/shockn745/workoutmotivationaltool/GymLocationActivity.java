@@ -42,94 +42,112 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
     private boolean mMaptypeIsHybrid = false;
     private boolean mAcceptButtonVisible = false;
 
+    /**
+     *  Called when the activity is first created, or after Destroy
+     *  If savedInstanceState is not null, go back to main activity
+     * @param savedInstanceState null if first created
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gym_location);
-
-        // Find elements by id
-        mSetLocationButton = (ImageButton) findViewById(R.id.set_location_button);
-        mChangeMaptypeButton = (ImageButton) findViewById(R.id.change_maptype_button);
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        // Add toolbar
-        setActionBar(mToolbar);
-
-        // Add the navigation arrow
-
-        // Inspection removed, because it won't throw NullPointerException since the actionBar is
-        // initialized just above.
-
-        //noinspection ConstantConditions
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-        // Initialize the GoogleMapOption with the location stored in the preferences
-        GoogleMapOptions options = new GoogleMapOptions();
-        try {
-            //Try to get previous location
-            LatLng coord = PreferencesUtils.getCoordinatesFromPreferences(this);
-
-            // Init the map with the saved location
-            options.camera(new CameraPosition(
-                            coord,
-                            getResources().getInteger(R.integer.gym_location_level_zoom),
-                            0,
-                            0)
-            );
-        } catch (PreferencesUtils.PreferenceNotInitializedException e) {
-            e.printStackTrace();
-            // Set default location if retrieval fails
-            options.camera(new CameraPosition(
-                            new LatLng(0, 0),
-                            getResources().getInteger(R.integer.gym_location_level_zoom_not_initialized),
-                            0,
-                            0)
-            );
-        }
-
-        // Add the MapFragment
-        MapFragment mapFragment = MapFragment.newInstance(options);
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, mapFragment)
-                    .commit();
-        }
+            setContentView(R.layout.activity_gym_location);
 
-        // Register this Activity as the callback to get the GoogleMap object
-        mapFragment.getMapAsync(this);
+            // Find elements by id
+            mSetLocationButton = (ImageButton) findViewById(R.id.set_location_button);
+            mChangeMaptypeButton = (ImageButton) findViewById(R.id.change_maptype_button);
+            Toolbar mToolbar = (Toolbar) findViewById(R.id.gym_toolbar);
+
+            // Add toolbar
+            setActionBar(mToolbar);
+
+            // Add the navigation arrow
+
+            // Inspection removed, because it won't throw NullPointerException since the actionBar is
+            // initialized just above.
+
+            //noinspection ConstantConditions
+            getActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        // Set listeners
-        mChangeMaptypeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Switch map type
-                if (mMap != null) {
-                    if (!mMaptypeIsHybrid) {
-                        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                        mMaptypeIsHybrid = true;
-                    } else {
-                        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                        mMaptypeIsHybrid = false;
+            // Initialize the GoogleMapOption with the location stored in the preferences
+            GoogleMapOptions options = new GoogleMapOptions();
+            try {
+                //Try to get previous location
+                LatLng coord = PreferencesUtils.getCoordinatesFromPreferences(this);
+
+                // Init the map with the saved location
+                options.camera(new CameraPosition(
+                                coord,
+                                getResources().getInteger(R.integer.gym_location_level_zoom),
+                                0,
+                                0)
+                );
+            } catch (PreferencesUtils.PreferenceNotInitializedException e) {
+                e.printStackTrace();
+                // Set default location if retrieval fails
+                options.camera(new CameraPosition(
+                                new LatLng(0, 0),
+                                getResources().getInteger(R.integer.gym_location_level_zoom_not_initialized),
+                                0,
+                                0)
+                );
+            }
+
+            // Add the MapFragment
+            MapFragment mapFragment = MapFragment.newInstance(options);
+            if (savedInstanceState == null) {
+                getFragmentManager().beginTransaction()
+                        .add(R.id.gym_container, mapFragment)
+                        .commit();
+            }
+
+            // Register this Activity as the callback to get the GoogleMap object
+            mapFragment.getMapAsync(this);
+
+
+            // Set listeners
+            mChangeMaptypeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Switch map type
+                    if (mMap != null) {
+                        if (!mMaptypeIsHybrid) {
+                            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                            mMaptypeIsHybrid = true;
+                        } else {
+                            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                            mMaptypeIsHybrid = false;
+                        }
                     }
                 }
-            }
-        });
-        mSetLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Save the location to the shared preferences
-                if (mCoordinates != null) {
-                    PreferencesUtils.saveCoordinatesToPreferences(GymLocationActivity.this, mCoordinates);
+            });
+            mSetLocationButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Save the location to the shared preferences
+                    if (mCoordinates != null) {
+                        PreferencesUtils.saveCoordinatesToPreferences(GymLocationActivity.this, mCoordinates);
 
-                    Log.v(LOG_TAG, "lat : " + mCoordinates.latitude);
-                    Log.v(LOG_TAG, "long : " + mCoordinates.longitude);
+                        Log.v(LOG_TAG, "lat : " + mCoordinates.latitude);
+                        Log.v(LOG_TAG, "long : " + mCoordinates.longitude);
 
-                    finish();
+                        finish();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            finish();
+        }
+    }
+
+    /**
+     * Clear saveInstanceState to prevent activity from restoring.
+     * @param outState
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.clear();
     }
 
     /**
@@ -168,7 +186,7 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
             @Override
             public void onMapLongClick(LatLng latLng) {
                 // Perform haptic feedback (not handled by GoogleMap)
-                findViewById(R.id.container)
+                findViewById(R.id.gym_container)
                         .performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
 
                 // Show "accept" button & display the marker or change its location
@@ -274,4 +292,5 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
         });
 
     }
+
 }

@@ -1,9 +1,6 @@
 package com.shockn745.workoutmotivationaltool.motivation.background;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Handler;
 import android.util.Log;
@@ -29,8 +26,60 @@ import java.util.Date;
  * - . . .<br><br>
  * Note : Not related to Android Handler
  */
-public class BackgroundController
-        implements FetchTransitTask.OnBackAtHomeTimeRetrievedListener, LocationListener {
+public class BackgroundController implements
+        FetchTransitTask.OnBackAtHomeTimeRetrievedListener,
+        FetchWeatherTask.OnWeatherInfoRetrievedListener,
+        LocationListener {
+
+    public static class BackgroundProcessResult {
+        public final FetchTransitTask.TransitInfos mTransitInfos;
+        public final FetchWeatherTask.WeatherInfos mWeatherInfos;
+
+        public BackgroundProcessResult(
+                FetchTransitTask.TransitInfos transitInfos,
+                FetchWeatherTask.WeatherInfos weatherInfos) {
+            this.mTransitInfos = transitInfos;
+            this.mWeatherInfos = weatherInfos;
+        }
+    }
+
+    public interface BackgroundControllerListener {
+
+        public static final int ERROR_LOCATION_FAIL = 10;
+
+        public static final int ERROR_TRANSIT_FAIL = 20;
+        public static final int ERROR_TRANSIT_CONNECTION_FAIL = 21;
+        public static final int ERROR_TRANSIT_NO_ROUTES = 22;
+
+        public static final int ERROR_WEATHER_FAIL = 30;
+        public static final int ERROR_WEATHER_CONNECTION_FAIL = 31;
+
+        public static final int ERROR_GYM_NOT_INITIALIZED = 100;
+
+
+        /**
+         * Called when the application exits the loading state
+         */
+        public void onLoadingStateFinished();
+
+        /**
+         * Called when the application enters the loading state
+         */
+        public void onLoadingStateInitiated();
+
+        /**
+         * Called when all backgroung processing is finished
+         * @param result Result of the background processing
+         */
+        public void onBackgroundProcessDone(BackgroundProcessResult result);
+
+        /**
+         * Called when there is an error in the processing
+         * @param errorCode See static fields
+         */
+        public void onBackgroundProcessError(int errorCode);
+
+    }
 
     private static final String LOG_TAG = BackgroundController.class.getSimpleName();
 
@@ -43,18 +92,33 @@ public class BackgroundController
     private static int LOC_REQ_EXPIRATION;
 
     // Constant fields to pass to handleResult(...)
-    public static final int CONN_REQ = 10;
+    public static final int INIT_LOADING = 0;
+
     public static final int CONN_OK = 11;
+
     public static final int LOC_OK = 20;
     public static final int LOC_FAIL = 21;
+
     public static final int FETCH_TRANSIT_DONE = 30;
+    public static final int FETCH_TRANSIT_ERROR = 31;
+    public static final int FETCH_TRANSIT_CONNECTION_ERROR = 32;
+    public static final int FETCH_TRANSIT_NO_ROUTES = 33;
+
+    public static final int FETCH_WEATHER_DONE = 40;
+    public static final int FETCH_WEATHER_ERROR = 41;
+    public static final int FETCH_WEATHER_CONNECTION_ERROR = 42;
+
     public static final int CLEAR_RESOURCES = 100;
-    private static final int PRIVATE_GYM_NOT_INIT = 200;
+    public static final int BG_PROCESS_SUCCESS = 101;
+    private static final int GYM_NOT_INIT = 102;
 
-    // Progress dialog shown during processing
-    private ProgressDialog mProgressDialog;
+    public static final int TEST_SCENARIO = 999;
 
-    private Date mBackAtHomeTime;
+    // Results of background tasks
+    private FetchTransitTask.TransitInfos mTransitInfos = null;
+    private FetchWeatherTask.WeatherInfos mWeatherInfos = null;
+
+
     private Location mLocation; // Current location of the user
     private Runnable mExpiredRunnable; // Expiration timer for when the location is not available
 
@@ -62,25 +126,18 @@ public class BackgroundController
 
     private Activity mActivity;
     private BackgroundControllerListener mListener;
-//    private Handler mHandler;
 
-    public interface BackgroundControllerListener {
+    private boolean mFetchingLocation = false;
+    private boolean mFetchLocationDone = false;
+    private boolean mFetchingTransit = false;
+    private boolean mFetchTransitDone = false;
+    private boolean mFetchingWeather = false;
+    private boolean mFetchWeatherDone = false;
 
-        /**
-         * Called when the "back at home time" is available
-         * @param backAtHome Time back at home
-         */
-        public void onBackAtHomeTimeRetrieved(Date backAtHome);
+    private boolean mFetchTransitSecondTry = false;
+    private boolean mFetchWeatherSecondTry = false;
 
 
-        /**
-         * Called when the application exits the loading state
-         */
-        public void onLoadingStateFinished();
-
-        //TODO add other functions
-
-    }
 
     public BackgroundController(Activity mActivity, BackgroundControllerListener mListener) {
         this.mActivity = mActivity;
@@ -105,46 +162,156 @@ public class BackgroundController
 
     /**
      * Handle the result of the processing.
+     * Everything comes back to this controller function.
+     * This way is way easier to understand the global workflow
      *
      * @param result Type of result, see constant fields
      */
     public void handleResult(int result) {
         switch (result) {
-            case CONN_REQ:
-                connectToGoogleApi();
+            case INIT_LOADING:
+                // If called on fetch tasks second try, do not notify listener
+                if (!mFetchTransitSecondTry && !mFetchWeatherSecondTry) {
+                    mListener.onLoadingStateInitiated();
+                }
+                if (!mFetchingLocation && !mFetchLocationDone){
+                    connectToGoogleApi();
+                }
+                if (!mFetchWeatherDone && !mFetchingWeather) {
+                    startFetchWeatherTaskWithGymLocation();
+                    mFetchingWeather = true;
+                }
                 break;
 
             case CONN_OK:
-                requestLocationUpdates();
-                startExpirationTimer();
+                if (!mFetchLocationDone && !mFetchingLocation) {
+                    requestLocationUpdates();
+                    startExpirationTimer();
+                    mFetchingLocation = true;
+                }
                 break;
 
             case LOC_OK:
+                mFetchingLocation = false;
+                mFetchLocationDone = true;
                 cancelExpirationTimer();
-                startFetchTransitTaskWithNewLocation();
+                if (!mFetchTransitDone && !mFetchingTransit) {
+                    startFetchTransitTaskWithNewLocation();
+                    mFetchingTransit = true;
+                }
                 break;
 
             case LOC_FAIL:
+                mFetchingLocation = false;
                 mListener.onLoadingStateFinished();
-                showUnableToObtainLocationDialog();
+                mListener.onBackgroundProcessError(
+                        BackgroundControllerListener.ERROR_LOCATION_FAIL
+                );
                 break;
 
             case FETCH_TRANSIT_DONE:
-                // Update the UI
+                mFetchingTransit = false;
+                mFetchTransitDone = true;
+                sendResultToListenerIfAllProcessingDone();
+                break;
+
+            case FETCH_TRANSIT_ERROR:
+                mFetchingTransit = false;
                 mListener.onLoadingStateFinished();
-                mListener.onBackAtHomeTimeRetrieved(mBackAtHomeTime);
+                mListener.onBackgroundProcessError(
+                        BackgroundControllerListener.ERROR_TRANSIT_FAIL
+                );
+                break;
+
+            case FETCH_TRANSIT_CONNECTION_ERROR:
+                mFetchingTransit = false;
+                if (mFetchTransitSecondTry) {
+                    mListener.onLoadingStateFinished();
+                    mListener.onBackgroundProcessError(
+                            BackgroundControllerListener.ERROR_TRANSIT_CONNECTION_FAIL
+                    );
+                } else {
+                    // Try one more time
+                    mFetchTransitSecondTry = true;
+                    handleResult(INIT_LOADING);
+                }
+                break;
+
+            case FETCH_TRANSIT_NO_ROUTES:
+                mFetchingTransit = false;
+                mListener.onLoadingStateFinished();
+                mListener.onBackgroundProcessError(
+                        BackgroundControllerListener.ERROR_TRANSIT_NO_ROUTES
+                );
+                break;
+
+            case FETCH_WEATHER_DONE:
+                mFetchingWeather = false;
+                mFetchWeatherDone = true;
+                sendResultToListenerIfAllProcessingDone();
+                break;
+
+            case FETCH_WEATHER_ERROR:
+                mFetchingWeather = false;
+                mListener.onLoadingStateFinished();
+                mListener.onBackgroundProcessError(
+                        BackgroundControllerListener.ERROR_WEATHER_FAIL
+                );
+                break;
+
+            case FETCH_WEATHER_CONNECTION_ERROR:
+                mFetchingWeather = false;
+                if (mFetchWeatherSecondTry) {
+                    mListener.onLoadingStateFinished();
+                    mListener.onBackgroundProcessError(
+                            BackgroundControllerListener.ERROR_WEATHER_CONNECTION_FAIL
+                    );
+                } else {
+                    // Try one more time
+                    mFetchWeatherSecondTry = true;
+                    handleResult(INIT_LOADING);
+                }
                 break;
 
             case CLEAR_RESOURCES:
+                mFetchingLocation = false;
+                mFetchingWeather = false;
+                mFetchingTransit = false;
                 cancelExpirationTimer();
                 removeLocationUpdates();
                 disconnectFromGoogleApi();
                 break;
 
-            case PRIVATE_GYM_NOT_INIT:
+            case BG_PROCESS_SUCCESS:
                 mListener.onLoadingStateFinished();
-                showGymNotInitDialog();
+                mListener.onBackgroundProcessDone(
+                        new BackgroundProcessResult(
+                                mTransitInfos,
+                                mWeatherInfos
+                        )
+                );
                 break;
+
+            case GYM_NOT_INIT:
+                mListener.onLoadingStateFinished();
+                mListener.onBackgroundProcessError(
+                        BackgroundControllerListener.ERROR_GYM_NOT_INITIALIZED
+                );
+                break;
+
+            case TEST_SCENARIO:
+                mListener.onLoadingStateFinished();
+                FetchTransitTask.TransitInfos transitInfos = new FetchTransitTask.TransitInfos(
+                        -1,
+                        "s{j_I{itpANlEeLc@[fGFV@CcBfc@C{@Fi@J_A@EHq@CAYUCREJEVAPF@b@BZ@nE?j@O"
+                );
+                transitInfos.setBackAtHomeDate(new Date(2015, 04, 28));
+                mListener.onBackgroundProcessDone(
+                        new BackgroundProcessResult(
+                                transitInfos,
+                                new FetchWeatherTask.WeatherInfos(19, "Test forecast", 800)
+                        )
+                );
 
             default:
                 Log.d(LOG_TAG, "handleResult : Result type not recognized");
@@ -171,7 +338,7 @@ public class BackgroundController
                 fetchTask.execute(mLocLatLng, gymLoc);
 
             } catch (PreferencesUtils.PreferenceNotInitializedException e) {
-                handleResult(PRIVATE_GYM_NOT_INIT);
+                handleResult(GYM_NOT_INIT);
             }
         } else {
             Log.d(LOG_TAG, "mLocation == null !");
@@ -179,11 +346,44 @@ public class BackgroundController
     }
 
 
+    /**
+     * Starts the FetchWeatherTask
+     */
+    private void startFetchWeatherTaskWithGymLocation() {
+        // Retrieve gym location
+        try {
+            LatLng coordGym = PreferencesUtils.getCoordinatesFromPreferences(mActivity);
+
+            new FetchWeatherTask(mActivity, this).execute(coordGym);
+
+        } catch (PreferencesUtils.PreferenceNotInitializedException e) {
+            handleResult(GYM_NOT_INIT);
+        }
+    }
+
+
+    /**
+     * Check if all AsyncTasks have been successfully executed,
+     * if so notify the listener that the result is ready
+     */
+    private void sendResultToListenerIfAllProcessingDone() {
+        // NOTE: Add other type of result (if applicable)
+        // Check that all variable have been successfully initialized
+        if (mTransitInfos != null && mWeatherInfos != null) {
+            handleResult(BG_PROCESS_SUCCESS);
+        }
+    }
+
 
     //////////////////////////////////////////
     // Connect/disconnect to the Google API //
     //////////////////////////////////////////
 
+    /**
+     * This function connects to the google API,
+     * then once connected the transit infos are retrieved
+     * @see {com.shockn745.workoutmotivationaltool.motivation.background.ConnectionListener#onConnected}
+     */
     private void connectToGoogleApi() {
         if (!mGoogleApiClient.isConnecting() &&
                 !mGoogleApiClient.isConnected()) {
@@ -227,7 +427,9 @@ public class BackgroundController
     }
 
     private void removeLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
     }
 
     private void startExpirationTimer() {
@@ -247,66 +449,41 @@ public class BackgroundController
 
 
 
-    ///////////////////////////////////////
-    // Show/dismiss dialog/cards methods //
-    ///////////////////////////////////////
-
-
-    /**
-     * Display a dialog informing the user that the location could not be retrieved, and gives
-     * him some hints to resolve the problem<br>
-     * The dialog can only be dismissed by a clicking the button, and it finishes the activity
-     * afterwards.
-     */
-    private void showUnableToObtainLocationDialog() {
-        // Create the AlertDialog
-        AlertDialog dialog = new AlertDialog.Builder(mActivity)
-                .setMessage(mActivity.getResources().getString(R.string.alert_location_message))
-                .setPositiveButton(mActivity.getResources().getString(R.string.alert_location_dismiss),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mActivity.finish();
-                            }
-                        })
-                .create();
-
-        // Prevent the dialog from being dismissed, so it can call finish() on the activity
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
-
-        // Show the dialog
-        dialog.show();
-    }
+    ////////////////////////////////////////
+    // OnBackAtHomeTimeRetrieved Listener //
+    ////////////////////////////////////////
 
     /**
-     * Display a dialog informing the user that the gym location has not been initialized,
-     * and invites him to initialize it.
-     * The dialog can only be dismissed by a clicking the button, and it finishes the activity
-     * afterwards.
+     * Callback called when FetchTransitTask is done
+     * @param transitInfos Transit infos
+     * @param resultCode RESULT_OK if OK <br>
+     *                   ERROR if error <br>
+     *                   NO_ROUTES_ERROR if no routes <br>
      */
-    private void showGymNotInitDialog() {
-        // Create the AlertDialog
-        AlertDialog dialog = new AlertDialog.Builder(mActivity)
-                .setMessage(
-                        mActivity.getResources().getString(R.string.warning_not_initialized_edit_text)
-                )
-                .setPositiveButton(
-                        mActivity.getResources().getString(R.string.alert_location_dismiss),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mActivity.finish();
-                            }
-                        }
-                ).create();
+    @Override
+    public void onBackAtHomeTimeRetrieved(FetchTransitTask.TransitInfos transitInfos,
+                                          int resultCode) {
+        switch (resultCode) {
+            case FetchTransitTask.RESULT_OK:
+                mTransitInfos = transitInfos;
+                handleResult(BackgroundController.FETCH_TRANSIT_DONE);
+                break;
 
-        // Prevent the dialog from being dismissed, so it can call finish() on the activity
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
+            case FetchTransitTask.CONNECTION_ERROR:
+                handleResult(BackgroundController.FETCH_TRANSIT_CONNECTION_ERROR);
+                break;
 
-        // Show the dialog
-        dialog.show();
+            case FetchTransitTask.NO_ROUTES_ERROR:
+                handleResult(BackgroundController.FETCH_TRANSIT_NO_ROUTES);
+                break;
+
+            case FetchTransitTask.ERROR:
+                handleResult(BackgroundController.FETCH_TRANSIT_ERROR);
+                break;
+
+            default:
+                Log.d(LOG_TAG, "Error code not recognized!");
+        }
     }
 
 
@@ -316,13 +493,31 @@ public class BackgroundController
     ////////////////////////////////////////
 
     /**
-     * Callback called when FetchTransitTask is done
-     * @param backAtHome Time back at home
+     * Callback called when FetchWeatherTask is done
+     * @param weatherInfos Current weather at the gym location
+     * @param resultCode RESULT_OK if OK <br>
+     *                   ERROR if error <br>
      */
     @Override
-    public void onBackAtHomeTimeRetrieved(Date backAtHome) {
-        mBackAtHomeTime = backAtHome;
-        handleResult(BackgroundController.FETCH_TRANSIT_DONE);
+    public void onWeatherInfoRetrieved(FetchWeatherTask.WeatherInfos weatherInfos, int resultCode) {
+        switch (resultCode) {
+            case FetchWeatherTask.RESULT_OK:
+                mWeatherInfos = weatherInfos;
+                handleResult(BackgroundController.FETCH_WEATHER_DONE);
+                break;
+
+            case FetchWeatherTask.CONNECTION_ERROR:
+                handleResult(BackgroundController.FETCH_WEATHER_CONNECTION_ERROR);
+                break;
+
+            case FetchWeatherTask.ERROR:
+                handleResult(BackgroundController.FETCH_WEATHER_ERROR);
+                break;
+
+            default:
+                Log.d(LOG_TAG, "Error code not recognized!");
+        }
+
     }
 
 

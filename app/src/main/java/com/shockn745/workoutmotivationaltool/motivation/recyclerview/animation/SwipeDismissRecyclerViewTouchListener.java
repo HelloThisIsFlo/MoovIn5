@@ -2,6 +2,7 @@ package com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -13,6 +14,9 @@ import android.view.ViewConfiguration;
 import android.view.ViewPropertyAnimator;
 import android.widget.AbsListView;
 import android.widget.ListView;
+import android.widget.Toolbar;
+
+import com.shockn745.workoutmotivationaltool.R;
 
 /**
  * A {@link View.OnTouchListener} that makes the list items in a {@link ListView}
@@ -74,6 +78,9 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
     private boolean mPaused;
     private boolean mDismissAnimationRunning;
 
+    // Properties for the OnScrollListener
+    private Toolbar mToolbar;
+
     /**
      * The callback interface used by {@link SwipeDismissRecyclerViewTouchListener} to inform its client
      * about a successful dismissal of one or more list item positions.
@@ -100,7 +107,11 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      * @param callbacks The callback to trigger when the user has indicated that she would like to
      *                  dismiss one or more list items.
      */
-    public SwipeDismissRecyclerViewTouchListener(RecyclerView recyclerView, DismissCallbacks callbacks) {
+    public SwipeDismissRecyclerViewTouchListener(
+            RecyclerView recyclerView,
+            DismissCallbacks callbacks,
+            Activity activity) {
+        mToolbar = (Toolbar) activity.findViewById(R.id.motivation_toolbar);
         ViewConfiguration vc = ViewConfiguration.get(recyclerView.getContext());
         mSlop = vc.getScaledTouchSlop();
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * 16;
@@ -138,6 +149,9 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      */
     public RecyclerView.OnScrollListener makeScrollListener() {
         return new RecyclerView.OnScrollListener() {
+            private final static String LOG_TAG = "OnScrollListener";
+
+            private int currentTranslationY;
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 setEnabled(newState != AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
@@ -145,6 +159,21 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) { // Scroll UP detected
+                    // Hide toolbar
+                    int toolbarHeight = mToolbar.getHeight();
+
+                    currentTranslationY = -Math.min(Math.abs(currentTranslationY - dy), toolbarHeight);
+
+
+                    mToolbar.setTranslationY(currentTranslationY);
+
+                } else { //Scroll DOWN detected
+                    // Animate toolbar down
+                    currentTranslationY = Math.min(currentTranslationY - dy, 0);
+
+                    mToolbar.setTranslationY(currentTranslationY);
+                }
             }
         };
     }

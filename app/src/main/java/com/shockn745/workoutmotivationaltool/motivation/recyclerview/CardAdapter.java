@@ -1,21 +1,27 @@
 package com.shockn745.workoutmotivationaltool.motivation.recyclerview;
 
+import android.app.Activity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 
 import com.shockn745.workoutmotivationaltool.R;
+import com.shockn745.workoutmotivationaltool.motivation.MotivationActivity;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardAd;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardBackAtHome;
-import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardCalories;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoading;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoadingSimple;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardRoute;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardWeather;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.calories.CaloriesAdapter;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.calories.CardCalories;
 
 import java.util.ArrayList;
 
@@ -25,10 +31,21 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final String LOG_TAG = CardAdapter.class.getSimpleName();
 
     private final ArrayList<CardInterface> mDataSet;
+    private final MotivationActivity mActivity;
 
-    public CardAdapter(ArrayList<CardInterface> dataSet) {
+    private DrawPolylineCallback mDrawPolylineCallback;
+
+    public interface DrawPolylineCallback {
+        void drawPolylineCallback();
+    }
+
+    public CardAdapter(ArrayList<CardInterface> dataSet,
+                       Activity activity,
+                       DrawPolylineCallback drawPolylineCallback) {
         // Init the dataset
         mDataSet = dataSet;
+        mActivity = (MotivationActivity) activity;
+        mDrawPolylineCallback = drawPolylineCallback;
     }
 
 
@@ -45,7 +62,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.card_loading, parent, false);
-                return new CardLoading.LoadingVH(itemView);
+                return createLoadingVH(itemView);
 
             case CardInterface.LOADING_SIMPLE_VIEW_TYPE:
                 itemView = LayoutInflater
@@ -57,7 +74,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.card_back_at_home, parent, false);
-                return new CardBackAtHome.BackAtHomeVH(itemView);
+                return createBackAtHomeVH(itemView);
 
             case CardInterface.WEATHER_VIEW_TYPE:
                 itemView = LayoutInflater
@@ -69,6 +86,22 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.card_route, parent, false);
+
+                ViewTreeObserver vto = itemView.getViewTreeObserver();
+
+                // Draw polyline after the map is displayed
+                // Required because the lite mode does not support the extended version of :
+                // CameraUpdateFactory.newLatLngBounds()
+                vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        try {
+                            mDrawPolylineCallback.drawPolylineCallback();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
                 return new CardRoute.RouteVH(itemView);
 
             case CardInterface.CALORIES_VIEW_TYPE:
@@ -131,14 +164,15 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             CardRoute card = (CardRoute) mDataSet.get(position);
 
-            routeVH.mTextView.setText(card.getText());
+            // Add the MapView to the FrameLayout
+            // if necessary remove from the previous FrameLayout
+            if (mActivity.getMapView().getParent() != null) {
+                ((FrameLayout) mActivity.getMapView().getParent()).removeAllViews();
+            }
+            routeVH.mFrameLayout.addView(mActivity.getMapView());
 
         } else if (holder instanceof CardCalories.CaloriesVH) {
-            CardCalories.CaloriesVH caloriesVH = (CardCalories.CaloriesVH) holder;
-
-            CardCalories card = (CardCalories) mDataSet.get(position);
-
-            caloriesVH.mTextView.setText(card.getText());
+            bindCaloriesCard((CardCalories.CaloriesVH) holder, position);
 
         } else if (holder instanceof CardAd.AdVH) {
             CardAd.AdVH adVH = (CardAd.AdVH) holder;
@@ -248,5 +282,83 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             notifyItemRangeRemoved(0, 2);
         }
     }
+
+
+
+    ///////////////////////////
+    // Bind/create method(s) //
+    ///////////////////////////
+
+    private void bindCaloriesCard(CardCalories.CaloriesVH holder, int position) {
+
+        CardCalories card = (CardCalories) mDataSet.get(position);
+
+        holder.mTextView.setText(card.getText());
+
+        // Set the recycler view
+        CardCalories.CaloriesItem[] caloriesDataSet = card.getItems();
+        CaloriesAdapter adapter = new CaloriesAdapter(caloriesDataSet);
+        holder.mRecyclerView.setAdapter(adapter);
+
+        holder.mRecyclerView.setLayoutManager(
+                new LinearLayoutManager(holder.itemView.getContext())
+        );
+
+        // Notify the recyclerView that its size won't change (better perfs)
+        holder.mRecyclerView.setHasFixedSize(true);
+        holder.mRecyclerView.setItemAnimator(null); //Deactivate animations
+
+        // Set the height of the recyclerview depending on the number of elements
+        ViewGroup.LayoutParams layoutParams = holder.mRecyclerView.getLayoutParams();
+        float test = mActivity.getResources().getDimension(R.dimen.calories_recycler_view_list_item_height);
+        layoutParams.height = (int) (card.getItems().length
+                * mActivity.getResources().getDimension(R.dimen.calories_recycler_view_list_item_height));
+
+        holder.mRecyclerView.setLayoutParams(layoutParams);
+
+    }
+
+    /**
+     * Creates the BackAtHome holder and sets the margin for the cardView.
+     * @param itemView Base layout (here cardView)
+     * @return the holder created
+     */
+    private CardBackAtHome.BackAtHomeVH createBackAtHomeVH(View itemView) {
+        CardBackAtHome.BackAtHomeVH holder = new CardBackAtHome.BackAtHomeVH(itemView);
+
+        // Set the margin for the cardview
+        View cardView = holder.itemView;
+
+        int toolbarHeight = mActivity.findViewById(R.id.motivation_toolbar).getHeight();
+
+        ViewGroup.MarginLayoutParams marginLayoutParams =
+                (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
+        marginLayoutParams.topMargin += toolbarHeight;
+        cardView.setLayoutParams(marginLayoutParams);
+
+        return holder;
+    }
+
+    /**
+     * Creates the LoadingCard holder and sets the margin for the cardView.
+     * @param itemView Base layout (here cardView)
+     * @return the holder created
+     */
+    private CardLoading.LoadingVH createLoadingVH(View itemView) {
+        CardLoading.LoadingVH holder = new CardLoading.LoadingVH(itemView);
+
+        // Set the margin for the cardview
+        View cardView = holder.itemView;
+
+        int toolbarHeight = mActivity.findViewById(R.id.motivation_toolbar).getHeight();
+
+        ViewGroup.MarginLayoutParams marginLayoutParams =
+                (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
+        marginLayoutParams.topMargin += toolbarHeight;
+        cardView.setLayoutParams(marginLayoutParams);
+
+        return holder;
+    }
+
 
 }

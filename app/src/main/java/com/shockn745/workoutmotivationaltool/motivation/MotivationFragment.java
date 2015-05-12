@@ -1,45 +1,62 @@
 package com.shockn745.workoutmotivationaltool.motivation;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
 import com.shockn745.workoutmotivationaltool.R;
 import com.shockn745.workoutmotivationaltool.motivation.background.BackgroundController;
 import com.shockn745.workoutmotivationaltool.motivation.background.ConnectionListener;
+import com.shockn745.workoutmotivationaltool.motivation.background.FetchWeatherTask;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.CardAdapter;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.CardAnimator;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardAd;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardBackAtHome;
-import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardCalories;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoading;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardLoadingSimple;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardRoute;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardWeather;
+import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.calories.CardCalories;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Fragment of MotivationActivity
  * see the {@link MotivationActivity} class
  */
-public class MotivationFragment extends Fragment
-        implements BackgroundController.BackgroundControllerListener{
+public class MotivationFragment extends Fragment implements
+        BackgroundController.BackgroundControllerListener,
+        OnMapReadyCallback,
+        CardAdapter.DrawPolylineCallback {
 
     private static final String LOG_TAG = MotivationFragment.class.getSimpleName();
 
     private BackgroundController mBackgroundController;
+    private ErrorHandler mErrorHandler;
 
     private RecyclerView mRecyclerView;
     private CardAdapter mAdapter;
@@ -47,7 +64,14 @@ public class MotivationFragment extends Fragment
     private Handler mHandler;
 
     private boolean mIsInLoadingState = true;
-    private boolean mResultCardsDisplayed = false;
+    private boolean mFirstLoadingCardDisplayed = false;
+    private boolean mSecondLoadingCardDisplayed = false;
+
+    // Add times to schedule initial add animations
+    private long addTimes[];
+
+    private GoogleMap mMap = null;
+    private String mPolylineRoute = null;
 
 
     @Override
@@ -64,17 +88,31 @@ public class MotivationFragment extends Fragment
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cards_recycler_view);
 
         initRecyclerView();
+
+        // Init the route view holder
+        // This is to prevent frame skip when adding the route card to the recyclerview
+        mAdapter.createViewHolder(mRecyclerView, CardInterface.ROUTE_VIEW_TYPE);
+
+        mErrorHandler = new ErrorHandler();
         mBackgroundController = new BackgroundController(getActivity(), this);
         mHandler = new Handler();
 
-        showLoadingCards();
+        // Init the add times
+        long removeDuration = mRecyclerView.getItemAnimator().getRemoveDuration();
+        long addDuration = mRecyclerView.getItemAnimator().getAddDuration();
+        addTimes = new long[]{
+                removeDuration + addDuration, //Not used here anymore
+                removeDuration + addDuration * 2,
+                removeDuration + addDuration * 3,
+                removeDuration + addDuration * 4,
+        };
 
         return rootView;
     }
 
     private void initRecyclerView() {
         // Set the adapter with empty dataset
-        mAdapter = new CardAdapter(new ArrayList<CardInterface>());
+        mAdapter = new CardAdapter(new ArrayList<CardInterface>(), getActivity(), this);
         mRecyclerView.setAdapter(mAdapter);
 
         // Set recyclerView
@@ -89,7 +127,8 @@ public class MotivationFragment extends Fragment
         SwipeDismissRecyclerViewTouchListener touchListener =
                 new SwipeDismissRecyclerViewTouchListener(
                         mRecyclerView,
-                        mAdapter
+                        mAdapter,
+                        getActivity()
                 );
         mRecyclerView.setOnTouchListener(touchListener);
         // Setting this scroll listener is required to ensure that during ListView scrolling,
@@ -102,7 +141,9 @@ public class MotivationFragment extends Fragment
         super.onResume();
 
         // Connect the GoogleApiClient
-        mBackgroundController.handleResult(BackgroundController.CONN_REQ);
+        // TODO Uncomment for test scenario
+//        mBackgroundController.handleResult(BackgroundController.TEST_SCENARIO);
+        mBackgroundController.handleResult(BackgroundController.INIT_LOADING);
     }
 
     @Override
@@ -130,30 +171,39 @@ public class MotivationFragment extends Fragment
         if (requestCode == ConnectionListener.REQUEST_RESOLVE_ERROR) {
             if (resultCode == Activity.RESULT_OK) {
                 // Try to connect after resolution
-                mBackgroundController.handleResult(BackgroundController.CONN_REQ);
+                mBackgroundController.handleResult(BackgroundController.INIT_LOADING);
             }
         }
     }
 
     private void showLoadingCards() {
-        // After 0.5s : Add first card
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mIsInLoadingState) mAdapter.addCard(
+        // Check loading state at initiation
+        if (mIsInLoadingState) {
+            // After 0.5s : Add first card
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // Check loading state at execution
+                    if (mIsInLoadingState && !mFirstLoadingCardDisplayed) {
+                        mFirstLoadingCardDisplayed = true;
                         // TODO use random sentences from list
-                        new CardLoading("Contacting your coach in LA")
-                );
-            }
-        }, 500);
+                        mAdapter.addCard(new CardLoading("Contacting your coach"));
+                    }
+                }
+            }, 500);
 
-        // After loc_req_expiration / 2 : Add second card
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mIsInLoadingState) mAdapter.addCard(new CardLoadingSimple("Almost done !"));
-            }
-        }, getResources().getInteger(R.integer.location_request_expiration) / 2);
+            // After loc_req_expiration / 2 : Add second card
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // Check loading state at execution
+                    if (mIsInLoadingState && !mSecondLoadingCardDisplayed) {
+                        mSecondLoadingCardDisplayed = true;
+                        mAdapter.addCard(new CardLoadingSimple("Almost done !"));
+                    }
+                }
+            }, getResources().getInteger(R.integer.location_request_expiration) / 2);
+        }
     }
 
 
@@ -162,73 +212,10 @@ public class MotivationFragment extends Fragment
     // BackgroundControllerListener Listener //
     ///////////////////////////////////////////
 
-    /**
-     * Called when the "back at home time" is available
-     * Update the UI
-     * @param backAtHome Time back at home
-     */
+
     @Override
-    public void onBackAtHomeTimeRetrieved(Date backAtHome) {
-        if (!mResultCardsDisplayed) {
-            // Format backAtHome time
-            final String formattedBackAtHomeTime = DateFormat
-                    .getTimeFormat(MotivationFragment.this.getActivity())
-                    .format(backAtHome);
-
-            // Show backAtHome card
-            // Wait after animation remove duration
-            // to allow the animations from clearLoadingScreen to unfold
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mAdapter.addCard(new CardBackAtHome(
-                            "You'll be back at home at : "
-                                    + formattedBackAtHomeTime
-                    ));
-                }
-            }, mRecyclerView.getItemAnimator().getRemoveDuration());
-
-
-            // TODO TEST SCENARIO : REMOVE
-            // Time schedule
-            long removeDuration = mRecyclerView.getItemAnimator().getRemoveDuration();
-            long addDuration = mRecyclerView.getItemAnimator().getAddDuration();
-            long addTimes[] = new long[]{
-                    removeDuration + addDuration,
-                    removeDuration + addDuration * 2,
-                    removeDuration + addDuration * 3,
-                    removeDuration + addDuration * 4,
-            };
-
-            // Display the rest of the test cards
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mAdapter.addCard(new CardWeather("Sunny"));
-                }
-            }, addTimes[0]);
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mAdapter.addCard(new CardRoute("This way"));
-                }
-            }, addTimes[1]);
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mAdapter.addCard(new CardAd("PUB"));
-                }
-            }, addTimes[2]);
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mAdapter.addCard(new CardCalories("543"));
-                }
-            }, addTimes[3]);
-
-        }
-        mResultCardsDisplayed = true;
-
+    public void onLoadingStateInitiated() {
+        showLoadingCards();
     }
 
     /**
@@ -246,7 +233,323 @@ public class MotivationFragment extends Fragment
         mIsInLoadingState = false;
     }
 
-    public boolean isInLoadingState() {
-        return mIsInLoadingState;
+    /**
+     * Called when all the background processing is done.
+     * @param result Result of the background processing
+     */
+    @Override
+    public void onBackgroundProcessDone(BackgroundController.BackgroundProcessResult result) {
+        handleBackAtHomeTime(result.mTransitInfos.getBackAtHomeDate());
+        handlePolylineRoute(result.mTransitInfos.getPolylineRoute());
+        handleWeatherInfo(result.mWeatherInfos);
+        // TODO add other functions to handle the other type of result (if applicable)
+    }
+
+    /**
+     * Called when there is an error in the background process
+     *
+     * @param errorCode See interface
+     * {@link com.shockn745.workoutmotivationaltool.motivation.background.BackgroundController
+     * .BackgroundControllerListener} static fields.
+     */
+    @Override
+    public void onBackgroundProcessError(int errorCode) {
+        mErrorHandler.handleError(errorCode);
+    }
+
+
+
+    ////////////////////////////////////////////////////////////
+    // Methods to handle results of the background processing //
+    ////////////////////////////////////////////////////////////
+
+    /**
+     * Called when the "back at home time" is available
+     * Update the UI
+     * @param backAtHome Time back at home
+     */
+    private void handleBackAtHomeTime(Date backAtHome) {
+        // Format backAtHome time
+        final String formattedBackAtHomeTime = DateFormat
+                .getTimeFormat(MotivationFragment.this.getActivity())
+                .format(backAtHome);
+
+        // Show backAtHome card
+        // Wait after animation remove duration
+        // to allow the animations from clearLoadingScreen to unfold
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.addCard(new CardBackAtHome(
+                        "You'll be back at home at : "
+                                + formattedBackAtHomeTime
+                ));
+            }
+        }, mRecyclerView.getItemAnimator().getRemoveDuration());
+
+
+        // TODO TEST SCENARIO : REMOVE
+        // Display the rest of the test cards
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.addCard(new CardAd("PUB"));
+            }
+        }, addTimes[2]);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.addCard(new CardCalories(getActivity()));
+            }
+        }, addTimes[3]);
+    }
+
+    /**
+     * Add the Route card
+     * The polyline is not drawn yet, it will be automatically drawn when the map is displayed
+     * cf. onMapLoaded()
+     * @param polyline Route to draw
+     */
+    private void handlePolylineRoute(String polyline) {
+        mPolylineRoute = polyline;
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.addCard(new CardRoute("This way"));
+            }
+        }, addTimes[1]);
+    }
+
+    /**
+     * Add the weather card
+     * @param weatherInfos weather infos
+     */
+    private void handleWeatherInfo(final FetchWeatherTask.WeatherInfos weatherInfos) {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.addCard(new CardWeather(weatherInfos.mForecast));
+            }
+        }, addTimes[0]);
+    }
+
+
+
+    ///////////////////
+    // Error handler //
+    ///////////////////
+
+    /**
+     * Class used to handle all error that could happen during the background processing
+     */
+    private class ErrorHandler {
+        // Boolean to prevent displaying two different dialogs, one on top of the other
+        // Eg. Connection error
+        private boolean mIsErrorDialogAlreadyDisplayed = false;
+
+        /**
+         * Called when there is an error in the background process
+         *
+         * @param errorCode See interface
+         * {@link com.shockn745.workoutmotivationaltool.motivation.background.BackgroundController
+         * .BackgroundControllerListener} static fields.
+         */
+        private void handleError(int errorCode) {
+            switch (errorCode) {
+                case ERROR_LOCATION_FAIL:
+                    showUnableToObtainLocationDialog();
+                    break;
+
+                case ERROR_TRANSIT_FAIL:
+                    showFail();
+                    break;
+                case ERROR_TRANSIT_CONNECTION_FAIL:
+                    showConnectionFail();
+                    break;
+                case ERROR_TRANSIT_NO_ROUTES:
+                    showTransitNoRoutes();
+                    break;
+
+                case ERROR_WEATHER_FAIL:
+                    showFail();
+                    break;
+
+                case ERROR_WEATHER_CONNECTION_FAIL:
+                    showConnectionFail();
+                    break;
+
+                case ERROR_GYM_NOT_INITIALIZED:
+                    // Shouldn't happen, but just in case.
+                    showGymNotInitDialog();
+                    break;
+
+                default:
+                    Log.d(LOG_TAG, "Unknown error !");
+            }
+        }
+
+
+        ///////////////////////////////////////
+        // Show/dismiss dialog/cards methods //
+        ///////////////////////////////////////
+
+        /**
+         * Display a dialog informing the user that the location could not be retrieved, and gives
+         * him some hints to resolve the problem<br>
+         * The dialog can only be dismissed by a clicking the button, and it finishes the activity
+         * afterwards.
+         */
+        private void showUnableToObtainLocationDialog() {
+            showErrorDialog(
+                    getActivity().getResources().getString(R.string.alert_location_fail)
+            );
+        }
+
+        /**
+         * Display a dialog informing the user that the gym location has not been initialized,
+         * and invites him to initialize it.
+         * The dialog can only be dismissed by a clicking the button, and it finishes the activity
+         * afterwards.
+         */
+        private void showGymNotInitDialog() {
+            showErrorDialog(
+                    getActivity().getResources().getString(R.string.warning_not_initialized_edit_text)
+            );
+        }
+
+        private void showFail() {
+            showErrorDialog(
+                    getActivity().getResources().getString(R.string.alert_fail)
+            );
+        }
+
+        private void showConnectionFail() {
+            showErrorDialog(
+                    getActivity().getResources().getString(R.string.alert_connection_fail)
+            );
+        }
+
+        private void showTransitNoRoutes() {
+            showErrorDialog(
+                    getActivity().getResources().getString(R.string.alert_transit_no_routes)
+            );
+        }
+
+
+
+        ///////////////////
+        // Utility method//
+        ///////////////////
+
+        /**
+         * Shows an AlertDialog with a custom message.
+         * The AlertDialog can only be dismissed by a clicking the button, and it finishes the activity
+         * afterwards.
+         *
+         * @param message Message to display
+         */
+        private void showErrorDialog(String message) {
+            if (!mIsErrorDialogAlreadyDisplayed) {
+                mIsErrorDialogAlreadyDisplayed = true;
+                // Create the AlertDialog
+                AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                        .setMessage(message)
+                        .setPositiveButton(
+                                getActivity().getResources().getString(R.string.alert_dismiss),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        getActivity().finish();
+                                    }
+                                }
+                        ).create();
+
+                // Prevent the dialog from being dismissed, so it can call finish() on the activity
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.setCancelable(false);
+
+                // Show the dialog
+                dialog.show();
+            }
+        }
+
+    }
+
+
+
+    /////////////////////////
+    // Map related methods //
+    /////////////////////////
+
+    /**
+     * Called when the map is ready to be used
+     * If the polyline route is already available, calls drawPolylineRoute()
+     * @param googleMap map
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        // Initialize the map here because we have to work with the map before it is displayed
+        // cf. drawPolylineRoute()
+        MapsInitializer.initialize(getActivity());
+        Log.d(LOG_TAG, "OnMapReady called");
+        if (mPolylineRoute != null) {
+            try {
+                drawPolylineRoute();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+//        mMap.setOnMapLoadedCallback(this);
+    }
+
+
+    /**
+     * Draw the polyline route onto the map and adjust the zoom level
+     */
+    private void drawPolylineRoute() throws Exception {
+        Log.d(LOG_TAG, "drawPolylineRoute()");
+
+        // Clean Map
+        mMap.clear();
+
+        // Draw polyline
+        List<LatLng> polylineList = PolyUtil.decode(mPolylineRoute);
+        PolylineOptions polylineOptions = new PolylineOptions();
+        polylineOptions
+                .addAll(polylineList)
+                .width(15)
+                .color(getActivity().getResources().getColor(R.color.accent));
+        mMap.addPolyline(polylineOptions);
+        mMap.addMarker(new MarkerOptions().position(polylineList.get(0)).title("Home"));
+        mMap.addMarker(new MarkerOptions().position(polylineList.get(polylineList.size() - 1)).title("Gym"));
+
+        // Move camera
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+        for (LatLng latLng : polylineList) {
+            builder.include(latLng);
+        }
+
+        int padding = 0;
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), padding));
+        Log.d(LOG_TAG, "Camera moved");
+    }
+
+
+
+    //////////////////////////
+    // DrawPolylineCallback //
+    //////////////////////////
+
+    /**
+     * Called when the map is displayed
+     */
+    @Override
+    public void drawPolylineCallback() {
+        try {
+            drawPolylineRoute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -16,15 +16,31 @@ import com.shockn745.workoutmotivationaltool.R;
  */
 public class SettingsActivity extends Activity {
 
+    /**
+     *  Called when the activity is first created, or after Destroy
+     *  If savedInstanceState is not null, go back to main activity
+     * @param savedInstanceState null if first created
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
         if (savedInstanceState == null) {
+            setContentView(R.layout.activity_setting);
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new SettingsFragment())
+                    .add(R.id.settings_container, new SettingsFragment())
                     .commit();
+        } else {
+            finish();
         }
+    }
+
+    /**
+     * Clear saveInstanceState to prevent activity from restoring.
+     * @param outState
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.clear();
     }
 
     /**
