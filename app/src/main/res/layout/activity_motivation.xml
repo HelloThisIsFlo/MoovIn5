@@ -40,7 +40,7 @@
         android:layout_height="@dimen/add_card_menu_height"
         android:layout_below="@id/add_card_button"
         android:layout_toStartOf="@id/add_card_button"
-        android:visibility="gone"
+        android:visibility="invisible"
         card_view:cardCornerRadius="2dp"
         card_view:cardElevation="6dp"/>
 

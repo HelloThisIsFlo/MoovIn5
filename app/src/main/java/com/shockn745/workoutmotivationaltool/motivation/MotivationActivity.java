@@ -4,9 +4,12 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.ImageButton;
@@ -28,6 +31,7 @@ public class MotivationActivity extends Activity {
     private static final String LOG_TAG = MotivationActivity.class.getSimpleName();
 
     private ImageButton mAddCardButton;
+    private CardView addCardMenu;
 
     private MapView mMapView;
     
@@ -69,7 +73,7 @@ public class MotivationActivity extends Activity {
             options.liteMode(true)
                     .mapType(GoogleMap.MAP_TYPE_NORMAL);
             mMapView = new MapView(this, options);
-            mMapView.onCreate(savedInstanceState);
+            mMapView.onCreate(null);
             mMapView.getMapAsync(motivationFragment);
 
 
@@ -80,9 +84,24 @@ public class MotivationActivity extends Activity {
             
             // Find view by id
             mAddCardButton = (ImageButton) findViewById(R.id.add_card_button);
+            addCardMenu = (CardView) findViewById(R.id.add_card_menu_card_view);
 
             mAddCardButton.setOnClickListener(new CardMenuOnClickListener());
-            
+
+            // The card menu view is set to invisible (not gone) in the xml so that it's drawn.
+            // This allows to get the height before the menu is actually displayed
+            addCardMenu.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            // gets called after layout has been done but before display
+                            // so we can get the height then hide the view
+                            addCardMenu.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            addCardMenu.setVisibility(View.GONE);
+                        }
+
+                    });
+
         } else {
             // If trying to restore : go back to main activity
             finish();
@@ -91,10 +110,10 @@ public class MotivationActivity extends Activity {
 
     /**
      * Clear saveInstanceState to prevent activity from restoring.
-     * @param outState
+     * @param outState bundle to clear
      */
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.clear();
     }
 
@@ -116,27 +135,28 @@ public class MotivationActivity extends Activity {
             final int REVEAL_DURATION =
                     getResources().getInteger(R.integer.card_menu_reveal_duration);
 
+            // Get the center for the clipping circle
+            /// Get dimensions
+            int width = addCardMenu.getWidth();
+            int height = addCardMenu.getHeight();
+            /// Start circle at top right corner
+            int cx = width;
+            int cy = 0;
+            Log.d(LOG_TAG, "cx = " + cx);
+            Log.d(LOG_TAG, "cy = " + cy);
+
+            // Get the final radius for the clipping circle
+            @SuppressWarnings("SuspiciousNameCombination")
+            int radius = (int) Math.sqrt(Math.pow(height, 2) + Math.pow(width, 2));
+
+            // Either show or hide the addCardMenu
             if (!mAddCardMenuDisplayed) {
                 // Show the addCardMenu
                 mAddCardMenuDisplayed = true;
-                View addCardMenu = findViewById(R.id.add_card_menu_card_view);
-
-                // Get the center for the clipping circle
-                /// Get dimensions
-                int width = (int) getResources().getDimension(R.dimen.add_card_menu_width);
-                int height = (int) getResources().getDimension(R.dimen.add_card_menu_height);
-                /// Start circle at top right corner
-                int cx = width;
-                int cy = 0;
-                Log.d(LOG_TAG, "cx = " + cx);
-                Log.d(LOG_TAG, "cy = " + cy);
-
-                // Get the final radius for the clipping circle
-                int finalRadius = (int) Math.sqrt(Math.pow(height, 2) + Math.pow(width, 2));
 
                 // Create the animator for the cardMenu (the start radius is zero)
                 Animator revealCardMenuAnim = ViewAnimationUtils
-                        .createCircularReveal(addCardMenu, cx, cy, 0, finalRadius)
+                        .createCircularReveal(addCardMenu, cx, cy, 0, radius)
                         .setDuration(REVEAL_DURATION);
                 Interpolator interpolator = AnimationUtils.loadInterpolator(
                         MotivationActivity.this,
@@ -164,26 +184,11 @@ public class MotivationActivity extends Activity {
 
             } else {
                 // Hide the addCardMenu
-
                 mAddCardMenuDisplayed = false;
-                final View addCardMenu = findViewById(R.id.add_card_menu_card_view);
-
-                // Get the center for the clipping circle
-                /// Get dimensions
-                int width = (int) getResources().getDimension(R.dimen.add_card_menu_width);
-                int height = (int) getResources().getDimension(R.dimen.add_card_menu_height);
-                /// Start circle at top right corner
-                int cx = width;
-                int cy = 0;
-                Log.d(LOG_TAG, "cx = " + cx);
-                Log.d(LOG_TAG, "cy = " + cy);
-
-                // Get the final radius for the clipping circle
-                int startRadius = (int) Math.sqrt(Math.pow(height, 2) + Math.pow(width, 2));
 
                 // Create the animator for the cardMenu (the start radius is zero)
                 Animator hideCardMenuAnim = ViewAnimationUtils
-                        .createCircularReveal(addCardMenu, cx, cy, startRadius, 0)
+                        .createCircularReveal(addCardMenu, cx, cy, radius, 0)
                         .setDuration(REVEAL_DURATION);
                 Interpolator interpolator = AnimationUtils.loadInterpolator(
                         MotivationActivity.this,
