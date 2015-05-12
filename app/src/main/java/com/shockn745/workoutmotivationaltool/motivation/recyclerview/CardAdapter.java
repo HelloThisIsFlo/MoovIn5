@@ -86,26 +86,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.card_route, parent, false);
-
-                final ViewTreeObserver vto = itemView.getViewTreeObserver();
-
-                // Draw polyline after the map is displayed
-                // Required because the lite mode does not support the extended version of :
-                // CameraUpdateFactory.newLatLngBounds()
-                vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        // Draw the polyline route
-                        // But only once
-                        itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        try {
-                            mDrawPolylineCallback.drawPolylineCallback();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                return new CardRoute.RouteVH(itemView);
+                return createRouteVH(itemView);
 
             case CardInterface.CALORIES_VIEW_TYPE:
                 itemView = LayoutInflater
@@ -359,6 +340,36 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
         marginLayoutParams.topMargin += toolbarHeight;
         cardView.setLayoutParams(marginLayoutParams);
+
+        return holder;
+    }
+
+    /**
+     * Create the RouteCard holder and draw the polyline on the map
+     * @param itemView Base layout (here cardView)
+     * @return the holder created
+     */
+    private CardRoute.RouteVH createRouteVH(final View itemView) {
+        CardRoute.RouteVH holder = new CardRoute.RouteVH(itemView);
+
+        final ViewTreeObserver vto = itemView.getViewTreeObserver();
+
+        // Draw polyline after the map is displayed
+        // Required because the lite mode does not support the extended version of :
+        // CameraUpdateFactory.newLatLngBounds()
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Draw the polyline route
+                // But only once
+                itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                try {
+                    mDrawPolylineCallback.drawPolylineCallback();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         return holder;
     }
