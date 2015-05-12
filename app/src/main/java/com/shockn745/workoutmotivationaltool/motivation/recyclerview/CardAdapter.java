@@ -87,18 +87,24 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         .from(parent.getContext())
                         .inflate(R.layout.card_route, parent, false);
 
-                ViewTreeObserver vto = itemView.getViewTreeObserver();
+                final ViewTreeObserver vto = itemView.getViewTreeObserver();
 
                 // Draw polyline after the map is displayed
                 // Required because the lite mode does not support the extended version of :
                 // CameraUpdateFactory.newLatLngBounds()
                 vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    private boolean isPolylineDrawn = false;
                     @Override
                     public void onGlobalLayout() {
-                        try {
-                            mDrawPolylineCallback.drawPolylineCallback();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        // Draw the polyline route
+                        // But only once
+                        if (!isPolylineDrawn) {
+                            isPolylineDrawn = true;
+                            try {
+                                mDrawPolylineCallback.drawPolylineCallback();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 });
