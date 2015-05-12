@@ -13,10 +13,12 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewPropertyAnimator;
 import android.widget.AbsListView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toolbar;
 
 import com.shockn745.workoutmotivationaltool.R;
+import com.shockn745.workoutmotivationaltool.motivation.add_card_menu.FABCallbacks;
 
 /**
  * A {@link View.OnTouchListener} that makes the list items in a {@link ListView}
@@ -62,7 +64,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
 
     // Fixed properties
     private RecyclerView mRecyclerView;
-    private DismissCallbacks mCallbacks;
+    private DismissCallbacks mDismissCallbacks;
     private int mViewWidth = 1; // 1 and not 0 to prevent dividing by zero
     private Handler mHandler;
     private long mRecyclerViewRemoveAnimationDuration;
@@ -79,7 +81,9 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
     private boolean mDismissAnimationRunning;
 
     // Properties for the OnScrollListener
+    private FABCallbacks mFabCallbacks;
     private Toolbar mToolbar;
+    private ImageButton mFAB;
 
     /**
      * The callback interface used by {@link SwipeDismissRecyclerViewTouchListener} to inform its client
@@ -110,8 +114,11 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
     public SwipeDismissRecyclerViewTouchListener(
             RecyclerView recyclerView,
             DismissCallbacks callbacks,
-            Activity activity) {
+            Activity activity,
+            FABCallbacks FABCallbacks) {
+        this.mFabCallbacks = FABCallbacks;
         mToolbar = (Toolbar) activity.findViewById(R.id.motivation_toolbar);
+        mFAB = (ImageButton) activity.findViewById(R.id.add_card_button);
         ViewConfiguration vc = ViewConfiguration.get(recyclerView.getContext());
         mSlop = vc.getScaledTouchSlop();
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * 16;
@@ -119,7 +126,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
         mAnimationTime = recyclerView.getContext().getResources().getInteger(
                 android.R.integer.config_shortAnimTime);
         mRecyclerView = recyclerView;
-        mCallbacks = callbacks;
+        mDismissCallbacks = callbacks;
         mHandler = new Handler();
         RecyclerView.ItemAnimator itemAnimator = recyclerView.getItemAnimator();
         if (itemAnimator != null) {
@@ -145,13 +152,17 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      * to this listener. This will ensure that this {@link SwipeDismissRecyclerViewTouchListener} is
      * paused during list view scrolling.</p>
      *
+     * Also this scroll listener hides/unhides the toolbar & FAB when scrolling
+     *
      * @see SwipeDismissRecyclerViewTouchListener
      */
     public RecyclerView.OnScrollListener makeScrollListener() {
         return new RecyclerView.OnScrollListener() {
             private final static String LOG_TAG = "OnScrollListener";
 
-            private int currentTranslationY;
+            private int mCurrentTranslationY;
+            private boolean mFABHidden = false;
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 setEnabled(newState != AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
@@ -160,19 +171,27 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) { // Scroll UP detected
-                    // Hide toolbar
+                    // Animate toolbar up
                     int toolbarHeight = mToolbar.getHeight();
+                    mCurrentTranslationY = -Math.min(Math.abs(mCurrentTranslationY - dy), toolbarHeight);
+                    mToolbar.setTranslationY(mCurrentTranslationY);
 
-                    currentTranslationY = -Math.min(Math.abs(currentTranslationY - dy), toolbarHeight);
-
-
-                    mToolbar.setTranslationY(currentTranslationY);
+                    // Hide FAB
+                    if (!mFABHidden) {
+                        mFABHidden = true;
+                        mFabCallbacks.hideFAB();
+                    }
 
                 } else { //Scroll DOWN detected
                     // Animate toolbar down
-                    currentTranslationY = Math.min(currentTranslationY - dy, 0);
+                    mCurrentTranslationY = Math.min(mCurrentTranslationY - dy, 0);
+                    mToolbar.setTranslationY(mCurrentTranslationY);
 
-                    mToolbar.setTranslationY(currentTranslationY);
+                    // "unhide" FAB if toolbar is fully displayed
+                    if (mFABHidden && mCurrentTranslationY == 0) {
+                        mFABHidden = false;
+                        mFabCallbacks.unHideFAB();
+                    }
                 }
             }
         };
@@ -214,7 +233,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     mDownX = motionEvent.getRawX();
                     mDownY = motionEvent.getRawY();
                     mDownPosition = mRecyclerView.getChildPosition(mDownView);
-                    if (mCallbacks.canDismiss(mDownPosition)) {
+                    if (mDismissCallbacks.canDismiss(mDownPosition)) {
                         // Helper for tracking the velocity of touch events, for implementing
                         // flinging and other such gestures
                         // cf : Doc VelocityTracker
@@ -383,7 +402,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
         // frame; in the future we may want to do something smarter and more performant.
 
         // Trigger callback
-        mCallbacks.onDismiss(mRecyclerView, dismissPosition);
+        mDismissCallbacks.onDismiss(mRecyclerView, dismissPosition);
 
         // Reset mDownPosition to avoid MotionEvent.ACTION_UP trying to start a dismiss
         // animation with a stale position
