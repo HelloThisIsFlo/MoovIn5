@@ -5,21 +5,17 @@ package com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards;
  */
 public interface CardInterface {
 
-    // TODO remove
-    public final static int CONTACT_VIEW_TYPE = 17;
-    public final static int SIMPLE_VIEW_TYPE = 132;
-
-    public final static int LOADING_VIEW_TYPE = 100;
-    public final static int LOADING_SIMPLE_VIEW_TYPE = 101;
-    public final static int BACK_AT_HOME_VIEW_TYPE = 200;
-    public final static int WEATHER_VIEW_TYPE = 300;
-    public final static int ROUTE_VIEW_TYPE = 400;
-    public final static int CALORIES_VIEW_TYPE = 500;
-    public final static int AD_VIEW_TYPE = 600;
+    int LOADING_VIEW_TYPE = 100;
+    int LOADING_SIMPLE_VIEW_TYPE = 101;
+    int BACK_AT_HOME_VIEW_TYPE = 200;
+    int WEATHER_VIEW_TYPE = 300;
+    int ROUTE_VIEW_TYPE = 400;
+    int CALORIES_VIEW_TYPE = 500;
+    int AD_VIEW_TYPE = 600;
 
 
-    public int getViewType();
+    int getViewType();
 
-    public boolean canDismiss();
+    boolean canDismiss();
 
 }

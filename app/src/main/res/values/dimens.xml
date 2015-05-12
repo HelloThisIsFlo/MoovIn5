@@ -19,8 +19,10 @@
     
     
     <!-- Motivation activity -->
+    <!-- Add card menu -->
     <dimen name="add_card_menu_width">150dp</dimen>
     <dimen name="add_card_menu_height">250dp</dimen>
+    <dimen name="add_card_menu_list_item_height">30dp</dimen>
 
     <!-- Card -->
     <dimen name="card_margin">8dp</dimen>
