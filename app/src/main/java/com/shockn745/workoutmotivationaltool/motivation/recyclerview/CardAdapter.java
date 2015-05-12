@@ -56,7 +56,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
      */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView;
+        final View itemView;
         switch (viewType) {
             case CardInterface.LOADING_VIEW_TYPE:
                 itemView = LayoutInflater
@@ -93,18 +93,15 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 // Required because the lite mode does not support the extended version of :
                 // CameraUpdateFactory.newLatLngBounds()
                 vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    private boolean isPolylineDrawn = false;
                     @Override
                     public void onGlobalLayout() {
                         // Draw the polyline route
                         // But only once
-                        if (!isPolylineDrawn) {
-                            isPolylineDrawn = true;
-                            try {
-                                mDrawPolylineCallback.drawPolylineCallback();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                        itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        try {
+                            mDrawPolylineCallback.drawPolylineCallback();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 });
