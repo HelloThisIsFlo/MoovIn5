@@ -28,7 +28,7 @@
     <dimen name="card_margin">8dp</dimen>
     <dimen name="card_side_margin">8dp</dimen>
     <dimen name="card_elevation">2dp</dimen>
-    <dimen name="card_corner_radius">2dp</dimen>
+    <dimen name="card_corner_radius">4dp</dimen>
 
 
     <!-- Card Heights -->

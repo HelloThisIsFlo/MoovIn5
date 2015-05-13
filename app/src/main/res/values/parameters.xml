@@ -35,5 +35,10 @@
     <!-- TODO Update with more accurate coefficient -->
     <integer name="coeff_calories">10</integer>
 
+    <!-- Parameter for the weather card -->
+    <!-- DO NOT CHANGE RATIO : 16/9 -->
+    <!-- Or update picture ratio too -->
+    <item name="card_weather_ratio" type="fraction">178%</item>
+
 
 </resources>

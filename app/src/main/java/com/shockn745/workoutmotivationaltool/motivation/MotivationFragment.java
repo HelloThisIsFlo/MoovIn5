@@ -343,7 +343,7 @@ public class MotivationFragment extends Fragment implements
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mAdapter.addCard(new CardWeather(weatherInfos.mForecast));
+                mAdapter.addCard(new CardWeather(weatherInfos));
             }
         }, addTimes[0]);
     }

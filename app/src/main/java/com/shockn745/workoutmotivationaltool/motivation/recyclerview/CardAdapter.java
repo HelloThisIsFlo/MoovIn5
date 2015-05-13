@@ -80,32 +80,17 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.card_weather, parent, false);
-                return new CardWeather.WeatherVH(itemView);
+                // Create the weather VH, pass the ratio parameter
+                return new CardWeather.WeatherVH(
+                        itemView,
+                        mActivity.getResources().getFraction(R.fraction.card_weather_ratio, 1, 1)
+                );
 
             case CardInterface.ROUTE_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.card_route, parent, false);
-
-                final ViewTreeObserver vto = itemView.getViewTreeObserver();
-
-                // Draw polyline after the map is displayed
-                // Required because the lite mode does not support the extended version of :
-                // CameraUpdateFactory.newLatLngBounds()
-                vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        // Draw the polyline route
-                        // But only once
-                        itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        try {
-                            mDrawPolylineCallback.drawPolylineCallback();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                return new CardRoute.RouteVH(itemView);
+                return createRouteVH(itemView);
 
             case CardInterface.CALORIES_VIEW_TYPE:
                 itemView = LayoutInflater
@@ -156,11 +141,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             backAtHomeVH.mTextView.setText(card.getText());
 
         } else if (holder instanceof CardWeather.WeatherVH) {
-            CardWeather.WeatherVH weatherVH = (CardWeather.WeatherVH) holder;
-
-            CardWeather card = (CardWeather) mDataSet.get(position);
-
-            weatherVH.mTextView.setText(card.getText());
+            bindWeatherCard((CardWeather.WeatherVH) holder, position);
 
         } else if (holder instanceof CardRoute.RouteVH) {
             CardRoute.RouteVH routeVH = (CardRoute.RouteVH) holder;
@@ -292,6 +273,11 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     // Bind/create method(s) //
     ///////////////////////////
 
+    /**
+     * Binds the calorie card : set the recyclerView (adapter + dynamic height)
+     * @param holder Calorie card holder
+     * @param position position of calorieCard in dataset
+     */
     private void bindCaloriesCard(CardCalories.CaloriesVH holder, int position) {
 
         CardCalories card = (CardCalories) mDataSet.get(position);
@@ -318,6 +304,20 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 * mActivity.getResources().getDimension(R.dimen.calories_recycler_view_list_item_height));
 
         holder.mRecyclerView.setLayoutParams(layoutParams);
+
+    }
+
+    /**
+     * Binds the weather card, set the temp & forecast texts and set the corresponding image
+     * @param weatherVH Weather card holder
+     * @param position position of the WeatherCard in the dataset
+     */
+    private void bindWeatherCard(CardWeather.WeatherVH weatherVH, int position) {
+        CardWeather card = (CardWeather) mDataSet.get(position);
+
+        weatherVH.mTempTextView.setText(card.getmTempText());
+        weatherVH.mForecastTextView.setText(card.getmForecastText());
+        weatherVH.mImageView.setImageResource(card.getmImageResId());
 
     }
 
@@ -359,6 +359,36 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
         marginLayoutParams.topMargin += toolbarHeight;
         cardView.setLayoutParams(marginLayoutParams);
+
+        return holder;
+    }
+
+    /**
+     * Create the RouteCard holder and draw the polyline on the map
+     * @param itemView Base layout (here cardView)
+     * @return the holder created
+     */
+    private CardRoute.RouteVH createRouteVH(final View itemView) {
+        CardRoute.RouteVH holder = new CardRoute.RouteVH(itemView);
+
+        final ViewTreeObserver vto = itemView.getViewTreeObserver();
+
+        // Draw polyline after the map is displayed
+        // Required because the lite mode does not support the extended version of :
+        // CameraUpdateFactory.newLatLngBounds()
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Draw the polyline route
+                // But only once
+                itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                try {
+                    mDrawPolylineCallback.drawPolylineCallback();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         return holder;
     }
