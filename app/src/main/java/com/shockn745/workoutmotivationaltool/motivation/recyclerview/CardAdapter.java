@@ -27,6 +27,9 @@ import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.calor
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Adapter for the list of cards
+ */
 public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
         SwipeDismissRecyclerViewTouchListener.DismissCallbacks,
         AddCardMenuAdapter.AddCardFromCacheCallback {

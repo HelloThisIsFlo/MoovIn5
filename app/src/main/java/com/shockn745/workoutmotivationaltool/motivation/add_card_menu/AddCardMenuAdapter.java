@@ -13,7 +13,7 @@ import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardI
 import java.util.ArrayList;
 
 /**
- * Created by Shock on 13.05.15.
+ * Adapter to display items in the add card menu
  */
 public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
