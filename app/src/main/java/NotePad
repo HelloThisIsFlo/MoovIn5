@@ -1,30 +1,7 @@
+IMPORTANT :
+-----------
 
+TODO Credit the author for the flaticons (calorie card)
 
-
-Reveal effect : Use it to display "add card" card when add FAB is pressed (on motivation activity).
----------------
-
-View myView = findViewById(R.id.container);
-
-    // get the center for the clipping circle
-    int cx = (myView.getLeft() + myView.getRight()) / 2;
-    int cy = (myView.getTop() + myView.getBottom()) / 2;
-
-//                    int cx = 950;
-//                    int cy = 1430;
-
-    // get the final radius for the clipping circle
-    int finalRadius = Math.max(myView.getWidth(), myView.getHeight());
-
-    // create the animator for this view (the start radius is zero)
-    Animator anim =
-            ViewAnimationUtils.createCircularReveal(myView, cx, cy, 0, finalRadius);
-
-    // make the view visible and start the animation
-//                    myView.setVisibility(View.VISIBLE);
-    anim.setDuration(3000);
-    anim.start();
-
-
-Temp :
-------
+Use this :
+<div>Icon made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed under <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a></div>
