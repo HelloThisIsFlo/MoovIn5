@@ -62,13 +62,11 @@ public class CardCalories implements CardInterface {
                 + caloriesBurnt
                 + activity.getString(R.string.calories_text_part_2);
 
-        mItems = new CaloriesItem[6];
-        mItems[0] = new CaloriesItem("Croissant", 1.3f, R.mipmap.ic_launcher);
-        mItems[1] = new CaloriesItem("Balanced meal", 0.7f, R.mipmap.ic_launcher);
-        mItems[2] = new CaloriesItem("Pizza slice", 3f, R.mipmap.ic_launcher);
-        mItems[3] = new CaloriesItem("Snack", 1.1f, R.mipmap.ic_launcher);
-        mItems[4] = new CaloriesItem("Test 1", 1.1f, R.mipmap.ic_launcher);
-        mItems[5] = new CaloriesItem("Test 2", 1.1f, R.mipmap.ic_launcher);
+        mItems = new CaloriesItem[4];
+        mItems[0] = new CaloriesItem("Croissant", 1.3f, R.drawable.calorie_croissant);
+        mItems[1] = new CaloriesItem("Balanced meal", 0.7f, R.drawable.calorie_balanced_meal);
+        mItems[2] = new CaloriesItem("Pizza slice", 3f, R.drawable.calorie_pizza_slice);
+        mItems[3] = new CaloriesItem("Chocolate bar", 1.1f, R.drawable.calorie_chocolate_bar);
 
     }
 
