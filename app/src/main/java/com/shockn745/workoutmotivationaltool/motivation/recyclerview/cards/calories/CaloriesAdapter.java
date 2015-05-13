@@ -1,5 +1,7 @@
 package com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.calories;
 
+import android.graphics.ColorFilter;
+import android.graphics.ColorMatrixColorFilter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,16 @@ public class CaloriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
             mImageView = (ImageView) itemView.findViewById(R.id.calories_list_item_image_view);
             mTextView = (TextView) itemView.findViewById(R.id.calories_list_item_text_view);
+
+            // Invert the color of the drawable
+            float[] colorMatrix_Negative = {
+                    -1.0f, 0, 0, 0, 255, //red
+                    0, -1.0f, 0, 0, 255, //green
+                    0, 0, -1.0f, 0, 255, //blue
+                    0, 0, 0, 1.0f, 0 //alpha
+            };
+            ColorFilter colorFilter_Negative = new ColorMatrixColorFilter(colorMatrix_Negative);
+            mImageView.setColorFilter(colorFilter_Negative);
         }
 
     }

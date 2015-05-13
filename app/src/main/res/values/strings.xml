@@ -40,8 +40,8 @@
 
 
     <!-- MotivationActivity -->
-    <string name="calories_text_part_1">You\'ll have burnt : </string>
-    <string name="calories_text_part_2"> Cals !</string>
+    <string name="calories_text_part_1">Estimated calories : </string>
+    <string name="calories_text_part_2"> Cals!</string>
 
 
 
