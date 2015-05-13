@@ -2,6 +2,8 @@ package com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,11 +20,24 @@ public class CardWeather implements CardInterface {
         public TextView mForecastTextView;
         public ImageView mImageView;
 
-        public WeatherVH(View itemView) {
+        public WeatherVH(View itemView, final float ratio) {
             super(itemView);
             this.mTempTextView = (TextView) itemView.findViewById(R.id.temperature_text_view);
             this.mForecastTextView = (TextView) itemView.findViewById(R.id.forecast_text_view);
             this.mImageView = (ImageView) itemView.findViewById(R.id.weather_image_view);
+
+            final View cardView = itemView;
+
+            // Set the height dynamically after layout (to be able to get the width parameter)
+            itemView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    cardView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    ViewGroup.LayoutParams layoutParams = cardView.getLayoutParams();
+                    layoutParams.height = (int) (cardView.getWidth() / ratio);
+                    cardView.setLayoutParams(layoutParams);
+                }
+            });
         }
     }
 

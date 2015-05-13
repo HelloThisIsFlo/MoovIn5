@@ -80,7 +80,11 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.card_weather, parent, false);
-                return new CardWeather.WeatherVH(itemView);
+                // Create the weather VH, pass the ratio parameter
+                return new CardWeather.WeatherVH(
+                        itemView,
+                        mActivity.getResources().getFraction(R.fraction.card_weather_ratio, 1, 1)
+                );
 
             case CardInterface.ROUTE_VIEW_TYPE:
                 itemView = LayoutInflater
