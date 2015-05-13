@@ -30,7 +30,9 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public TextView textView;
         private int mCardViewType;
 
-        public VH(View itemView, final AddCardFromCacheCallback callback) {
+        public VH(View itemView,
+                  final AddCardFromCacheCallback addCardFromCacheCallback,
+                  final AddCardMenuCallbacks addCardMenuCallbacks) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.add_card_menu_list_item_text_view);
 
@@ -38,7 +40,8 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    callback.addCardFromCache(mCardViewType);
+                    addCardFromCacheCallback.addCardFromCache(mCardViewType);
+                    addCardMenuCallbacks.hideAddCardMenu();
                 }
             });
         }
@@ -51,14 +54,14 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     // Stores the VIEW_TYPES of cards that have been dismissed
     private final ArrayList<Integer> mListDismissedCards;
     private final Activity mActivity;
-    private final AddCardFromCacheCallback mCallback;
+    private final AddCardFromCacheCallback mAddCardFromCacheCallback;
 
     public AddCardMenuAdapter(ArrayList<Integer> listDismissedCards,
                               Activity activity,
-                              AddCardFromCacheCallback callback) {
+                              AddCardFromCacheCallback addCardFromCacheCallback) {
         this.mListDismissedCards = listDismissedCards;
         mActivity = activity;
-        mCallback = callback;
+        mAddCardFromCacheCallback = addCardFromCacheCallback;
     }
 
     @Override
@@ -66,7 +69,7 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         View itemView = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.add_card_menu_list_item, parent, false);
-        return new VH(itemView, mCallback);
+        return new VH(itemView, mAddCardFromCacheCallback, (AddCardMenuCallbacks) mActivity);
     }
 
     @Override
