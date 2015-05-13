@@ -6,8 +6,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
@@ -20,11 +18,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.shockn745.workoutmotivationaltool.R;
-import com.shockn745.workoutmotivationaltool.motivation.add_card_menu.AddCardMenuAdapter;
 import com.shockn745.workoutmotivationaltool.motivation.add_card_menu.FABCallbacks;
-import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
-
-import java.util.ArrayList;
 
 /**
  * This activity is where the location is retrieved, the travel time processed and the information
@@ -118,19 +112,7 @@ public class MotivationActivity extends Activity implements FABCallbacks {
             // TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST //
             ///////////////////////////////////////////////////////
 
-            RecyclerView recyclerView =
-                    (RecyclerView) findViewById(R.id.add_card_menu_recycler_view);
 
-            ArrayList<Integer> dismissedCardsList = new ArrayList<>();
-            dismissedCardsList.add(CardInterface.BACK_AT_HOME_VIEW_TYPE);
-            dismissedCardsList.add(CardInterface.AD_VIEW_TYPE);
-            dismissedCardsList.add(CardInterface.WEATHER_VIEW_TYPE);
-
-            AddCardMenuAdapter addCardMenuAdapter =
-                    new AddCardMenuAdapter(dismissedCardsList);
-
-            recyclerView.setAdapter(addCardMenuAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
 

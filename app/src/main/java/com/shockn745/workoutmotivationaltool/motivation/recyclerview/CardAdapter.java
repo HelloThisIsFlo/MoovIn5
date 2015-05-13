@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 
 import com.shockn745.workoutmotivationaltool.R;
 import com.shockn745.workoutmotivationaltool.motivation.MotivationActivity;
+import com.shockn745.workoutmotivationaltool.motivation.add_card_menu.AddCardMenuAdapter;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardAd;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardBackAtHome;
@@ -24,14 +25,21 @@ import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.calor
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.calories.CardCalories;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-        implements SwipeDismissRecyclerViewTouchListener.DismissCallbacks {
+public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
+        SwipeDismissRecyclerViewTouchListener.DismissCallbacks,
+        AddCardMenuAdapter.AddCardFromCacheCallback {
 
     private static final String LOG_TAG = CardAdapter.class.getSimpleName();
 
     private final ArrayList<CardInterface> mDataSet;
     private final MotivationActivity mActivity;
+
+    // Card cache variables
+    private final HashMap<Integer, CardInterface> mRemovedCards;
+    private final ArrayList<Integer> mRemovedCardsViewTypes;
+    private final AddCardMenuAdapter mAddCardMenuAdapter;
 
     private DrawPolylineCallback mDrawPolylineCallback;
 
@@ -46,6 +54,17 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         mDataSet = dataSet;
         mActivity = (MotivationActivity) activity;
         mDrawPolylineCallback = drawPolylineCallback;
+        mRemovedCards = new HashMap<>();
+        mRemovedCardsViewTypes = new ArrayList<>();
+
+        // Set AddCardMenuAdapter
+        mAddCardMenuAdapter = new AddCardMenuAdapter(mRemovedCardsViewTypes, mActivity, this);
+
+        RecyclerView recyclerView =
+                (RecyclerView) activity.findViewById(R.id.add_card_menu_recycler_view);
+
+        recyclerView.setAdapter(mAddCardMenuAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
     }
 
 
@@ -230,14 +249,40 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     /**
+     * Method used to add a previously removed card
+     * @param viewType view type to retrieve card from cache
+     */
+    @Override
+    public void addCardFromCache(int viewType) {
+        // Retrieve card and delete it from cache
+        CardInterface cardToAdd = mRemovedCards.get(viewType);
+        mRemovedCards.remove(viewType);
+
+        // Update mRemovedCardsViewTypes
+        mRemovedCardsViewTypes.clear();
+        mRemovedCardsViewTypes.addAll(mRemovedCards.keySet());
+        mAddCardMenuAdapter.notifyDataSetChanged();
+
+        // Add card
+        addCard(cardToAdd);
+    }
+
+    /**
      * Method used to remove a card.
      * Handle the deletion from the dataset and the adapter
      * Triggers the animation.
+     * Also cache the removed cards in a stack
      * @param position Position of the card to remove
      */
     public void removeCard(int position) {
         // Remove from dataset
         CardInterface toCache = mDataSet.remove(position);
+
+        // Cache the card and the viewtype
+        mRemovedCards.put(toCache.getViewType(), toCache);
+        mRemovedCardsViewTypes.clear();
+        mRemovedCardsViewTypes.addAll(mRemovedCards.keySet());
+        mAddCardMenuAdapter.notifyDataSetChanged();
 
         // Notify Adapter to refresh (also starts the animation)
         notifyItemRemoved(position);

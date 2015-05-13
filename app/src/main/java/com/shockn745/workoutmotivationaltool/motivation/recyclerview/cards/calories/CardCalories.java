@@ -63,10 +63,10 @@ public class CardCalories implements CardInterface {
                 + activity.getString(R.string.calories_text_part_2);
 
         mItems = new CaloriesItem[4];
-        mItems[0] = new CaloriesItem("Croissant", 1.3f, R.drawable.calorie_croissant);
-        mItems[1] = new CaloriesItem("Balanced meal", 0.7f, R.drawable.calorie_balanced_meal);
-        mItems[2] = new CaloriesItem("Pizza slice", 3f, R.drawable.calorie_pizza_slice);
-        mItems[3] = new CaloriesItem("Chocolate bar", 1.1f, R.drawable.calorie_chocolate_bar);
+        mItems[0] = new CaloriesItem("Croissant", 1.3f, R.drawable.calories_croissant);
+        mItems[1] = new CaloriesItem("Balanced meal", 0.7f, R.drawable.calories_balanced_meal);
+        mItems[2] = new CaloriesItem("Pizza slice", 3f, R.drawable.calories_pizza_slice);
+        mItems[3] = new CaloriesItem("Chocolate bar", 1.1f, R.drawable.calories_chocolate_bar);
 
     }
 
