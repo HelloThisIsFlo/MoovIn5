@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.Toolbar;
 
 import com.shockn745.workoutmotivationaltool.R;
+import com.shockn745.workoutmotivationaltool.motivation.add_card_menu.AddCardMenuCallbacks;
 import com.shockn745.workoutmotivationaltool.motivation.add_card_menu.FABCallbacks;
 
 /**
@@ -82,6 +83,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
 
     // Properties for the OnScrollListener
     private FABCallbacks mFabCallbacks;
+    private AddCardMenuCallbacks mAddCardMenuCallbacks;
     private Toolbar mToolbar;
     private ImageButton mFAB;
 
@@ -115,8 +117,10 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             RecyclerView recyclerView,
             DismissCallbacks callbacks,
             Activity activity,
-            FABCallbacks FABCallbacks) {
+            FABCallbacks FABCallbacks,
+            AddCardMenuCallbacks addCardMenuCallbacks) {
         this.mFabCallbacks = FABCallbacks;
+        this.mAddCardMenuCallbacks = addCardMenuCallbacks;
         mToolbar = (Toolbar) activity.findViewById(R.id.motivation_toolbar);
         mFAB = (ImageButton) activity.findViewById(R.id.add_card_button);
         ViewConfiguration vc = ViewConfiguration.get(recyclerView.getContext());
@@ -180,6 +184,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     if (!mFABHidden) {
                         mFABHidden = true;
                         mFabCallbacks.hideFAB();
+                        mAddCardMenuCallbacks.hideAddCardMenu();
                     }
 
                 } else { //Scroll DOWN detected

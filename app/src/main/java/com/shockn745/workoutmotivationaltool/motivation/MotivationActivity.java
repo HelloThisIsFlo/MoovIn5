@@ -31,6 +31,8 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
 
     private static final String LOG_TAG = MotivationActivity.class.getSimpleName();
     private int mRevealDuration;
+    private boolean mAddCardMenuDisplayed = false;
+
 
     private ImageButton mAddCardButton;
     private CardView mAddCardMenu;
@@ -92,7 +94,18 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
             mAddCardButton = (ImageButton) findViewById(R.id.add_card_button);
             mAddCardMenu = (CardView) findViewById(R.id.add_card_menu_card_view);
 
-            mAddCardButton.setOnClickListener(new CardMenuOnClickListener(this));
+            mAddCardButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Either show or hide the mAddCardMenu
+                    if (!mAddCardMenuDisplayed) {
+                        revealAddCardMenu();
+                    } else {
+                        hideAddCardMenu();
+                        mAddCardMenuDisplayed = false;
+                    }
+                }
+            });
 
             // The card menu view is set to invisible (not gone) in the xml so that it's drawn.
             // This allows to get the height before the menu is actually displayed
@@ -108,22 +121,6 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
                             mAddCardMenu.setVisibility(View.GONE);
                         }
                     });
-
-
-
-            ///////////////////////////////////////////////////////
-            // TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST //
-            ///////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
 
         } else {
             // If trying to restore : go back to main activity
@@ -230,146 +227,122 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
     ///////////////////////////
 
     /**
-     * Reveal the addCardMenu
+     * Reveal the addCardMenu, if hidden
      */
     @Override
     public void revealAddCardMenu() {
-        // Get the center for the clipping circle
-        /// Get dimensions
-        int width = mAddCardMenu.getWidth();
-        int height = mAddCardMenu.getHeight();
-        /// Start circle at top right corner
-        int cx = width;
-        int cy = 0;
+        if (!mAddCardMenuDisplayed) {
+            mAddCardMenuDisplayed = true;
 
-        // Get the final radius for the clipping circle
-        @SuppressWarnings("SuspiciousNameCombination")
-        int radius = (int) Math.sqrt(Math.pow(height, 2) + Math.pow(width, 2));
+            // Get the center for the clipping circle
+            /// Get dimensions
+            int width = mAddCardMenu.getWidth();
+            int height = mAddCardMenu.getHeight();
+            /// Start circle at top right corner
+            int cx = width;
+            int cy = 0;
 
-        // Create the animator for the cardMenu (the start radius is zero)
-        Animator revealCardMenuAnim = ViewAnimationUtils
-                .createCircularReveal(mAddCardMenu, cx, cy, 0, radius)
-                .setDuration(mRevealDuration);
-        Interpolator interpolator = AnimationUtils.loadInterpolator(
-                MotivationActivity.this,
-                android.R.interpolator.fast_out_slow_in
-        );
-        revealCardMenuAnim.setInterpolator(interpolator);
+            // Get the final radius for the clipping circle
+            @SuppressWarnings("SuspiciousNameCombination")
+            int radius = (int) Math.sqrt(Math.pow(height, 2) + Math.pow(width, 2));
 
-        // Make the view visible
-        mAddCardMenu.setVisibility(View.VISIBLE);
+            // Create the animator for the cardMenu (the start radius is zero)
+            Animator revealCardMenuAnim = ViewAnimationUtils
+                    .createCircularReveal(mAddCardMenu, cx, cy, 0, radius)
+                    .setDuration(mRevealDuration);
+            Interpolator interpolator = AnimationUtils.loadInterpolator(
+                    MotivationActivity.this,
+                    android.R.interpolator.fast_out_slow_in
+            );
+            revealCardMenuAnim.setInterpolator(interpolator);
 
-        /////////////////
+            // Make the view visible
+            mAddCardMenu.setVisibility(View.VISIBLE);
 
-        // Rotate the addCardButton
-        ObjectAnimator rotateFAB = ObjectAnimator.ofFloat(
-                mAddCardButton,
-                "rotation",
-                0,
-                -45f
-        ).setDuration(mRevealDuration);
-        rotateFAB.setInterpolator(interpolator);
+            /////////////////
 
-        // Start the animations
-        revealCardMenuAnim.start();
-        rotateFAB.start();
+            // Rotate the addCardButton
+            ObjectAnimator rotateFAB = ObjectAnimator.ofFloat(
+                    mAddCardButton,
+                    "rotation",
+                    0,
+                    -45f
+            ).setDuration(mRevealDuration);
+            rotateFAB.setInterpolator(interpolator);
+
+            // Start the animations
+            revealCardMenuAnim.start();
+            rotateFAB.start();
+        }
     }
 
     /**
-     * Hide the addCardMenu
+     * Hide the addCardMenu, if displayed
      */
     @Override
     public void hideAddCardMenu() {
-        // Get the center for the clipping circle
-        /// Get dimensions
-        int width = mAddCardMenu.getWidth();
-        int height = mAddCardMenu.getHeight();
-        /// Start circle at top right corner
-        int cx = width;
-        int cy = 0;
+        if (mAddCardMenuDisplayed) {
+            mAddCardMenuDisplayed = false;
 
-        // Get the final radius for the clipping circle
-        @SuppressWarnings("SuspiciousNameCombination")
-        int radius = (int) Math.sqrt(Math.pow(height, 2) + Math.pow(width, 2));
+            // Get the center for the clipping circle
+            /// Get dimensions
+            int width = mAddCardMenu.getWidth();
+            int height = mAddCardMenu.getHeight();
+            /// Start circle at top right corner
+            int cx = width;
+            int cy = 0;
 
-
-        // Create the animator for the cardMenu (the start radius is zero)
-        Animator hideCardMenuAnim = ViewAnimationUtils
-                .createCircularReveal(mAddCardMenu, cx, cy, radius, 0)
-                .setDuration(mRevealDuration);
-        Interpolator interpolator = AnimationUtils.loadInterpolator(
-                MotivationActivity.this,
-                android.R.interpolator.fast_out_slow_in
-        );
-        hideCardMenuAnim.setInterpolator(interpolator);
-
-        // Add listener to hide the view when animation is done
-        hideCardMenuAnim.addListener(new Animator.AnimatorListener() {
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                // Hide the mAddCardMenu
-                mAddCardMenu.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-            }
-        });
-
-        /////////////////
-
-        // Rotate the addCardButton
-        ObjectAnimator rotateFAB = ObjectAnimator.ofFloat(
-                mAddCardButton,
-                "rotation",
-                -45f,
-                0
-        ).setDuration(mRevealDuration);
-        rotateFAB.setInterpolator(interpolator);
-
-        // Start the animations
-        hideCardMenuAnim.start();
-        rotateFAB.start();
-    }
+            // Get the final radius for the clipping circle
+            @SuppressWarnings("SuspiciousNameCombination")
+            int radius = (int) Math.sqrt(Math.pow(height, 2) + Math.pow(width, 2));
 
 
+            // Create the animator for the cardMenu (the start radius is zero)
+            Animator hideCardMenuAnim = ViewAnimationUtils
+                    .createCircularReveal(mAddCardMenu, cx, cy, radius, 0)
+                    .setDuration(mRevealDuration);
+            Interpolator interpolator = AnimationUtils.loadInterpolator(
+                    MotivationActivity.this,
+                    android.R.interpolator.fast_out_slow_in
+            );
+            hideCardMenuAnim.setInterpolator(interpolator);
 
-    ///////////////////////////
-    // addCardMenu Animation //
-    ///////////////////////////
+            // Add listener to hide the view when animation is done
+            hideCardMenuAnim.addListener(new Animator.AnimatorListener() {
 
-    /**
-     * OnClickListener used to reveal the card menu.
-     */
-    private class CardMenuOnClickListener implements View.OnClickListener {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    // Hide the mAddCardMenu
+                    mAddCardMenu.setVisibility(View.GONE);
+                }
 
-        private boolean mAddCardMenuDisplayed = false;
-        private AddCardMenuCallbacks mCallbacks;
+                @Override
+                public void onAnimationStart(Animator animation) {
+                }
 
-        public CardMenuOnClickListener(AddCardMenuCallbacks callbacks) {
-            super();
-            this.mCallbacks = callbacks;
-        }
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                }
 
-        @Override
-        public void onClick(View v) {
-            // Either show or hide the mAddCardMenu
-            if (!mAddCardMenuDisplayed) {
-                mCallbacks.revealAddCardMenu();
-                mAddCardMenuDisplayed = true;
-            } else {
-                mCallbacks.hideAddCardMenu();
-                mAddCardMenuDisplayed = false;
-            }
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                }
+            });
+
+            /////////////////
+
+            // Rotate the addCardButton
+            ObjectAnimator rotateFAB = ObjectAnimator.ofFloat(
+                    mAddCardButton,
+                    "rotation",
+                    -45f,
+                    0
+            ).setDuration(mRevealDuration);
+            rotateFAB.setInterpolator(interpolator);
+
+            // Start the animations
+            hideCardMenuAnim.start();
+            rotateFAB.start();
         }
     }
 

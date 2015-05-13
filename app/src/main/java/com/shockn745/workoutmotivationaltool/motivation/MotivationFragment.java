@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
 import com.shockn745.workoutmotivationaltool.R;
+import com.shockn745.workoutmotivationaltool.motivation.add_card_menu.AddCardMenuCallbacks;
 import com.shockn745.workoutmotivationaltool.motivation.add_card_menu.FABCallbacks;
 import com.shockn745.workoutmotivationaltool.motivation.background.BackgroundController;
 import com.shockn745.workoutmotivationaltool.motivation.background.ConnectionListener;
@@ -135,7 +136,8 @@ public class MotivationFragment extends Fragment implements
                         mRecyclerView,
                         mAdapter,
                         getActivity(),
-                        (FABCallbacks) getActivity()
+                        (FABCallbacks) getActivity(),
+                        (AddCardMenuCallbacks) getActivity()
                 );
         mRecyclerView.setOnTouchListener(touchListener);
         // Setting this scroll listener is required to ensure that during ListView scrolling,
