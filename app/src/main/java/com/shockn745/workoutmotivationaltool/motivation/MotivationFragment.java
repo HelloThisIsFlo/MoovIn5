@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -285,11 +284,8 @@ public class MotivationFragment extends Fragment implements
      * Update the UI
      * @param backAtHome Time back at home
      */
-    private void handleBackAtHomeTime(Date backAtHome) {
-        // Format backAtHome time
-        final String formattedBackAtHomeTime = DateFormat
-                .getTimeFormat(MotivationFragment.this.getActivity())
-                .format(backAtHome);
+    private void handleBackAtHomeTime(final Date backAtHome) {
+
 
         // Show backAtHome card
         // Wait after animation remove duration
@@ -297,10 +293,7 @@ public class MotivationFragment extends Fragment implements
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mAdapter.addCard(new CardBackAtHome(
-                        "You'll be back at home at : "
-                                + formattedBackAtHomeTime
-                ));
+                mAdapter.addCard(new CardBackAtHome(backAtHome, getActivity()));
             }
         }, mRecyclerView.getItemAnimator().getRemoveDuration());
 

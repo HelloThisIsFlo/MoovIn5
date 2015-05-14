@@ -160,11 +160,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             loadingSimpleHolder.mTextView.setText(card.getText());
 
         } else if (holder instanceof CardBackAtHome.BackAtHomeVH) {
-            CardBackAtHome.BackAtHomeVH backAtHomeVH = (CardBackAtHome.BackAtHomeVH) holder;
-
-            CardBackAtHome card = (CardBackAtHome) mDataSet.get(position);
-
-            backAtHomeVH.mTextView.setText(card.getText());
+            bindBackAtHomeCard((CardBackAtHome.BackAtHomeVH) holder, position);
 
         } else if (holder instanceof CardWeather.WeatherVH) {
             bindWeatherCard((CardWeather.WeatherVH) holder, position);
@@ -384,6 +380,15 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         weatherVH.mTempTextView.setText(card.getmTempText());
         weatherVH.mForecastTextView.setText(card.getmForecastText());
         weatherVH.mImageView.setImageResource(card.getmImageResId());
+
+    }
+
+    private void bindBackAtHomeCard(CardBackAtHome.BackAtHomeVH backAtHomeVH, int position) {
+
+        CardBackAtHome card = (CardBackAtHome) mDataSet.get(position);
+
+        backAtHomeVH.mBackAtHomeTimeTextView.setText(card.getBackAtHomeTimeString());
+        backAtHomeVH.mMotivationalTextView.setText(card.getMotivationalString());
 
     }
 

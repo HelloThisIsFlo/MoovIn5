@@ -51,5 +51,19 @@
     <string name="add_card_menu_toast_part_1">Card</string>
     <string name="add_card_menu_toast_part_2">added</string>
 
+    <!-- BackAtHome Card -->
+    <string name="back_at_home_card_5_minutes">If you move in the next 5 minutes
+    </string>
+    <string name="back_at_home_card_motivational_intro">You will be ready to : \n</string>
+    <string-array name="back_at_home_card_motivational_array">
+        <item>Go to the club</item>
+        <item>Chill at home</item>
+        <item>Go to your date</item>
+        <item>Cook dinner</item>
+        <item>Enjoy the endorphin rush</item>
+        <item>Hang out with your friends</item>
+        <item>Get a beer</item>
+        <item>Watch a movie</item>
+    </string-array>
 
 </resources>

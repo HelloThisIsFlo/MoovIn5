@@ -32,7 +32,7 @@
 
 
     <!-- Card Heights -->
-    <dimen name="card_back_at_home_height">100dp</dimen>
+    <dimen name="card_back_at_home_height">250dp</dimen>
     <dimen name="card_route_height">180dp</dimen>
     <dimen name="card_ad_height">70dp</dimen>
     <dimen name="card_loading_height">100dp</dimen>
