@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:minHeight="?android:attr/actionBarSize"
         android:background="?android:attr/colorPrimary"
-        android:elevation="8dp"
+        android:elevation="@dimen/toolbar_elevation"
         />
 
     <FrameLayout
@@ -23,5 +23,36 @@
         tools:ignore="MergeRootFrame" />
         <!--android:layout_below="@id/motivation_toolbar"-->
 
+    <ImageButton
+        android:id="@+id/add_card_button"
+        style="@style/FloatingActionButton.Default"
+        android:src="@drawable/plus"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:visibility="invisible"
+        android:layout_marginTop="@dimen/fab_margin_top" />
+
+
+        <!-- android:layout_height="@dimen/add_card_menu_height" -->
+    <!-- TODO fix the dynamical height -->
+    <!-- Idées : override onMeasure du Linear layout -->
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/add_card_menu_card_view"
+        android:layout_width="@dimen/add_card_menu_width"
+        android:layout_height="150dp"
+        android:layout_below="@id/add_card_button"
+        android:layout_toStartOf="@id/add_card_button"
+        android:visibility="invisible"
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="6dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/add_card_menu_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        </android.support.v7.widget.CardView>
 
 </RelativeLayout>

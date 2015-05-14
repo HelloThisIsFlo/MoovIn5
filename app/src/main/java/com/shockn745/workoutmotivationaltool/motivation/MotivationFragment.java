@@ -25,6 +25,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
 import com.shockn745.workoutmotivationaltool.R;
+import com.shockn745.workoutmotivationaltool.motivation.add_card_menu.AddCardMenuCallbacks;
+import com.shockn745.workoutmotivationaltool.motivation.add_card_menu.FABCallbacks;
 import com.shockn745.workoutmotivationaltool.motivation.background.BackgroundController;
 import com.shockn745.workoutmotivationaltool.motivation.background.ConnectionListener;
 import com.shockn745.workoutmotivationaltool.motivation.background.FetchWeatherTask;
@@ -55,6 +57,7 @@ public class MotivationFragment extends Fragment implements
 
     private static final String LOG_TAG = MotivationFragment.class.getSimpleName();
 
+    private FABCallbacks mFABCallbacks;
     private BackgroundController mBackgroundController;
     private ErrorHandler mErrorHandler;
 
@@ -73,6 +76,10 @@ public class MotivationFragment extends Fragment implements
     private GoogleMap mMap = null;
     private String mPolylineRoute = null;
 
+
+    public void setShowFABCallback(FABCallbacks FABCallbacks) {
+        this.mFABCallbacks = FABCallbacks;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,7 +135,9 @@ public class MotivationFragment extends Fragment implements
                 new SwipeDismissRecyclerViewTouchListener(
                         mRecyclerView,
                         mAdapter,
-                        getActivity()
+                        getActivity(),
+                        (FABCallbacks) getActivity(),
+                        (AddCardMenuCallbacks) getActivity()
                 );
         mRecyclerView.setOnTouchListener(touchListener);
         // Setting this scroll listener is required to ensure that during ListView scrolling,
@@ -228,6 +237,14 @@ public class MotivationFragment extends Fragment implements
             mAdapter.clearLoadingScreen();
             ((CardAnimator)mRecyclerView.getItemAnimator())
                     .setAnimationStyle(CardAnimator.STYLE_POST_LOADING);
+            // Reveal FAB
+            // Wait until the first card is added
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mFABCallbacks.revealFAB();
+                }
+            }, getResources().getInteger(R.integer.card_add_anim_duration));
         }
 
         mIsInLoadingState = false;
@@ -492,7 +509,6 @@ public class MotivationFragment extends Fragment implements
         // Initialize the map here because we have to work with the map before it is displayed
         // cf. drawPolylineRoute()
         MapsInitializer.initialize(getActivity());
-        Log.d(LOG_TAG, "OnMapReady called");
         if (mPolylineRoute != null) {
             drawPolylineRoute();
         }
@@ -527,7 +543,6 @@ public class MotivationFragment extends Fragment implements
 
         int padding = 0;
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), padding));
-        Log.d(LOG_TAG, "Camera moved");
     }
 
 

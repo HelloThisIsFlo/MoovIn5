@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView
     style="@style/Card"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/card_view"
+    android:id="@+id/loading_simple_card_view"
     android:layout_height="@dimen/card_loading_simple_height">
 
     <TextView
