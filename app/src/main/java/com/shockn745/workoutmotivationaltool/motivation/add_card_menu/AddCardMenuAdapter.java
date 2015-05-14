@@ -18,6 +18,8 @@ import java.util.HashMap;
  */
 public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public static final int EMPTY_SET = -1;
+
     public interface AddCardFromCacheCallback {
 
         /**
@@ -27,6 +29,10 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         void addCardFromCache(int viewType);
     }
 
+    /**
+     * ViewHolder to hold the card descriptions and card viewType
+     * Also set the OnClickListener
+     */
     private class VH extends RecyclerView.ViewHolder {
         public TextView textView;
         private int mCardViewType;
@@ -41,8 +47,11 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    addCardFromCacheCallback.addCardFromCache(mCardViewType);
-                    addCardMenuCallbacks.hideAddCardMenu();
+                    // Disable onClickListener on the "EMPTY_SET" message
+                    if (mCardViewType != EMPTY_SET) {
+                        addCardFromCacheCallback.addCardFromCache(mCardViewType);
+                        addCardMenuCallbacks.hideAddCardMenu();
+                    }
                 }
             });
         }
@@ -66,6 +75,8 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         mAddCardFromCacheCallback = addCardFromCacheCallback;
 
         // Create the list of card descriptions
+        // Binds the card view type with its description
+        // Add a description for when no card is in cache
         mCardDescriptions = new HashMap<>();
         mCardDescriptions.put(
                 CardInterface.WEATHER_VIEW_TYPE,
@@ -78,6 +89,10 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         mCardDescriptions.put(
                 CardInterface.CALORIES_VIEW_TYPE,
                 mActivity.getString(R.string.add_card_menu_calories)
+        );
+        mCardDescriptions.put(
+                EMPTY_SET,
+                mActivity.getString(R.string.add_card_menu_empty_set)
         );
     }
 
@@ -98,6 +113,8 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         textToSet = mCardDescriptions.get(cardType);
 
+        // Display the card description of the cards that are in cache
+        // If empty, display a message : mCardDescriptions.get(EMPTY_SET);
         if (textToSet != null) {
             ((VH) holder).textView.setText(textToSet);
             ((VH) holder).setCardViewType(cardType);

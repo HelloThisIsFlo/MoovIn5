@@ -27,6 +27,7 @@ import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.calor
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Adapter for the list of cards
@@ -60,6 +61,8 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         mDrawPolylineCallback = drawPolylineCallback;
         mRemovedCards = new HashMap<>();
         mRemovedCardsViewTypes = new ArrayList<>();
+        // Notify AddCardMenuAdapter that no cards are in cache
+        mRemovedCardsViewTypes.add(AddCardMenuAdapter.EMPTY_SET);
 
         // Set AddCardMenuAdapter
         mAddCardMenuAdapter = new AddCardMenuAdapter(mRemovedCardsViewTypes, mActivity, this);
@@ -264,7 +267,12 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
         // Update mRemovedCardsViewTypes
         mRemovedCardsViewTypes.clear();
-        mRemovedCardsViewTypes.addAll(mRemovedCards.keySet());
+        Set<Integer> cardViewTypesSet = mRemovedCards.keySet();
+        if (!cardViewTypesSet.isEmpty()) {
+            mRemovedCardsViewTypes.addAll(mRemovedCards.keySet());
+        } else {
+            mRemovedCardsViewTypes.add(AddCardMenuAdapter.EMPTY_SET);
+        }
         mAddCardMenuAdapter.notifyDataSetChanged();
 
         // Add card
