@@ -47,6 +47,9 @@
     <string name="add_card_menu_weather">Weather</string>
     <string name="add_card_menu_route">Route</string>
     <string name="add_card_menu_calories">Calories</string>
+    <string name="add_card_menu_toast_part_1">Card</string>
+    <string name="add_card_menu_toast_part_2">added</string>
+
 
 
 

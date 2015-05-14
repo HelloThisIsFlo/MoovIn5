@@ -11,6 +11,7 @@ import com.shockn745.workoutmotivationaltool.R;
 import com.shockn745.workoutmotivationaltool.motivation.recyclerview.cards.CardInterface;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Adapter to display items in the add card menu
@@ -55,6 +56,7 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final ArrayList<Integer> mListDismissedCards;
     private final Activity mActivity;
     private final AddCardFromCacheCallback mAddCardFromCacheCallback;
+    private final HashMap<Integer, String> mCardDescriptions;
 
     public AddCardMenuAdapter(ArrayList<Integer> listDismissedCards,
                               Activity activity,
@@ -62,6 +64,21 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.mListDismissedCards = listDismissedCards;
         mActivity = activity;
         mAddCardFromCacheCallback = addCardFromCacheCallback;
+
+        // Create the list of card descriptions
+        mCardDescriptions = new HashMap<>();
+        mCardDescriptions.put(
+                CardInterface.WEATHER_VIEW_TYPE,
+                mActivity.getString(R.string.add_card_menu_weather)
+        );
+        mCardDescriptions.put(
+                CardInterface.ROUTE_VIEW_TYPE,
+                mActivity.getString(R.string.add_card_menu_route)
+        );
+        mCardDescriptions.put(
+                CardInterface.CALORIES_VIEW_TYPE,
+                mActivity.getString(R.string.add_card_menu_calories)
+        );
     }
 
     @Override
@@ -79,30 +96,23 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         String textToSet;
         int cardType = mListDismissedCards.get(position);
 
-        switch (cardType) {
-            case CardInterface.WEATHER_VIEW_TYPE:
-                textToSet = mActivity.getString(R.string.add_card_menu_weather);
-                break;
+        textToSet = mCardDescriptions.get(cardType);
 
-            case CardInterface.ROUTE_VIEW_TYPE:
-                textToSet = mActivity.getString(R.string.add_card_menu_route);
-                break;
-
-            case CardInterface.CALORIES_VIEW_TYPE:
-                textToSet = mActivity.getString(R.string.add_card_menu_calories);
-                break;
-
-            default:
-                textToSet = "CardType Not Supported!";
+        if (textToSet != null) {
+            ((VH) holder).textView.setText(textToSet);
+            ((VH) holder).setCardViewType(cardType);
+        } else {
+            throw new IllegalStateException("Card type not supported");
         }
-
-        ((VH) holder).textView.setText(textToSet);
-        ((VH) holder).setCardViewType(cardType);
     }
 
     @Override
     public int getItemCount() {
         return mListDismissedCards.size();
+    }
+
+    public String getCardDescription(int cardViewType) {
+        return mCardDescriptions.get(cardViewType);
     }
 
 }

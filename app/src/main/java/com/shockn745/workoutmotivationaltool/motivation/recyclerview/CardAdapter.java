@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.shockn745.workoutmotivationaltool.R;
 import com.shockn745.workoutmotivationaltool.motivation.MotivationActivity;
@@ -268,6 +269,15 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
         // Add card
         addCard(cardToAdd);
+        String cardDescription = mAddCardMenuAdapter.getCardDescription(viewType);
+        if (cardDescription != null) {
+            cardDescription = mActivity.getString(R.string.add_card_menu_toast_part_1)
+                    + " "
+                    + cardDescription
+                    + " "
+                    + mActivity.getString(R.string.add_card_menu_toast_part_2);
+            Toast.makeText(mActivity, cardDescription, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
