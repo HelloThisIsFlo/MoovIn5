@@ -494,11 +494,7 @@ public class MotivationFragment extends Fragment implements
         MapsInitializer.initialize(getActivity());
         Log.d(LOG_TAG, "OnMapReady called");
         if (mPolylineRoute != null) {
-            try {
-                drawPolylineRoute();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            drawPolylineRoute();
         }
 //        mMap.setOnMapLoadedCallback(this);
     }
@@ -507,8 +503,7 @@ public class MotivationFragment extends Fragment implements
     /**
      * Draw the polyline route onto the map and adjust the zoom level
      */
-    private void drawPolylineRoute() throws Exception {
-        Log.d(LOG_TAG, "drawPolylineRoute()");
+    private void drawPolylineRoute() {
 
         // Clean Map
         mMap.clear();
@@ -546,10 +541,6 @@ public class MotivationFragment extends Fragment implements
      */
     @Override
     public void drawPolylineCallback() {
-        try {
-            drawPolylineRoute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        drawPolylineRoute();
     }
 }
