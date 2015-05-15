@@ -38,7 +38,6 @@
     <dimen name="card_loading_simple_height">100dp</dimen>
     <dimen name="card_route_content_height">180dp</dimen>
     <dimen name="card_weather_content_height">180dp</dimen>
-    <dimen name="card_weather_workaround_height">250dp</dimen><!-- 180 + 70 -->
 
     <!-- Calories card : recyclerView -->
     <dimen name="calories_recycler_view_list_item_height">70dp</dimen>

@@ -26,7 +26,7 @@ public class CardWeather implements CardInterface {
             this.mForecastTextView = (TextView) itemView.findViewById(R.id.forecast_text_view);
             this.mImageView = (ImageView) itemView.findViewById(R.id.weather_image_view);
 
-            final View cardView = itemView;
+            final View cardView = itemView.findViewById(R.id.weather_frame_layout);
 
             // Set the height dynamically after layout (to be able to get the width parameter)
             itemView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

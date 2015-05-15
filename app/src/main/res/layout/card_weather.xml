@@ -3,11 +3,11 @@
     style="@style/Card"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/weather_card_view"
-    android:layout_height="@dimen/card_weather_workaround_height">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/weather_header_text_view"
@@ -22,10 +22,11 @@
             />
 
         <!-- AccentTint added at the foreground to darken the image -->
+        <!-- layout_height is set dynamically in CardWeather contructor -->
         <FrameLayout
             android:id="@+id/weather_frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_alignParentBottom="true"
             android:layout_below="@id/weather_header_text_view"
             android:foreground="@color/accentTint">
@@ -42,6 +43,8 @@
             android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
             android:background="#66333333"
             />
 
@@ -52,6 +55,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/temperature_text_view"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             android:gravity="end"
             android:background="#66333333"
             />

@@ -3,6 +3,8 @@
     android:id="@+id/add_card_menu_list_item_text_view"
     android:layout_width="match_parent"
     android:layout_height="@dimen/add_card_menu_list_item_height"
-    android:textSize="20sp">
+    android:padding="5dp"
+    android:textColor="#FFFFFF"
+    android:textSize="30sp">
 
 </TextView>
