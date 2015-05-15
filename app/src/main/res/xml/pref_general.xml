@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.shockn745.workoutmotivationaltool.settings.NumberPickerPreference
+    <com.shockn745.moovin5.settings.NumberPickerPreference
         android:title="@string/pref_warmup"
         android:key="@string/pref_warmup_key"
         android:defaultValue="@integer/pref_warmup_default"
         />
 
-    <com.shockn745.workoutmotivationaltool.settings.NumberPickerPreference
+    <com.shockn745.moovin5.settings.NumberPickerPreference
         android:title="@string/pref_stretching"
         android:key="@string/pref_stretching_key"
         android:defaultValue="@integer/pref_stretching_default"

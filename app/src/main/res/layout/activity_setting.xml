@@ -3,5 +3,5 @@
     android:id="@+id/settings_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.shockn745.workoutmotivationaltool.settings.SettingsActivity"
+    tools:context="com.shockn745.moovin5.settings.SettingsActivity"
     tools:ignore="MergeRootFrame" />
