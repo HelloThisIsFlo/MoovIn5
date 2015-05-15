@@ -1,4 +1,4 @@
-# Workout Motivational Tool
+# MoovIn5
 
 This is an android application aimed at getting you motivated to move from your couch. Right now!
 
