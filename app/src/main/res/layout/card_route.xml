@@ -9,15 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/card_header_height"
-            android:text="@string/card_header_route"
-            android:background="@color/primaryDark"
-            android:textColor="#FFFFFF"
-            android:gravity="center_vertical"
-            android:textSize="35sp"
-            />
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/card_header_height"-->
+            <!--android:text="@string/card_header_route"-->
+            <!--android:background="@color/primaryDark"-->
+            <!--android:textColor="#FFFFFF"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:textSize="35sp"-->
+            <!--/>-->
 
         <!-- AccentTint added at the foreground to darken the map -->
         <FrameLayout

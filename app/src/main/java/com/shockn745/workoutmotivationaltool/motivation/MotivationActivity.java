@@ -3,6 +3,7 @@ package com.shockn745.workoutmotivationaltool.motivation;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -11,7 +12,10 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -121,6 +125,39 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
                             mAddCardMenu.setVisibility(View.GONE);
                         }
                     });
+
+
+
+            ///////////////////////////////////////////////////////
+            // TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST //
+            ///////////////////////////////////////////////////////
+
+            Button darkenButton = (Button) findViewById(R.id.test_darken_button);
+            final ImageView background = (ImageView)
+                    findViewById(R.id.motivation_background_image_view);
+            darkenButton.setOnClickListener(new View.OnClickListener() {
+                int increment = 220;
+
+                @Override
+                public void onClick(View v) {
+                    increment -= 20;
+                    if (increment > 0) {
+                        background.setColorFilter(
+                                Color.rgb(increment, increment, increment),
+                                android.graphics.PorterDuff.Mode.MULTIPLY
+                        );
+                        Toast.makeText(
+                                MotivationActivity.this,
+                                "Increment = " + increment,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                }
+            });
+
+
+
+
 
         } else {
             // If trying to restore : go back to main activity

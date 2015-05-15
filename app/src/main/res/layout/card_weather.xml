@@ -9,17 +9,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/weather_header_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/card_header_height"
-            android:text="@string/card_header_weather"
-            android:background="@color/primaryDark"
-            android:textColor="#FFFFFF"
-            android:gravity="center_vertical"
-            android:textSize="35sp"
-            android:layout_alignParentTop="true"
-            />
+        <!--<TextView-->
+            <!--android:id="@+id/weather_header_text_view"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/card_header_height"-->
+            <!--android:text="@string/card_header_weather"-->
+            <!--android:background="@color/primaryDark"-->
+            <!--android:textColor="#FFFFFF"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:textSize="35sp"-->
+            <!--android:layout_above="@+id/weather_frame_layout"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--/>-->
 
         <!-- AccentTint added at the foreground to darken the image -->
         <!-- layout_height is set dynamically in CardWeather contructor -->
@@ -28,7 +29,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_alignParentBottom="true"
-            android:layout_below="@id/weather_header_text_view"
             android:foreground="@color/accentTint">
             <ImageView
                 android:id="@+id/weather_image_view"

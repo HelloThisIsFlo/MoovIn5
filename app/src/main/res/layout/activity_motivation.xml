@@ -4,10 +4,12 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
+
     <ImageView
+        android:id="@+id/motivation_background_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/background_bis"
+        android:src="@drawable/background_blue"
         android:scaleType="centerCrop"/>
 
     <Toolbar
@@ -20,6 +22,15 @@
         android:background="?android:attr/colorPrimary"
         android:elevation="@dimen/toolbar_elevation"
         />
+
+    <Button
+        android:id="@+id/test_darken_button"
+        android:layout_below="@id/motivation_toolbar"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:text="DARKEN"/>
+
 
     <FrameLayout
         android:id="@+id/motivation_container"

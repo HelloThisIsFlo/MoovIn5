@@ -45,39 +45,39 @@ public class BackgroundController implements
 
     public interface BackgroundControllerListener {
 
-        public static final int ERROR_LOCATION_FAIL = 10;
+        int ERROR_LOCATION_FAIL = 10;
 
-        public static final int ERROR_TRANSIT_FAIL = 20;
-        public static final int ERROR_TRANSIT_CONNECTION_FAIL = 21;
-        public static final int ERROR_TRANSIT_NO_ROUTES = 22;
+        int ERROR_TRANSIT_FAIL = 20;
+        int ERROR_TRANSIT_CONNECTION_FAIL = 21;
+        int ERROR_TRANSIT_NO_ROUTES = 22;
 
-        public static final int ERROR_WEATHER_FAIL = 30;
-        public static final int ERROR_WEATHER_CONNECTION_FAIL = 31;
+        int ERROR_WEATHER_FAIL = 30;
+        int ERROR_WEATHER_CONNECTION_FAIL = 31;
 
-        public static final int ERROR_GYM_NOT_INITIALIZED = 100;
+        int ERROR_GYM_NOT_INITIALIZED = 100;
 
 
         /**
          * Called when the application exits the loading state
          */
-        public void onLoadingStateFinished();
+        void onLoadingStateFinished();
 
         /**
          * Called when the application enters the loading state
          */
-        public void onLoadingStateInitiated();
+        void onLoadingStateInitiated();
 
         /**
          * Called when all backgroung processing is finished
          * @param result Result of the background processing
          */
-        public void onBackgroundProcessDone(BackgroundProcessResult result);
+        void onBackgroundProcessDone(BackgroundProcessResult result);
 
         /**
          * Called when there is an error in the processing
          * @param errorCode See static fields
          */
-        public void onBackgroundProcessError(int errorCode);
+        void onBackgroundProcessError(int errorCode);
 
     }
 
@@ -305,7 +305,7 @@ public class BackgroundController implements
                         -1,
                         "s{j_I{itpANlEeLc@[fGFV@CcBfc@C{@Fi@J_A@EHq@CAYUCREJEVAPF@b@BZ@nE?j@O"
                 );
-                transitInfos.setBackAtHomeDate(new Date(2015, 04, 28));
+                transitInfos.setBackAtHomeDate(new Date(2015, 4, 28));
                 mListener.onBackgroundProcessDone(
                         new BackgroundProcessResult(
                                 transitInfos,

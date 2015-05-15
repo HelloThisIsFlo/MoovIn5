@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- TODO refactor all colors in different themes, styles, etc. And add button to switch theme -->
+    <!-- cf : http://stackoverflow.com/questions/2482848/how-to-change-current-theme-at-runtime-in-android -->
+    <!-- The idea : switch theme & relaunch the activity afterwards -->
     <item name="windowBackground" type="color">#BDBDBD</item>
-    <item name="primary" type="color">#b93d31</item>
-    <item name="primaryDark" type="color">#a13529</item>
-    <item name="accent" type="color">#474747</item>
-    <item name="accentTint" type="color">#50474747</item>
+    <item name="primary" type="color">#00ACC1</item> <!--600-->
+    <item name="primaryDark" type="color">#0097A7</item> <!--700-->
+    <!--<item name="accent" type="color">#F50057</item>-->
+    <item name="accent" type="color">#F50057</item>
+    <item name="accentTint" type="color">#00474747</item>
     <item name="fabHighlight" type="color">#EEFF41</item>
 </resources>
