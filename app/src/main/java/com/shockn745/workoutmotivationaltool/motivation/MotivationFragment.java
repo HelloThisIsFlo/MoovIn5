@@ -327,7 +327,7 @@ public class MotivationFragment extends Fragment implements
             public void run() {
                 mAdapter.addCard(new CardRoute("This way"));
             }
-        }, addTimes[1]);
+        }, addTimes[0]);
     }
 
     /**
@@ -340,7 +340,7 @@ public class MotivationFragment extends Fragment implements
             public void run() {
                 mAdapter.addCard(new CardWeather(weatherInfos));
             }
-        }, addTimes[0]);
+        }, addTimes[1]);
     }
 
 

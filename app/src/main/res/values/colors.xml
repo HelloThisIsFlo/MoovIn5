@@ -2,8 +2,9 @@
 <resources>
 
     <item name="windowBackground" type="color">#BDBDBD</item>
-    <item name="primary" type="color">#2196F3</item>
-    <item name="primaryDark" type="color">#1976D2</item>
-    <item name="accent" type="color">#FF4081</item>
+    <item name="primary" type="color">#b93d31</item>
+    <item name="primaryDark" type="color">#a13529</item>
+    <item name="accent" type="color">#474747</item>
+    <item name="accentTint" type="color">#50474747</item>
     <item name="fabHighlight" type="color">#EEFF41</item>
 </resources>

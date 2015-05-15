@@ -344,28 +344,29 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
         CardCalories card = (CardCalories) mDataSet.get(position);
 
-        holder.mTextView.setText(card.getText());
+        holder.headerTextView.setText(card.getHeaderText());
+        holder.caloriesTextView.setText(card.getCaloriesText());
 
         // Set the recycler view
         CardCalories.CaloriesItem[] caloriesDataSet = card.getItems();
         CaloriesAdapter adapter = new CaloriesAdapter(caloriesDataSet);
-        holder.mRecyclerView.setAdapter(adapter);
+        holder.recyclerView.setAdapter(adapter);
 
-        holder.mRecyclerView.setLayoutManager(
+        holder.recyclerView.setLayoutManager(
                 new LinearLayoutManager(holder.itemView.getContext())
         );
 
         // Notify the recyclerView that its size won't change (better perfs)
-        holder.mRecyclerView.setHasFixedSize(true);
-        holder.mRecyclerView.setItemAnimator(null); //Deactivate animations
+        holder.recyclerView.setHasFixedSize(true);
+        holder.recyclerView.setItemAnimator(null); //Deactivate animations
 
         // Set the height of the recyclerview depending on the number of elements
-        ViewGroup.LayoutParams layoutParams = holder.mRecyclerView.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = holder.recyclerView.getLayoutParams();
         float test = mActivity.getResources().getDimension(R.dimen.calories_recycler_view_list_item_height);
         layoutParams.height = (int) (card.getItems().length
                 * mActivity.getResources().getDimension(R.dimen.calories_recycler_view_list_item_height));
 
-        holder.mRecyclerView.setLayoutParams(layoutParams);
+        holder.recyclerView.setLayoutParams(layoutParams);
 
     }
 

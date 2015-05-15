@@ -11,33 +11,38 @@
         android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/back_at_home_card_5_minutes"
+            android:layout_height="@dimen/card_header_height"
+            android:text="@string/card_header_back_at_home"
             android:background="@color/primaryDark"
             android:textColor="#FFFFFF"
+            android:gravity="center_vertical"
             android:textSize="25sp"
             />
 
         <TextView
             android:id="@+id/back_at_home_time_text_view"
-            android:textSize="50sp"
-            android:layout_margin="10dp"
+            android:textSize="60sp"
+            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:background="@color/primary"
+            android:textColor="#FFFFFF"
             android:layout_gravity="center"
             />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
+            android:background="@color/primaryDark"/>
 
         <TextView
             android:id="@+id/back_at_home_motivational_text_view"
             android:textSize="20sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/primary"
+            android:textColor="#FFFFFF"
             />
 
     </LinearLayout>
