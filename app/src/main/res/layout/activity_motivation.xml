@@ -9,7 +9,7 @@
         android:id="@+id/motivation_background_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/background_blue"
+        android:src="@drawable/motivation_background"
         android:scaleType="centerCrop"/>
 
     <Toolbar
@@ -22,15 +22,6 @@
         android:background="?android:attr/colorPrimary"
         android:elevation="@dimen/toolbar_elevation"
         />
-
-    <Button
-        android:id="@+id/test_darken_button"
-        android:layout_below="@id/motivation_toolbar"
-        android:layout_width="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content"
-        android:text="DARKEN"/>
-
 
     <FrameLayout
         android:id="@+id/motivation_container"
@@ -58,7 +49,7 @@
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/add_card_menu_card_view"
         android:layout_width="@dimen/add_card_menu_width"
-        android:layout_height="150dp"
+        android:layout_height="@dimen/add_card_menu_height"
         android:layout_below="@id/add_card_button"
         android:layout_toStartOf="@id/add_card_button"
         android:visibility="invisible"
@@ -69,7 +60,7 @@
             android:id="@+id/add_card_menu_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/accent"/>
+            android:background="@color/primaryDark"/>
 
         </android.support.v7.widget.CardView>
 

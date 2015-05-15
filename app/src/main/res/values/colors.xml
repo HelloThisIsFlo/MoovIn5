@@ -5,9 +5,10 @@
     <!-- cf : http://stackoverflow.com/questions/2482848/how-to-change-current-theme-at-runtime-in-android -->
     <!-- The idea : switch theme & relaunch the activity afterwards -->
     <item name="windowBackground" type="color">#BDBDBD</item>
-    <item name="primary" type="color">#00ACC1</item> <!--600-->
-    <item name="primaryDark" type="color">#0097A7</item> <!--700-->
+    <item name="primary" type="color">#00ACC1</item>
+    <item name="primaryDark" type="color">#0097A7</item>
     <!--<item name="accent" type="color">#F50057</item>-->
+    <!-- 600 : 00ACC1 / 700 : 0097A7 / 800 : 00838F -->
     <item name="accent" type="color">#F50057</item>
     <item name="accentTint" type="color">#00474747</item>
     <item name="fabHighlight" type="color">#EEFF41</item>

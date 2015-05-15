@@ -5,7 +5,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/loading_simple_card_view"
     android:layout_height="@dimen/card_loading_simple_height"
-    card_view:cardBackgroundColor="@color/primary"
+    card_view:cardBackgroundColor="@color/primaryDark"
     >
 
     <TextView
