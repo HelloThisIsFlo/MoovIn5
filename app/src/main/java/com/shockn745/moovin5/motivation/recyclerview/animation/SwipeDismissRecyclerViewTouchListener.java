@@ -11,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewPropertyAnimator;
 import android.widget.AbsListView;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -52,11 +51,11 @@ import com.shockn745.moovin5.motivation.add_card_menu.FABCallbacks;
  * listView.setOnScrollListener(touchListener.makeScrollListener());
  * </pre>
  *
- * <p>This class Requires API level 12 or later due to use of {@link
- * ViewPropertyAnimator}.</p>
- *
  */
 public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListener {
+    private static final String LOG_TAG =
+            SwipeDismissRecyclerViewTouchListener.class.getSimpleName();
+
     // Cached ViewConfiguration and system-wide constant values
     private int mSlop;
     private int mMinFlingVelocity;
@@ -202,6 +201,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
         };
     }
 
+
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if (mViewWidth < 2) {
@@ -210,7 +210,11 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
 
         switch (motionEvent.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
-                if (mPaused || mDismissAnimationRunning || isRemoveAnimationRunning()) {
+                // Prevent scrolling if animation is running
+                if (mDismissAnimationRunning || isAddRemoveAnimationRunning()) {
+                    return true;
+                }
+                if (mPaused) {
                     return false;
                 }
 
@@ -348,10 +352,12 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             }
 
             case MotionEvent.ACTION_MOVE: {
+                // Prevent scrolling if animation is running
+                if (mDismissAnimationRunning || isAddRemoveAnimationRunning()) {
+                    return true;
+                }
                 if (mVelocityTracker == null
-                        || mPaused
-                        || mDismissAnimationRunning
-                        || isRemoveAnimationRunning()) {
+                        || mPaused) {
                     break;
                 }
 
@@ -392,7 +398,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      * Check if the built in remove animation of the recyclerview is running
      * @return true if the animation is running
      */
-    private boolean isRemoveAnimationRunning() {
+    private boolean isAddRemoveAnimationRunning() {
         RecyclerView.ItemAnimator itemAnimator = mRecyclerView.getItemAnimator();
         if (itemAnimator != null) {
             return itemAnimator.isRunning();
