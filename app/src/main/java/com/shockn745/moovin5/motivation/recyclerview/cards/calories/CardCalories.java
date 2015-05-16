@@ -12,6 +12,8 @@ import com.shockn745.moovin5.motivation.recyclerview.cards.CardInterface;
 
 /**
  * Card that display calories information
+ *
+ * @author Florian Kempenich
  */
 public class CardCalories implements CardInterface {
 

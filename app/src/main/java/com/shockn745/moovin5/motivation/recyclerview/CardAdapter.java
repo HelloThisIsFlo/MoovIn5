@@ -31,6 +31,8 @@ import java.util.Set;
 
 /**
  * Adapter for the list of cards
+ *
+ * @author Florian Kempenich
  */
 public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
         SwipeDismissRecyclerViewTouchListener.DismissCallbacks,

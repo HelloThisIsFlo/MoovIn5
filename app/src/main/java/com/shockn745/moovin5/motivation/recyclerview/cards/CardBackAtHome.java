@@ -15,6 +15,8 @@ import java.util.Date;
 
 /**
  * Card displaying the time back at home
+ *
+ * @author Florian Kempenich
  */
 public class CardBackAtHome implements CardInterface {
 

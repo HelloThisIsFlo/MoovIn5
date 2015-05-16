@@ -28,6 +28,8 @@ import java.util.Date;
  * It takes a LatLng[2] as parameter, where :<br>
  * LatLng[0] : start point<br>
  * LatLng[1] : destination<br>
+ *
+ * @author Florian Kempenich
  */
 public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTask.TransitInfos> {
 

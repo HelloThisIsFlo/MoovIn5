@@ -38,6 +38,8 @@ import java.util.List;
  * Commented methods are either added or modified
  *
  * @see RecyclerView.ItemAnimator
+ *
+ * @author Florian Kempenich
  */
 public class CardAnimator extends RecyclerView.ItemAnimator {
 

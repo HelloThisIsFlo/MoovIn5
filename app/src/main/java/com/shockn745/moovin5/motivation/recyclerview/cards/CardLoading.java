@@ -9,6 +9,8 @@ import com.shockn745.moovin5.R;
 
 /**
  * Card shown when the application is processing. Just after entering MotivationActivity.
+ *
+ * @author Florian Kempenich
  */
 public class CardLoading extends CardLoadingSimple {
 

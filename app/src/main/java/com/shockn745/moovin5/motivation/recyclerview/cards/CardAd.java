@@ -8,6 +8,8 @@ import com.shockn745.moovin5.R;
 
 /**
  * Card that display ads
+ *
+ * @author Florian Kempenich
  */
 public class CardAd implements CardInterface {
 

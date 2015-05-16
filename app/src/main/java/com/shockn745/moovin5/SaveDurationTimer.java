@@ -10,6 +10,8 @@ import android.util.Log;
  * Timer used to save the workout duration in the preference after a certain amount of time
  * It is used to prevent multiple writes to shared preferences when scrolling through the numbers
  * in the duration picker
+ *
+ * @author Florian Kempenich
  */
 class SaveDurationTimer implements Runnable {
 

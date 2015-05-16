@@ -2,6 +2,8 @@ package com.shockn745.moovin5.motivation.recyclerview.cards;
 
 /**
  * Interface for the cards used in MotivationActivity
+ *
+ * @author Florian Kempenich
  */
 public interface CardInterface {
 

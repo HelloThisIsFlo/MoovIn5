@@ -17,6 +17,8 @@ import com.shockn745.moovin5.motivation.MotivationActivity;
 
 /**
  * The main fragment of the application
+ *
+ * @author Florian Kempenich
  */
 public class MainFragment extends Fragment {
 

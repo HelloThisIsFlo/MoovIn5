@@ -10,6 +10,8 @@ import com.shockn745.moovin5.R;
  * Card shown when the loading time is longer than loc_req_expiration / 2
  * Also the base class for
  * {@link com.shockn745.moovin5.motivation.recyclerview.cards.CardLoading}
+ *
+ * @author Florian Kempenich
  */
 public class CardLoadingSimple implements CardInterface {
 

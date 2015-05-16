@@ -12,6 +12,8 @@ import com.shockn745.moovin5.motivation.background.FetchWeatherTask;
 
 /**
  * Card that display weather information
+ *
+ * @author Florian Kempenich
  */
 public class CardWeather implements CardInterface {
 

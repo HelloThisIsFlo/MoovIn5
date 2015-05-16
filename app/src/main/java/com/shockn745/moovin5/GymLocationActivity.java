@@ -23,7 +23,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.shockn745.moovin5.settings.PreferencesUtils;
 
-
+/**
+ * Activity where the gym location is set by the user
+ *
+ * @author Florian Kempenich
+ */
 public class GymLocationActivity extends Activity implements OnMapReadyCallback {
 
     private final static String LOG_TAG = GymLocationActivity.class.getSimpleName();

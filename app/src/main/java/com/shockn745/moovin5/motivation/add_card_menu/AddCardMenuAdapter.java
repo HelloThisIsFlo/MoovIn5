@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 /**
  * Adapter to display items in the add card menu
+ * @author Florian Kempenich
  */
 public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

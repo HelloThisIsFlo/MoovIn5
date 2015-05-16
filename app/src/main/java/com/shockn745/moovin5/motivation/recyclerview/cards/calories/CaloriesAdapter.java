@@ -13,6 +13,8 @@ import com.shockn745.moovin5.R;
 
 /**
  * Adapter for the CaloriesItems
+ *
+ * @author Florian Kempenich
  */
 public class CaloriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

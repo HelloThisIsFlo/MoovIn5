@@ -48,6 +48,8 @@ import java.util.List;
 /**
  * Fragment of MotivationActivity
  * see the {@link MotivationActivity} class
+ *
+ * @author Florian Kempenich
  */
 public class MotivationFragment extends Fragment implements
         BackgroundController.BackgroundControllerListener,

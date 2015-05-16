@@ -14,6 +14,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
  *
  * @see <a href="http://developer.android.com/google/auth/api-client.html">
  * Accessing Google APIs</a>
+ *
+ * @author Florian Kempenich
  */
 public class ConnectionListener
         implements GoogleApiClient.ConnectionCallbacks,

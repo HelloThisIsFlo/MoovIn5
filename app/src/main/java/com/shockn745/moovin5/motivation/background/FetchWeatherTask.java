@@ -19,6 +19,8 @@ import java.net.URL;
 
 /**
  * AsyncTask that fetch the current weather on background
+ *
+ * @author Florian Kempenich
  */
 public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTask.WeatherInfos> {
 

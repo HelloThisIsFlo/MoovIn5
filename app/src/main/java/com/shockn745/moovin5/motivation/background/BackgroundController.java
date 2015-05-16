@@ -24,7 +24,8 @@ import java.util.Date;
  * - Location failed<br>
  * - Transit time retrieved<br>
  * - . . .<br><br>
- * Note : Not related to Android Handler
+ *
+ * @author Florian Kempenich
  */
 public class BackgroundController implements
         FetchTransitTask.OnBackAtHomeTimeRetrievedListener,
