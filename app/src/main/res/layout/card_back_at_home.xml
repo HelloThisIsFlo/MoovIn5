@@ -10,25 +10,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/card_header_height"
+            style="@style/TextView.Header.Small"
             android:text="@string/card_header_back_at_home"
-            android:background="@color/primaryDark"
-            android:textColor="#FFFFFF"
-            android:gravity="center_vertical"
-            android:textSize="25sp"
             />
 
         <TextView
+            style="@style/TextView.Content.MainInfo.GeneralVariation"
             android:id="@+id/back_at_home_time_text_view"
-            android:textSize="60sp"
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="@color/primary"
-            android:textColor="#FFFFFF"
-            android:layout_gravity="center"
             />
 
         <View
@@ -37,12 +25,8 @@
             android:background="@color/primaryDark"/>
 
         <TextView
+            style="@style/TextView.Content"
             android:id="@+id/back_at_home_motivational_text_view"
-            android:textSize="20sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/primary"
-            android:textColor="#FFFFFF"
             />
 
     </LinearLayout>

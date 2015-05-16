@@ -13,25 +13,13 @@
         android:orientation="vertical">
 
         <TextView
+            style="@style/TextView.Header"
             android:id="@+id/calories_header_text_view"
-            android:textSize="35sp"
-            android:textColor="#FFFFFF"
-            android:background="@color/primaryDark"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:layout_height="@dimen/card_header_height"
             />
 
         <TextView
+            style="@style/TextView.Content.MainInfo.GeneralVariation.CalorieVariation"
             android:id="@+id/calories_calories_text_view"
-            android:textSize="50sp"
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/primary"
-            android:textColor="#FFFFFF"
-            android:gravity="center"
-            android:layout_gravity="center"
             />
 
 
