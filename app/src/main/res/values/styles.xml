@@ -55,37 +55,43 @@
 
     <!-- Style for TextView -->
     <style name="TextView">
-        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColor">@color/textColor</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:paddingStart">10dp</item>
     </style>
 
+    <style name="TextView.LoadingVariation" parent="TextView">
+        <item name="android:textSize">@dimen/text_size_loading</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 
     <style name="TextView.Header" parent="TextView">
         <item name="android:layout_height">@dimen/card_header_height</item>
         <item name="android:background">@color/primaryDark</item>
-        <item name="android:textSize">35sp</item>
+        <item name="android:textSize">@dimen/text_size_header</item>
     </style>
 
     <style name="TextView.Header.Small" parent="TextView.Header">
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">@dimen/text_size_header_small</item>
     </style>
+
 
 
     <style name="TextView.Content" parent="TextView">
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/text_size_content</item>
         <item name="android:background">@color/primary</item>
     </style>
 
     <style name="TextView.Content.CalorieItemVariation" parent="TextView.Content">
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">@dimen/text_size_content_calorie_item</item>
     </style>
 
 
     <style name="TextView.Content.MainInfo" parent="TextView.Content">
-        <item name="android:textSize">60sp</item>
+        <item name="android:textSize">@dimen/text_size_content_main_info</item>
         <item name="android:layout_gravity">center</item>
     </style>
 
@@ -96,15 +102,15 @@
 
     <style name="TextView.Content.MainInfo.WeatherVariation" parent="TextView.Content.MainInfo">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:background">#66333333</item>
+        <item name="android:background">@color/weatherTint</item>
         <item name="android:paddingStart">10dp</item>
         <item name="android:paddingEnd">10dp</item>
-        <!-- cf. xml for padding start & end-->
+        <!-- cf. card_weather.xml for padding start & end-->
     </style>
 
     <style name="TextView.Content.MainInfo.GeneralVariation.CalorieVariation"
         parent="TextView.Content.MainInfo.GeneralVariation">
-        <item name="android:textSize">50sp</item>
+        <item name="android:textSize">@dimen/text_size_content_main_info_calories</item>
     </style>
 
 

@@ -16,8 +16,15 @@
     <!-- Added margin for dynamic slide in reveal effect -->
     <dimen name="fab_dynamic_margin">56dp</dimen>
     
-    
-    
+    <!-- TextView textSize -->
+    <dimen name="text_size_loading">30sp</dimen>
+    <dimen name="text_size_header">35sp</dimen>
+    <dimen name="text_size_header_small">25sp</dimen>
+    <dimen name="text_size_content">20sp</dimen>
+    <dimen name="text_size_content_calorie_item">25sp</dimen>
+    <dimen name="text_size_content_main_info">60sp</dimen>
+    <dimen name="text_size_content_main_info_calories">50sp</dimen>
+
     <!-- Motivation activity -->
     <!-- Add card menu -->
     <dimen name="add_card_menu_width">150dp</dimen>

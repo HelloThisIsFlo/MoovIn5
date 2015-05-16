@@ -9,20 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- AccentTint added at the foreground to darken the image -->
         <!-- layout_height is set dynamically in CardWeather contructor -->
-        <FrameLayout
-            android:id="@+id/weather_frame_layout"
+        <ImageView
+            android:id="@+id/weather_image_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_alignParentBottom="true"
-            android:foreground="@color/accentTint">
-            <ImageView
-                android:id="@+id/weather_image_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"/>
-        </FrameLayout>
+            android:scaleType="centerCrop"/>
 
         <TextView
             style="@style/TextView.Content.MainInfo.WeatherVariation"

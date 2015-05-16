@@ -11,11 +11,8 @@
         android:background="@color/primaryDark">
 
         <TextView
+            style="@style/TextView.LoadingVariation"
             android:id="@+id/loading_text_view"
-            android:textSize="30sp"
-            android:textColor="#FFFFFF"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             />
 
