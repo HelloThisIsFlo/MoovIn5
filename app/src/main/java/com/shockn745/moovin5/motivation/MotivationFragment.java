@@ -90,7 +90,7 @@ public class MotivationFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_motivation, container, false);
+        View rootView = inflater.inflate(R.layout.motivation_fragment, container, false);
 
         // Find views by id
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cards_recycler_view);

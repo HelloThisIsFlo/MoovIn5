@@ -38,7 +38,7 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.main_fragment, container, false);
 
         // Find elements by id
         mMotivateButton = (Button) rootView.findViewById(R.id.motivate_button);

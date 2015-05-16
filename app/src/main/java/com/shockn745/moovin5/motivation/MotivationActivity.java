@@ -53,7 +53,7 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
         super.onCreate(savedInstanceState);
         mRevealDuration = getResources().getInteger(R.integer.card_menu_reveal_duration);
         if (savedInstanceState == null) {
-            setContentView(R.layout.activity_motivation);
+            setContentView(R.layout.motivation_activity);
             MotivationFragment motivationFragment = new MotivationFragment();
             motivationFragment.setShowFABCallback(this);
             getFragmentManager().beginTransaction()

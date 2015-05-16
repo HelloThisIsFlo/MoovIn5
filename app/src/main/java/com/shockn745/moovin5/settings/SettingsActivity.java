@@ -25,7 +25,7 @@ public class SettingsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
-            setContentView(R.layout.activity_setting);
+            setContentView(R.layout.settings_activity);
             getFragmentManager().beginTransaction()
                     .add(R.id.settings_container, new SettingsFragment())
                     .commit();

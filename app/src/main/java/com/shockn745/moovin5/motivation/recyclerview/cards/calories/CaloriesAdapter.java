@@ -50,7 +50,7 @@ public class CaloriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.card_calories_list_item, parent, false);
+                .inflate(R.layout.motivation_card_calories_list_item, parent, false);
 
         return new CaloriesItemVH(itemView);
     }

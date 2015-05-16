@@ -101,7 +101,7 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.add_card_menu_list_item, parent, false);
+                .inflate(R.layout.motivation_add_card_menu_list_item, parent, false);
         return new VH(itemView, mAddCardFromCacheCallback, (AddCardMenuCallbacks) mActivity);
     }
 

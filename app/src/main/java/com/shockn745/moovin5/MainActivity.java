@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.main_container, new MainFragment())

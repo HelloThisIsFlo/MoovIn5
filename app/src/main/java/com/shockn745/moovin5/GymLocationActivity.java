@@ -55,7 +55,7 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
-            setContentView(R.layout.activity_gym_location);
+            setContentView(R.layout.gym_activity);
 
             // Find elements by id
             mSetLocationButton = (ImageButton) findViewById(R.id.set_location_button);

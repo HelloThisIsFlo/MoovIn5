@@ -89,25 +89,25 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             case CardInterface.LOADING_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
-                        .inflate(R.layout.card_loading, parent, false);
+                        .inflate(R.layout.motivation_card_loading, parent, false);
                 return createLoadingVH(itemView);
 
             case CardInterface.LOADING_SIMPLE_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
-                        .inflate(R.layout.card_loading_simple, parent, false);
+                        .inflate(R.layout.motivation_card_loading_simple, parent, false);
                 return new CardLoadingSimple.LoadingSimpleVH(itemView);
 
             case CardInterface.BACK_AT_HOME_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
-                        .inflate(R.layout.card_back_at_home, parent, false);
+                        .inflate(R.layout.motivation_card_back_at_home, parent, false);
                 return createBackAtHomeVH(itemView);
 
             case CardInterface.WEATHER_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
-                        .inflate(R.layout.card_weather, parent, false);
+                        .inflate(R.layout.motivation_card_weather, parent, false);
                 // Create the weather VH, pass the ratio parameter
                 return new CardWeather.WeatherVH(
                         itemView,
@@ -117,19 +117,19 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             case CardInterface.ROUTE_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
-                        .inflate(R.layout.card_route, parent, false);
+                        .inflate(R.layout.motivation_card_route, parent, false);
                 return createRouteVH(itemView);
 
             case CardInterface.CALORIES_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
-                        .inflate(R.layout.card_calories, parent, false);
+                        .inflate(R.layout.motivation_card_calories, parent, false);
                 return new CardCalories.CaloriesVH(itemView);
 
             case CardInterface.AD_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
-                        .inflate(R.layout.card_ad, parent, false);
+                        .inflate(R.layout.motivation_card_ad, parent, false);
                 return new CardAd.AdVH(itemView);
             default:
                 return null;

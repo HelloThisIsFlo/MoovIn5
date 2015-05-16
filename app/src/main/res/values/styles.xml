@@ -105,7 +105,7 @@
         <item name="android:background">@color/weatherTint</item>
         <item name="android:paddingStart">10dp</item>
         <item name="android:paddingEnd">10dp</item>
-        <!-- cf. card_weather.xml for padding start & end-->
+        <!-- cf. motivation_card_weather.xmlweather.xml for padding start & end-->
     </style>
 
     <style name="TextView.Content.MainInfo.GeneralVariation.CalorieVariation"
