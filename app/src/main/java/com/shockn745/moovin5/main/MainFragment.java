@@ -67,13 +67,7 @@ public class MainFragment extends Fragment {
         initHomeGymCard(mHomeIcon);
         initHomeGymCard(mGymIcon);
 
-
-
-
-        ///////////////
-        // TEMP TEMP //
-        ///////////////
-
+        // Set the animation for the Home/Gym card
         final CardView mHomeCard = (CardView) rootView.findViewById(R.id.main_home_card_view);
         final CardView mGymCard = (CardView) rootView.findViewById(R.id.main_gym_card_view);
         final CardView mGymLocationCard = (CardView) rootView.findViewById(R.id.main_change_gym_card_view);
@@ -83,9 +77,10 @@ public class MainFragment extends Fragment {
                 mGymLocationCard,
                 getResources().getInteger(R.integer.home_gym_animation_duration)
         );
-
         mHomeCard.setOnTouchListener(touchListener);
         mGymCard.setOnTouchListener(touchListener);
+
+
 
 
 
@@ -129,6 +124,13 @@ public class MainFragment extends Fragment {
 
 
         // Set listeners
+        mGymLocationCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startGymLocation = new Intent(getActivity(), GymLocationActivity.class);
+                startActivity(startGymLocation);
+            }
+        });
         mMotivateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

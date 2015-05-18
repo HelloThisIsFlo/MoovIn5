@@ -46,6 +46,8 @@ public class GymHomeOnTouchListener implements View.OnTouchListener {
     private final float mGymLocTranslation;
     private final float mGymLocElevation;
 
+    private boolean mAnimationRunning;
+
 
     private final static int TRANSLATION_VALUE_HIDDEN = -10;
 
@@ -76,21 +78,24 @@ public class GymHomeOnTouchListener implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        int x = (int) event.getX();
-        int y = (int) event.getY();
+        if (!mAnimationRunning) {
+            int x = (int) event.getX();
+            int y = (int) event.getY();
 
-        switch (v.getId()) {
-            case R.id.main_home_card_view:
-                revealHomeGymCard(mGymCard, mHomeCard, x, y, true);
-                break;
-            case R.id.main_gym_card_view:
-                revealHomeGymCard(mHomeCard, mGymCard, x, y, false);
-                break;
-            default:
-                throw new IllegalStateException("View not supported in this listenener!");
+            switch (v.getId()) {
+                case R.id.main_home_card_view:
+                    revealHomeGymCard(mGymCard, mHomeCard, x, y, true);
+                    break;
+                case R.id.main_gym_card_view:
+                    revealHomeGymCard(mHomeCard, mGymCard, x, y, false);
+                    break;
+                default:
+                    throw new IllegalStateException("View not supported in this listenener!");
+            }
         }
         return true;
     }
+
 
     /**
      * Reveal one card and hides the other
@@ -147,16 +152,11 @@ public class GymHomeOnTouchListener implements View.OnTouchListener {
             }
 
             @Override
-            public void onAnimationStart(Animator animation) {
-            }
-
+            public void onAnimationStart(Animator animation) {}
             @Override
-            public void onAnimationCancel(Animator animation) {
-            }
-
+            public void onAnimationCancel(Animator animation) {}
             @Override
-            public void onAnimationRepeat(Animator animation) {
-            }
+            public void onAnimationRepeat(Animator animation) {}
         });
 
         ObjectAnimator lowerElevation = ObjectAnimator
@@ -187,6 +187,21 @@ public class GymHomeOnTouchListener implements View.OnTouchListener {
                     .play(gymLocationAnimators.getElevationAnimator())
                     .with(revealCardMenuAnim);
         }
+
+        mAnimationRunning = true;
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mAnimationRunning = false;
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {}
+            @Override
+            public void onAnimationCancel(Animator animation) {}
+            @Override
+            public void onAnimationRepeat(Animator animation) {}
+        });
         animatorSet.start();
     }
 
