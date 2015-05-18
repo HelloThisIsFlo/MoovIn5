@@ -19,6 +19,7 @@
     <integer name="gym_location_level_zoom_not_initialized">1</integer>
 
     <!-- Animation -->
+    <integer name="home_gym_animation_duration">750</integer>
     <integer name="fab_anim_duration">500</integer>
     <integer name="card_menu_reveal_duration">500</integer>
     <integer name="card_menu_FAB_reveal_duration">500</integer>

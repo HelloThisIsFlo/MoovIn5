@@ -1,10 +1,12 @@
-package com.shockn745.moovin5;
+package com.shockn745.moovin5.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.shockn745.moovin5.R;
 
 /**
  * Timer used to save the workout duration in the preference after a certain amount of time

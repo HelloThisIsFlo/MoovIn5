@@ -19,6 +19,7 @@
         <item name="android:windowBackground">@color/windowBackground</item>
         <!-- You can also set colorControlNormal, colorControlActivated
              colorControlHighlight and colorSwitchThumbNormal. -->
+        <item name="android:textColorPrimary">#FFFFFF</item>
     </style>
 
     <!-- Theme for the GymActivity -->
@@ -51,6 +52,12 @@
         <item name="android:layout_marginStart">@dimen/card_side_margin</item>
         <item name="android:layout_marginEnd">@dimen/card_side_margin</item>
         <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+    </style>
+    <style name="Card.GymHomeVariation" parent="Card">
+        <item name="android:layout_width">@dimen/main_card_home_width</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="cardElevation">4dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 
     <!-- Style for TextView -->
@@ -85,6 +92,10 @@
         <item name="android:background">@color/primary</item>
     </style>
 
+    <style name="TextView.Content.GymVariation" parent="TextView.Content">
+        <item name="android:paddingStart">0dp</item>
+    </style>
+
     <style name="TextView.Content.CalorieItemVariation" parent="TextView.Content">
         <item name="android:textSize">@dimen/text_size_content_calorie_item</item>
     </style>
@@ -111,6 +122,11 @@
     <style name="TextView.Content.MainInfo.GeneralVariation.CalorieVariation"
         parent="TextView.Content.MainInfo.GeneralVariation">
         <item name="android:textSize">@dimen/text_size_content_main_info_calories</item>
+    </style>
+
+    <style name="TextView.Content.MainInfo.GeneralVariation.HomeVariation"
+        parent="TextView.Content.MainInfo.GeneralVariation">
+        <item name="android:textSize">@dimen/text_size_content_main_info_home</item>
     </style>
 
 

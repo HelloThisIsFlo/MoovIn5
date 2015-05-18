@@ -5,8 +5,10 @@
     android:layout_width="match_parent">
 
     <ImageView
+        android:id="@+id/main_background_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:src="@drawable/motivation_background"
         android:scaleType="centerCrop"/>
 
     <FrameLayout

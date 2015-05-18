@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.shockn745.moovin5.MainActivity"
+            android:name=".main.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +31,7 @@
         <activity
             android:name="com.shockn745.moovin5.settings.SettingsActivity"
             android:label="@string/title_activity_setting"
-            android:parentActivityName="com.shockn745.moovin5.MainActivity">
+            android:parentActivityName=".main.MainActivity">
             <meta-data
                 android:name="android.PARENT_ACTIVITY"
                 android:value="com.shockn745.workoutmotivationaltool.MainActivity" />
@@ -40,7 +40,7 @@
             android:name="com.shockn745.moovin5.motivation.MotivationActivity"
             android:label="@string/title_activity_motivation"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName="com.shockn745.moovin5.MainActivity">
+            android:parentActivityName=".main.MainActivity">
             <meta-data
                 android:name="android.PARENT_ACTIVITY"
                 android:value="com.shockn745.workoutmotivationaltool.MainActivity" />
@@ -48,7 +48,7 @@
         <activity
             android:name="com.shockn745.moovin5.GymLocationActivity"
             android:label="@string/title_activity_gym_location"
-            android:parentActivityName="com.shockn745.moovin5.MainActivity"
+            android:parentActivityName=".main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.PARENT_ACTIVITY"

@@ -1,12 +1,15 @@
-package com.shockn745.moovin5;
+package com.shockn745.moovin5.main;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
+import com.shockn745.moovin5.R;
 import com.shockn745.moovin5.settings.SettingsActivity;
 
 /**
@@ -31,6 +34,14 @@ public class MainActivity extends Activity {
 
         // Set the default values for the very first launch of the application.
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
+
+        // Darken the background
+        int darkenValue = getResources().getInteger(R.integer.background_darken_value);
+        ((ImageView) findViewById(R.id.main_background_image_view))
+                .setColorFilter(
+                        Color.rgb(darkenValue, darkenValue, darkenValue),
+                        android.graphics.PorterDuff.Mode.MULTIPLY
+                );
     }
 
 
