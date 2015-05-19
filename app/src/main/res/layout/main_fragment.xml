@@ -4,10 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_marginTop="30dp"
     tools:context=".MainActivity$PlaceholderFragment">
 
     <!-- Home / Gym Card -->
@@ -101,10 +98,10 @@
     </RelativeLayout>
 
 
-
     <android.support.v7.widget.CardView
         style="@style/Card"
         android:id="@+id/main_picker_card_view"
+        android:layout_marginTop="50dp"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/main_card_picker_height"
         android:layout_below="@id/main_home_relative_layout"
@@ -126,26 +123,21 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:visibility="invisible"
                 />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
-    <Button
-        android:id="@+id/motivate_button"
-        android:text="@string/motivate_button"
-        android:layout_width="@dimen/main_card_picker_width"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/main_picker_card_view"
-        android:layout_centerHorizontal="true"
-        android:background="@color/accent"/>
 
-    <Button
-        android:id="@+id/change_location_button"
-        android:text="@string/change_location_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/motivate_button"
-        android:layout_centerHorizontal="true"/>
+
+    <ImageButton
+        android:id="@+id/main_moovit_button"
+        style="@style/FloatingActionButton.Default"
+        android:src="@drawable/ic_done"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/fab_margin_bottom" />
 
     <TextView
         android:id="@+id/warning_edit_text"
@@ -153,7 +145,7 @@
         android:layout_height="wrap_content"
         android:textColor="#ff0000"
         android:text="@string/warning_not_initialized_edit_text"
-        android:layout_below="@id/change_location_button"
+        android:layout_below="@id/main_picker_card_view"
         android:layout_centerHorizontal="true"
         android:visibility="gone"/>
 

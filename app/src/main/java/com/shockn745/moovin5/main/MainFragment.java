@@ -14,11 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.shockn745.moovin5.GymLocationActivity;
 import com.shockn745.moovin5.R;
@@ -33,8 +36,7 @@ public class MainFragment extends Fragment {
 
     private static final String LOG_TAG = MainFragment.class.getSimpleName();
 
-    private Button mMotivateButton;
-    private Button mChangeLocationButton;
+    private ImageButton mMotivateButton;
     private NumberPicker mDurationPicker;
     private TextView mWarningEditText;
     private ImageView mHomeIcon;
@@ -52,11 +54,10 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.main_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.main_fragment, container, false);
 
         // Find elements by id
-        mMotivateButton = (Button) rootView.findViewById(R.id.motivate_button);
-        mChangeLocationButton = (Button) rootView.findViewById(R.id.change_location_button);
+        mMotivateButton = (ImageButton) rootView.findViewById(R.id.main_moovit_button);
         mDurationPicker = (NumberPicker) rootView.findViewById(R.id.duration_picker);
         mWarningEditText = (TextView) rootView.findViewById(R.id.warning_edit_text);
         mHomeIcon = (ImageView) rootView.findViewById(R.id.main_home_image_view);
@@ -79,18 +80,6 @@ public class MainFragment extends Fragment {
         );
         mHomeCard.setOnTouchListener(touchListener);
         mGymCard.setOnTouchListener(touchListener);
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -138,13 +127,6 @@ public class MainFragment extends Fragment {
                 startActivity(startMotivation);
             }
         });
-        mChangeLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent startGymLocation = new Intent(getActivity(), GymLocationActivity.class);
-                startActivity(startGymLocation);
-            }
-        });
         mDurationPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             /**
              * Every time the value is changed, a timer is launched, at expiration the value is
@@ -164,6 +146,16 @@ public class MainFragment extends Fragment {
                 Log.d(LOG_TAG, "Elevation = " + elev);
             }
         });
+
+
+
+        // Animate the views
+        CardView pickerCard = (CardView) rootView.findViewById(R.id.main_picker_card_view);
+        RelativeLayout gymHomeCards = (RelativeLayout) rootView.findViewById(R.id.main_home_relative_layout);
+
+        animateViews(gymHomeCards, pickerCard, mDurationPicker, mMotivateButton);
+
+
 
         return rootView;
     }
@@ -215,4 +207,41 @@ public class MainFragment extends Fragment {
                 });
     }
 
+    /**
+     * Animate the views when the application is launched
+     * @param gymHomeCards gymHomeCards relative layout to animate
+     * @param pickerCard pickerCard to animate
+     * @param picker Number picker to animate
+     * @param fab FAB to animate
+     */
+    private void animateViews(View gymHomeCards, View pickerCard, final View picker, View fab) {
+
+        Animation rollInGymHomeCard = AnimationUtils.loadAnimation(getActivity(), R.anim.main_enter_anim);
+        Animation rollInPickerCard = AnimationUtils.loadAnimation(getActivity(), R.anim.main_enter_anim);
+        Animation fadeInPicker = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in_picker_anim);
+
+        // FAB Animation
+        float slideLength = getResources().getDimension(R.dimen.fab_size)
+                + getResources().getDimension(R.dimen.fab_margin_bottom);
+        Animation slideFAB = new TranslateAnimation(0, 0, slideLength, 0);
+        slideFAB.setInterpolator(
+                AnimationUtils.loadInterpolator(
+                        getActivity(),
+                        android.R.interpolator.fast_out_slow_in
+                )
+        );
+        slideFAB.setDuration(getResources().getInteger(R.integer.fab_anim_duration));
+        slideFAB.setStartOffset(rollInGymHomeCard.getDuration());
+
+        rollInPickerCard.setStartOffset(150);
+        fadeInPicker.setDuration(250);
+        fadeInPicker.setStartOffset(rollInGymHomeCard.getDuration());
+
+        picker.setVisibility(View.VISIBLE);
+
+        gymHomeCards.startAnimation(rollInGymHomeCard);
+        pickerCard.startAnimation(rollInPickerCard);
+        picker.startAnimation(fadeInPicker);
+        fab.startAnimation(slideFAB);
+    }
 }

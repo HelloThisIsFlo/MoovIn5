@@ -8,8 +8,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 
+import com.shockn745.moovin5.R;
+
 /**
- * Custom number picker used to increase the sizeof the text in NumberPicker
+ * Custom number picker used to increase the sizeof the text in NumberPicker, and change its color
  *
  * @author Kempenich Florian
  */
@@ -51,7 +53,10 @@ public class CustomNumberPicker extends NumberPicker {
 
     private void updateView(View view) {
         if(view instanceof EditText){
-            ((EditText) view).setTextSize(40);
+            ((EditText) view).setTextSize(35);
+            ((EditText) view).setTextColor(
+                    view.getContext().getResources().getColor(R.color.textColor)
+            );
         }
     }
 }

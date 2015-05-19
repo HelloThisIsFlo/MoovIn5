@@ -28,11 +28,13 @@
 
 
 
-    <!-- Motivation activity -->
+    <!-- Main activity -->
     <dimen name="main_card_home_height">90dp</dimen>
     <dimen name="main_card_home_width">270dp</dimen>
     <dimen name="main_card_picker_height">250dp</dimen>
     <dimen name="main_card_picker_width">240dp</dimen>
+    <dimen name="main_card_elevation_resting">4dp</dimen>
+    <dimen name="main_card_elevation_pressed">10dp</dimen>
 
 
 
