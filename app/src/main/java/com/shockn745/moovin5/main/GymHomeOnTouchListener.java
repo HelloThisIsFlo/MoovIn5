@@ -3,7 +3,11 @@ package com.shockn745.moovin5.main;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -48,17 +52,27 @@ public class GymHomeOnTouchListener implements View.OnTouchListener {
 
     private boolean mAnimationRunning;
 
+    private boolean mHomeMode;
+
+    private SharedPreferences mPrefs;
+    private final String homeModePrefKey;
 
     private final static int TRANSLATION_VALUE_HIDDEN = -10;
 
-    public GymHomeOnTouchListener(CardView homeCard,
+    public GymHomeOnTouchListener(Activity activity,
+                                  CardView homeCard,
                                   CardView gymCard,
                                   CardView gymLocationCard,
-                                  int duration) {
+                                  int duration,
+                                  boolean inHomeMode) {
         this.mHomeCard = homeCard;
         this.mGymCard = gymCard;
         this.mGymLocationCard = gymLocationCard;
         this.mDuration = duration;
+        this.mHomeMode = inHomeMode;
+
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        homeModePrefKey = activity.getString(R.string.pref_home_mode_key);
 
         // Save the initial values
         mGymLocTranslation = gymLocationCard.getTranslationX();
@@ -71,9 +85,16 @@ public class GymHomeOnTouchListener implements View.OnTouchListener {
             mElevation = homeElevation;
         }
 
-        // Hide the gym location card
-        mGymLocationCard.setTranslationX(TRANSLATION_VALUE_HIDDEN);
-        mGymLocationCard.setCardElevation(0);
+        if (mHomeMode) {
+            // Hide teh outdoors card
+            mGymCard.setVisibility(View.INVISIBLE);
+            // Hide the gym location card
+            mGymLocationCard.setTranslationX(TRANSLATION_VALUE_HIDDEN);
+            mGymLocationCard.setCardElevation(0);
+        } else {
+            // Hide the home card
+            mHomeCard.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -82,18 +103,33 @@ public class GymHomeOnTouchListener implements View.OnTouchListener {
             int x = (int) event.getX();
             int y = (int) event.getY();
 
+
             switch (v.getId()) {
                 case R.id.main_home_card_view:
                     revealHomeGymCard(mGymCard, mHomeCard, x, y, true);
+                    mHomeMode = false;
+                    mPrefs.edit().putBoolean(homeModePrefKey, mHomeMode).commit();
                     break;
                 case R.id.main_gym_card_view:
                     revealHomeGymCard(mHomeCard, mGymCard, x, y, false);
+                    mHomeMode = true;
+                    mPrefs.edit().putBoolean(homeModePrefKey, mHomeMode).commit();
                     break;
                 default:
                     throw new IllegalStateException("View not supported in this listenener!");
             }
         }
+        String homeModeString = mHomeMode ? "true" : "false";
+        Log.d("touch listener", "home mode : " + homeModeString);
         return true;
+    }
+
+    /**
+     * Check if in HomeMode
+     * @return true if in homeMode
+     */
+    private boolean inHomeMode() {
+        return mHomeMode;
     }
 
 

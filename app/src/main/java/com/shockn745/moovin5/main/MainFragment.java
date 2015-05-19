@@ -42,6 +42,7 @@ public class MainFragment extends Fragment {
     private ImageView mHomeIcon;
     private ImageView mGymIcon;
 
+    private boolean mInHomeMode;
 
     // Components for the timer used by mDurationPicker
     private Handler mHandler;
@@ -63,6 +64,8 @@ public class MainFragment extends Fragment {
         mHomeIcon = (ImageView) rootView.findViewById(R.id.main_home_image_view);
         mGymIcon = (ImageView) rootView.findViewById(R.id.main_gym_image_view);
 
+        // Get the preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         // Set up elements
         initHomeGymCard(mHomeIcon);
@@ -72,16 +75,27 @@ public class MainFragment extends Fragment {
         final CardView mHomeCard = (CardView) rootView.findViewById(R.id.main_home_card_view);
         final CardView mGymCard = (CardView) rootView.findViewById(R.id.main_gym_card_view);
         final CardView mGymLocationCard = (CardView) rootView.findViewById(R.id.main_change_gym_card_view);
+        // Retrieve inHomeMode
+        if (prefs.contains(getString(R.string.pref_home_mode_key))) {
+            // Init
+            mInHomeMode = prefs.getBoolean(getString(R.string.pref_home_mode_key),false);
+        } else {
+            // Save the default value to the preferences
+            mInHomeMode = false;
+            prefs.edit()
+                    .putBoolean(getString(R.string.pref_home_mode_key), mInHomeMode)
+                    .apply();
+        }
         GymHomeOnTouchListener touchListener = new GymHomeOnTouchListener(
+                getActivity(),
                 mHomeCard,
                 mGymCard,
                 mGymLocationCard,
-                getResources().getInteger(R.integer.home_gym_animation_duration)
+                getResources().getInteger(R.integer.home_gym_animation_duration),
+                mInHomeMode
         );
         mHomeCard.setOnTouchListener(touchListener);
         mGymCard.setOnTouchListener(touchListener);
-
-
 
         // Configure mDurationPicker
         mDurationPicker.setMinValue(getResources().getInteger(R.integer.main_duration_min));
@@ -89,7 +103,6 @@ public class MainFragment extends Fragment {
         // Disable focus for the elements of the picker (disable keyboard)
         mDurationPicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         // Init with the previous value
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (prefs.contains(getString(R.string.pref_workout_key))) {
             // Init
             int workoutPrevious = prefs.getInt(getString(R.string.pref_workout_key),
@@ -104,13 +117,9 @@ public class MainFragment extends Fragment {
             mDurationPicker.setValue(workoutDefault);
         }
 
-
-
         // Init timer used by mDurationPicker
         mHandler = new Handler();
         mSavePreferencesTimer = new SaveDurationTimer(getActivity());
-
-
 
         // Set listeners
         mGymLocationCard.setOnClickListener(new View.OnClickListener() {
@@ -147,15 +156,11 @@ public class MainFragment extends Fragment {
             }
         });
 
-
-
         // Animate the views
         CardView pickerCard = (CardView) rootView.findViewById(R.id.main_picker_card_view);
         RelativeLayout gymHomeCards = (RelativeLayout) rootView.findViewById(R.id.main_home_relative_layout);
 
         animateViews(gymHomeCards, pickerCard, mDurationPicker, mMotivateButton);
-
-
 
         return rootView;
     }
