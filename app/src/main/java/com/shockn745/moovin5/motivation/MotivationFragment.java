@@ -77,6 +77,8 @@ public class MotivationFragment extends Fragment implements
     private GoogleMap mMap = null;
     private String mPolylineRoute = null;
 
+    private CardScheduler mCardScheduler;
+
 
     public void setShowFABCallback(FABCallbacks FABCallbacks) {
         this.mFABCallbacks = FABCallbacks;
@@ -105,15 +107,19 @@ public class MotivationFragment extends Fragment implements
         mBackgroundController = new BackgroundController(getActivity(), this);
         mHandler = new Handler();
 
-        // Init the add times
-        long removeDuration = mRecyclerView.getItemAnimator().getRemoveDuration();
-        long addDuration = mRecyclerView.getItemAnimator().getAddDuration();
-        addTimes = new long[]{
-                removeDuration + addDuration, //Not used here anymore
-                removeDuration + addDuration * 2,
-                removeDuration + addDuration * 3,
-                removeDuration + addDuration * 4,
-        };
+        mCardScheduler = new CardScheduler(
+                mAdapter,
+                mRecyclerView.getItemAnimator().getAddDuration()
+        );
+
+//        // Init the add times
+//        long addDuration = mRecyclerView.getItemAnimator().getAddDuration();
+//        addTimes = new long[]{
+//                addDuration + addDuration, //Not used here anymore
+//                addDuration + addDuration * 2,
+//                addDuration + addDuration * 3,
+//                addDuration + addDuration * 4,
+//        };
 
         return rootView;
     }
@@ -252,15 +258,33 @@ public class MotivationFragment extends Fragment implements
     }
 
     /**
+     * Create all the cards and schedules them.
      * Called when all the background processing is done.
      * @param result Result of the background processing
      */
     @Override
     public void onBackgroundProcessDone(BackgroundController.BackgroundProcessResult result) {
-        handleBackAtHomeTime(result.mTransitInfos.getBackAtHomeDate());
-        handlePolylineRoute(result.mTransitInfos.getPolylineRoute());
-        handleWeatherInfo(result.mWeatherInfos);
-        // TODO add other functions to handle the other type of result (if applicable)
+        // Create cards
+        CardInterface backAtHomeCard = new CardBackAtHome(
+                result.mTransitInfos.getBackAtHomeDate(),
+                getActivity()
+        );
+        CardInterface weatherCard = new CardWeather(result.mWeatherInfos);
+        CardInterface caloriesCard = new CardCalories(getActivity());
+        CardInterface adCard = new CardAd("PUB");
+        CardInterface routeCard = createRouteCard(result.mTransitInfos.getPolylineRoute());
+
+        // Add cards to scheduler
+        mCardScheduler.addCardToList(backAtHomeCard);
+        mCardScheduler.addCardToList(weatherCard);
+        if (routeCard != null) {
+            mCardScheduler.addCardToList(routeCard);
+        }
+        mCardScheduler.addCardToList(adCard);
+        mCardScheduler.addCardToList(caloriesCard);
+
+        // Display cards
+        mCardScheduler.displayPendingCards();
     }
 
     /**
@@ -282,67 +306,22 @@ public class MotivationFragment extends Fragment implements
     ////////////////////////////////////////////////////////////
 
     /**
-     * Called when the "back at home time" is available
-     * Update the UI
-     * @param backAtHome Time back at home
-     */
-    private void handleBackAtHomeTime(final Date backAtHome) {
-
-
-        // Show backAtHome card
-        // Wait after animation remove duration
-        // to allow the animations from clearLoadingScreen to unfold
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAdapter.addCard(new CardBackAtHome(backAtHome, getActivity()));
-            }
-        }, mRecyclerView.getItemAnimator().getRemoveDuration());
-
-
-        // TODO TEST SCENARIO : REMOVE
-        // Display the rest of the test cards
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAdapter.addCard(new CardAd("PUB"));
-            }
-        }, addTimes[2]);
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAdapter.addCard(new CardCalories(getActivity()));
-            }
-        }, addTimes[3]);
-    }
-
-    /**
-     * Add the Route card
+     * Create the Route card
      * The polyline is not drawn yet, it will be automatically drawn when the map is displayed
      * cf. onMapLoaded()
      * @param polyline Route to draw
+     * @return Route card
+     *
      */
-    private void handlePolylineRoute(String polyline) {
-        mPolylineRoute = polyline;
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAdapter.addCard(new CardRoute("This way"));
-            }
-        }, addTimes[0]);
-    }
-
-    /**
-     * Add the weather card
-     * @param weatherInfos weather infos
-     */
-    private void handleWeatherInfo(final FetchWeatherTask.WeatherInfos weatherInfos) {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAdapter.addCard(new CardWeather(weatherInfos));
-            }
-        }, addTimes[1]);
+    private CardRoute createRouteCard(String polyline) {
+        // Check if polyline is null
+        // Polyline is null in inHomeMode : No need to display the route card
+        if (polyline != null) {
+            mPolylineRoute = polyline;
+            return new CardRoute();
+        } else {
+            return null;
+        }
     }
 
 
@@ -507,7 +486,6 @@ public class MotivationFragment extends Fragment implements
         if (mPolylineRoute != null) {
             drawPolylineRoute();
         }
-//        mMap.setOnMapLoadedCallback(this);
     }
 
 
@@ -515,29 +493,30 @@ public class MotivationFragment extends Fragment implements
      * Draw the polyline route onto the map and adjust the zoom level
      */
     private void drawPolylineRoute() {
+        if (mPolylineRoute != null) {
+            // Clean Map
+            mMap.clear();
 
-        // Clean Map
-        mMap.clear();
+            // Draw polyline
+            List<LatLng> polylineList = PolyUtil.decode(mPolylineRoute);
+            PolylineOptions polylineOptions = new PolylineOptions();
+            polylineOptions
+                    .addAll(polylineList)
+                    .width(15)
+                    .color(getActivity().getResources().getColor(R.color.accent));
+            mMap.addPolyline(polylineOptions);
+            mMap.addMarker(new MarkerOptions().position(polylineList.get(0)).title("Home"));
+            mMap.addMarker(new MarkerOptions().position(polylineList.get(polylineList.size() - 1)).title("Gym"));
 
-        // Draw polyline
-        List<LatLng> polylineList = PolyUtil.decode(mPolylineRoute);
-        PolylineOptions polylineOptions = new PolylineOptions();
-        polylineOptions
-                .addAll(polylineList)
-                .width(15)
-                .color(getActivity().getResources().getColor(R.color.accent));
-        mMap.addPolyline(polylineOptions);
-        mMap.addMarker(new MarkerOptions().position(polylineList.get(0)).title("Home"));
-        mMap.addMarker(new MarkerOptions().position(polylineList.get(polylineList.size() - 1)).title("Gym"));
+            // Move camera
+            LatLngBounds.Builder builder = LatLngBounds.builder();
+            for (LatLng latLng : polylineList) {
+                builder.include(latLng);
+            }
 
-        // Move camera
-        LatLngBounds.Builder builder = LatLngBounds.builder();
-        for (LatLng latLng : polylineList) {
-            builder.include(latLng);
+            int padding = 0;
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), padding));
         }
-
-        int padding = 0;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), padding));
     }
 
 

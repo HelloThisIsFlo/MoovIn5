@@ -25,10 +25,8 @@ public class CardRoute implements CardInterface {
         }
     }
 
-    private String mPolyline;
 
-    public CardRoute(String polyline) {
-        mPolyline = polyline;
+    public CardRoute() {
     }
 
     @Override

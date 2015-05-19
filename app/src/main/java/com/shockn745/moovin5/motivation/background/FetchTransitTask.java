@@ -43,7 +43,7 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTas
          *                   NO_ROUTES_ERROR if no routes <br>
          *                   CONNECTION_ERROR if connection error
          */
-        public void onBackAtHomeTimeRetrieved(TransitInfos transitInfos, int resultCode);
+        void onBackAtHomeTimeRetrieved(TransitInfos transitInfos, int resultCode);
 
     }
 
@@ -88,9 +88,14 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTas
     private Activity mActivity;
     private OnBackAtHomeTimeRetrievedListener mListener;
 
-    public FetchTransitTask(Activity mActivity, OnBackAtHomeTimeRetrievedListener mListener) {
+    private boolean mInHomeMode;
+
+    public FetchTransitTask(Activity mActivity,
+                            OnBackAtHomeTimeRetrievedListener mListener,
+                            boolean inHomeMode) {
         this.mActivity = mActivity;
         this.mListener = mListener;
+        this.mInHomeMode = inHomeMode;
     }
 
     /**
@@ -101,122 +106,129 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTas
      */
     @Override
     protected TransitInfos doInBackground(LatLng... params) {
-        // Check if both origin & destination are provided
-        if (params.length == 2) {
+        if (mInHomeMode) {
+            // Skip fetching transit infos
+            return new TransitInfos(0, null);
 
-            // Get the coordinates
-            LatLng start = params[0];
-            LatLng dest = params[1];
+        } else {
+            // Not in homeMode : Normal behavior
+            // Check if both origin & destination are provided
+            if (params.length == 2) {
 
-            double startLatitude = start.latitude;
-            double startLongitude = start.longitude;
-            double destLatitude = dest.latitude;
-            double destLongitude = dest.longitude;
+                // Get the coordinates
+                LatLng start = params[0];
+                LatLng dest = params[1];
 
-            // Create the URL
-            final String URL_SCHEME = "http";
-            final String URL_AUTHORITY = "maps.googleapis.com";
-            final String URL_PATH = "maps/api/directions";
-            final String URL_PATH_OUTPUT = "json";
-            final String URL_PARAM_ORIGIN = "origin";
-            final String URL_PARAM_DESTINATION = "destination";
-            final String URL_PARAM_MODE = "mode";
+                double startLatitude = start.latitude;
+                double startLongitude = start.longitude;
+                double destLatitude = dest.latitude;
+                double destLongitude = dest.longitude;
 
-            String originQuery = startLatitude + "," + startLongitude;
-            String destQuery = destLatitude + "," + destLongitude;
-            final String URL_QUERY_MODE = "transit";
+                // Create the URL
+                final String URL_SCHEME = "http";
+                final String URL_AUTHORITY = "maps.googleapis.com";
+                final String URL_PATH = "maps/api/directions";
+                final String URL_PATH_OUTPUT = "json";
+                final String URL_PARAM_ORIGIN = "origin";
+                final String URL_PARAM_DESTINATION = "destination";
+                final String URL_PARAM_MODE = "mode";
 
-            Uri uri = new Uri.Builder()
-                    .scheme(URL_SCHEME)
-                    .authority(URL_AUTHORITY)
-                    .path(URL_PATH)
-                    .appendPath(URL_PATH_OUTPUT)
-                    .appendQueryParameter(URL_PARAM_ORIGIN, originQuery)
-                    .appendQueryParameter(URL_PARAM_DESTINATION, destQuery)
-                    .appendQueryParameter(URL_PARAM_MODE, URL_QUERY_MODE)
-                    .build();
+                String originQuery = startLatitude + "," + startLongitude;
+                String destQuery = destLatitude + "," + destLongitude;
+                final String URL_QUERY_MODE = "transit";
 
-            // Fetch JSON from the Google Directions API
-            HttpURLConnection connection = null;
-            BufferedReader bufferedReader = null;
-            String jsonString = null;
-            try {
-                // Init the URL
-                URL url = new URL(uri.toString());
-                Log.d(LOG_TAG, url.toString());
+                Uri uri = new Uri.Builder()
+                        .scheme(URL_SCHEME)
+                        .authority(URL_AUTHORITY)
+                        .path(URL_PATH)
+                        .appendPath(URL_PATH_OUTPUT)
+                        .appendQueryParameter(URL_PARAM_ORIGIN, originQuery)
+                        .appendQueryParameter(URL_PARAM_DESTINATION, destQuery)
+                        .appendQueryParameter(URL_PARAM_MODE, URL_QUERY_MODE)
+                        .build();
 
-                // Create the request and connect
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.connect();
+                // Fetch JSON from the Google Directions API
+                HttpURLConnection connection = null;
+                BufferedReader bufferedReader = null;
+                String jsonString = null;
+                try {
+                    // Init the URL
+                    URL url = new URL(uri.toString());
+                    Log.d(LOG_TAG, url.toString());
 
-                // Read the input stream into a String
-                InputStream stream = connection.getInputStream();
-                if (stream == null) {
-                    // Note : "finally" block will run even if there's a "return" statement in
-                    // the "try" block
+                    // Create the request and connect
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.connect();
+
+                    // Read the input stream into a String
+                    InputStream stream = connection.getInputStream();
+                    if (stream == null) {
+                        // Note : "finally" block will run even if there's a "return" statement in
+                        // the "try" block
+                        publishProgress(CONNECTION_ERROR);
+                        return null;
+                    }
+                    bufferedReader =
+                            new BufferedReader(new InputStreamReader(stream));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(line).append("\n");
+                    }
+
+                    if (stringBuilder.length() != 0) {
+                        jsonString = stringBuilder.toString();
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    publishProgress(URL_ERROR);
+                    return null;
+                } catch (IOException e) {
+                    e.printStackTrace();
                     publishProgress(CONNECTION_ERROR);
                     return null;
-                }
-                bufferedReader =
-                        new BufferedReader(new InputStreamReader(stream));
-                StringBuilder stringBuilder = new StringBuilder();
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(line).append("\n");
+                } finally {
+                    // If connection has been initialized, disconnect
+                    if (connection != null) {
+                        connection.disconnect();
+                    }
+                    if (bufferedReader != null) {
+                        try {
+                            bufferedReader.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Log.d(LOG_TAG, "Problem closing the buffered reader !");
+                        }
+                    }
                 }
 
-                if (stringBuilder.length() != 0) {
-                    jsonString = stringBuilder.toString();
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                publishProgress(URL_ERROR);
-                return null;
-            } catch (IOException e) {
-                e.printStackTrace();
-                publishProgress(CONNECTION_ERROR);
-                return null;
-            } finally {
-                // If connection has been initialized, disconnect
-                if (connection != null) {
-                    connection.disconnect();
-                }
-                if (bufferedReader != null) {
+                // Parse the JSON String to retrieve transit time
+                // Return result if successful
+                if (jsonString != null) {
                     try {
-                        bufferedReader.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Log.d(LOG_TAG, "Problem closing the buffered reader !");
-                    }
-                }
-            }
-
-            // Parse the JSON String to retrieve transit time
-            // Return result if successful
-            if (jsonString != null) {
-                try {
-                    // String too long to log => using debug mode instead
-                    // Log.d(LOG_TAG, jsonString);
-                    TransitInfos transitInfos = parseTransitInfos(jsonString);
-                    if (transitInfos == null) {
-                        // No routes available
-                        publishProgress(NO_ROUTES_ERROR);
+                        // String too long to log => using debug mode instead
+                        // Log.d(LOG_TAG, jsonString);
+                        TransitInfos transitInfos = parseTransitInfos(jsonString);
+                        if (transitInfos == null) {
+                            // No routes available
+                            publishProgress(NO_ROUTES_ERROR);
+                            return null;
+                        } else {
+                            return transitInfos;
+                        }
+                    } catch (JSONException e) {
+                        publishProgress(JSON_ERROR);
                         return null;
-                    } else {
-                        return transitInfos;
                     }
-                } catch (JSONException e) {
-                    publishProgress(JSON_ERROR);
+                } else {
+                    publishProgress(EMPTY_ERROR);
                     return null;
                 }
             } else {
-                publishProgress(EMPTY_ERROR);
+                publishProgress(ARG_ERROR);
                 return null;
             }
-        } else {
-            publishProgress(ARG_ERROR);
-            return null;
         }
     }
 

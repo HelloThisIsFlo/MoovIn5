@@ -1,8 +1,10 @@
 package com.shockn745.moovin5.motivation.background;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -138,6 +140,7 @@ public class BackgroundController implements
     private boolean mFetchTransitSecondTry = false;
     private boolean mFetchWeatherSecondTry = false;
 
+    private boolean mInHomeMode;
 
 
     public BackgroundController(Activity mActivity, BackgroundControllerListener mListener) {
@@ -159,6 +162,11 @@ public class BackgroundController implements
                 .addOnConnectionFailedListener(listener)
                 .addApi(LocationServices.API)
                 .build();
+
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(mActivity);
+        mInHomeMode = prefs.getBoolean(mActivity.getString(R.string.pref_home_mode_key), false);
+
     }
 
     /**
@@ -175,8 +183,14 @@ public class BackgroundController implements
                 if (!mFetchTransitSecondTry && !mFetchWeatherSecondTry) {
                     mListener.onLoadingStateInitiated();
                 }
-                if (!mFetchingLocation && !mFetchLocationDone){
-                    connectToGoogleApi();
+                if (!mInHomeMode) {
+                    // Not in home mode : normal behavior
+                    if (!mFetchingLocation && !mFetchLocationDone) {
+                        connectToGoogleApi();
+                    }
+                } else {
+                    // In home mode : skip location retrieval
+                    handleResult(LOC_OK);
                 }
                 if (!mFetchWeatherDone && !mFetchingWeather) {
                     startFetchWeatherTaskWithGymLocation();
@@ -324,25 +338,24 @@ public class BackgroundController implements
 
     /**
      * Handle the newly generated location, accessible vie the mLocation field
+     * Location can be null if inHomeMode == true
      */
     private void startFetchTransitTaskWithNewLocation() {
-        if (mLocation != null) {
-            Log.d(LOG_TAG, mLocation.toString());
+        try {
+            // Get gym location from preferences
+            LatLng gymLoc = PreferencesUtils.getCoordinatesFromPreferences(mActivity);
 
-            try {
-                // Get gym location from preferences
-                LatLng gymLoc = PreferencesUtils.getCoordinatesFromPreferences(mActivity);
-
-                // Fetch transit time from Google Directions API
-                FetchTransitTask fetchTask = new FetchTransitTask(mActivity, this);
-                LatLng mLocLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
-                fetchTask.execute(mLocLatLng, gymLoc);
-
-            } catch (PreferencesUtils.PreferenceNotInitializedException e) {
-                handleResult(GYM_NOT_INIT);
+            // Fetch transit time from Google Directions API
+            FetchTransitTask fetchTask = new FetchTransitTask(mActivity, this, mInHomeMode);
+            LatLng mLocLatLng = null;
+            // Only init if not inHomeMode
+            if (!mInHomeMode) {
+                mLocLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
             }
-        } else {
-            Log.d(LOG_TAG, "mLocation == null !");
+            fetchTask.execute(mLocLatLng, gymLoc);
+
+        } catch (PreferencesUtils.PreferenceNotInitializedException e) {
+            handleResult(GYM_NOT_INIT);
         }
     }
 
@@ -370,7 +383,7 @@ public class BackgroundController implements
     private void sendResultToListenerIfAllProcessingDone() {
         // NOTE: Add other type of result (if applicable)
         // Check that all variable have been successfully initialized
-        if (mTransitInfos != null && mWeatherInfos != null) {
+        if (mFetchTransitDone && mFetchWeatherDone) {
             handleResult(BG_PROCESS_SUCCESS);
         }
     }
