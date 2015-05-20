@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -168,7 +169,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
 
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                setEnabled(newState != AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
+                setEnabled(newState != RecyclerView.SCROLL_STATE_DRAGGING);
             }
 
             @Override
