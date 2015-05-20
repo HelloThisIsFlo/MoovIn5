@@ -64,6 +64,7 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
 
     @Override
     protected WeatherInfos doInBackground(LatLng... params) {
+        // TODO offer choice for fahrenheit degrees
         if (params.length != 1) {
             publishProgress(ERROR);
             return null;

@@ -50,7 +50,7 @@ public class CardWeather extends AbstractCard {
 
     public CardWeather(Activity activity, FetchWeatherTask.WeatherInfos weatherInfos) {
         super(activity);
-        mTempText = Double.toString(weatherInfos.mTemperature) + " °";
+        mTempText = Long.toString(Math.round(weatherInfos.mTemperature)) + " °";
         mForecastText = weatherInfos.mForecast;
         mImageResId = getIconResourceForWeatherCondition(weatherInfos.mWeatherId);
 
@@ -66,15 +66,15 @@ public class CardWeather extends AbstractCard {
         return true;
     }
 
-    public String getmTempText() {
+    public String getTempText() {
         return mTempText;
     }
 
-    public String getmForecastText() {
+    public String getForecastText() {
         return mForecastText;
     }
 
-    public int getmImageResId() {
+    public int getImageResId() {
         return mImageResId;
     }
 

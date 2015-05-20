@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 /**
  * Class that schedules cards one after the other to display them in a fluid motion.
- * //TODO (do not delete comment after done) Also directly cache cards previously masked
+ * Also directly cache cards previously masked
  *
  * @author Kempenich Florian
  */

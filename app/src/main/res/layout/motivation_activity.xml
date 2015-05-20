@@ -42,7 +42,6 @@
         android:layout_marginTop="@dimen/fab_margin_top" />
 
 
-        <!-- android:layout_height="@dimen/add_card_menu_height" -->
     <!-- TODO fix the dynamical height -->
     <!-- Idées : override onMeasure du Linear layout -->
     <android.support.v7.widget.CardView

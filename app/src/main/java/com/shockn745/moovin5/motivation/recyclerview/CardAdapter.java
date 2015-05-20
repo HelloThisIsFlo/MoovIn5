@@ -398,9 +398,9 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private void bindWeatherCard(CardWeather.WeatherVH weatherVH, int position) {
         CardWeather card = (CardWeather) mDataSet.get(position);
 
-        weatherVH.mTempTextView.setText(card.getmTempText());
-        weatherVH.mForecastTextView.setText(card.getmForecastText());
-        weatherVH.mImageView.setImageResource(card.getmImageResId());
+        weatherVH.mTempTextView.setText(card.getTempText());
+        weatherVH.mForecastTextView.setText(card.getForecastText());
+        weatherVH.mImageView.setImageResource(card.getImageResId());
 
     }
 
