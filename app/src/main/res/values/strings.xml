@@ -13,7 +13,7 @@
     <string name="change_location_button">Change location</string>
     <string name="card_header_main_picker">Duration</string>
     <string name="card_home_text">Home</string>
-    <string name="card_gym_text">Outdoors</string>
+    <string name="card_gym_text">Outdoor</string>
 
 
 
@@ -46,6 +46,7 @@
     <string name="card_header_route">Route</string>
     <string name="card_header_weather">Weather</string>
     <string name="card_header_calories">Estimated calories</string>
+    <string name="card_header_loading">Contacting your coach</string>
 
     <!-- BackAtHome Card -->
     <string name="back_at_home_card_motivational_intro">You will be ready to : \n</string>

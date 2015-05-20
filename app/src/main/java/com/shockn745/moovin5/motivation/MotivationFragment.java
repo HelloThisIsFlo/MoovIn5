@@ -206,7 +206,12 @@ public class MotivationFragment extends Fragment implements
                     if (mIsInLoadingState && !mFirstLoadingCardDisplayed) {
                         mFirstLoadingCardDisplayed = true;
                         // TODO use random sentences from list
-                        mAdapter.addCard(new CardLoading(getActivity(), "Contacting your coach"));
+                        mAdapter.addCard(
+                                new CardLoading(
+                                        getActivity(),
+                                        getActivity().getString(R.string.card_header_loading)
+                                )
+                        );
                     }
                 }
             }, 500);
