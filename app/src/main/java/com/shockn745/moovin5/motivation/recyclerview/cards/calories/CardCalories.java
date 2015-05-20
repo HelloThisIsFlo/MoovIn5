@@ -39,7 +39,7 @@ public class CardCalories extends AbstractCard {
             this.mImageId = mImageId;
 
 
-            mText = String.format("%.2f %s", quantity, name);
+            mText = String.format("%.1f %s", quantity, name);
         }
 
         public String getText() {
@@ -62,18 +62,45 @@ public class CardCalories extends AbstractCard {
         // Process the estimated calorie burn
         int workoutDuration = prefs.getInt(activity.getString(R.string.pref_workout_key),
                 activity.getResources().getInteger(R.integer.workout_default));
-        int coeffCalories = activity.getResources().getInteger(R.integer.coeff_calories);
-        int caloriesBurnt = workoutDuration * coeffCalories;
+        int coeffCaloriesX10 = activity.getResources().getInteger(R.integer.coeff_calories_x10);
+        int caloriesBurnt = (int) (workoutDuration * coeffCaloriesX10/10f);
 
         mHeaderText = activity.getString(R.string.card_header_calories);
         mCaloriesText = caloriesBurnt + " " +activity.getString(R.string.calories_cals);
 
         // Add the equivalent calories / food
+        // Process calories
+        float[] calories = new float[4];
+        calories[0] = ((float) caloriesBurnt) /
+                activity.getResources().getInteger(R.integer.calories_croissant_cals);
+        calories[1] = ((float) caloriesBurnt) /
+                activity.getResources().getInteger(R.integer.calories_balanced_cals);
+        calories[2] = ((float) caloriesBurnt) /
+                activity.getResources().getInteger(R.integer.calories_pizza_cals);
+        calories[3] = ((float) caloriesBurnt) /
+                activity.getResources().getInteger(R.integer.calories_chocolate_cals);
+        // Add CaloriesItems
         mItems = new CaloriesItem[4];
-        mItems[0] = new CaloriesItem("Croissant", 1.3f, R.drawable.calories_croissant);
-        mItems[1] = new CaloriesItem("Balanced meal", 0.7f, R.drawable.calories_balanced_meal);
-        mItems[2] = new CaloriesItem("Pizza slice", 3f, R.drawable.calories_pizza_slice);
-        mItems[3] = new CaloriesItem("Chocolate bar", 1.1f, R.drawable.calories_chocolate_bar);
+        mItems[0] = new CaloriesItem(
+                activity.getString(R.string.calories_croissant),
+                calories[0],
+                R.drawable.calories_croissant
+        );
+        mItems[1] = new CaloriesItem(
+                activity.getString(R.string.calories_balanced),
+                calories[1],
+                R.drawable.calories_balanced_meal
+        );
+        mItems[2] = new CaloriesItem(
+                activity.getString(R.string.calories_pizza),
+                calories[2],
+                R.drawable.calories_pizza_slice
+        );
+        mItems[3] = new CaloriesItem(
+                activity.getString(R.string.calories_chocolate),
+                calories[3],
+                R.drawable.calories_chocolate_bar
+        );
 
     }
 
