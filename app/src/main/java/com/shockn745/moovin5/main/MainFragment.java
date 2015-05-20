@@ -150,9 +150,6 @@ public class MainFragment extends Fragment {
                 mHandler.removeCallbacks(mSavePreferencesTimer);
                 mSavePreferencesTimer.setWorkoutDuration(newVal);
                 mHandler.postDelayed(mSavePreferencesTimer, SAVE_PREFERENCES_TIMER_DELAY);
-
-                float elev = getActivity().findViewById(R.id.main_picker_card_view).getElevation();
-                Log.d(LOG_TAG, "Elevation = " + elev);
             }
         });
 
