@@ -43,6 +43,8 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
 
     private int mBottomPositionFAB;
 
+    private boolean isFABHidden = true;
+
     /**
      *  Called when the activity is first created, or after Destroy
      *  If savedInstanceState is not null, go back to main activity
@@ -164,6 +166,7 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
      */
     @Override
     public void revealFAB() {
+        isFABHidden = false;
         final int REVEAL_DURATION =
                 getResources().getInteger(R.integer.card_menu_FAB_reveal_duration);
 
@@ -199,6 +202,7 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
      */
     @Override
     public void hideFAB() {
+        isFABHidden = true;
         mBottomPositionFAB = mAddCardButton.getBottom();
 
         // Animate the FAB out of the screen (UP direction)
@@ -220,6 +224,7 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
      */
     @Override
     public void unHideFAB() {
+        isFABHidden = false;
         // Animate the FAB out of the screen (UP direction)
         mAddCardButton.animate()
                 .translationY(0)
@@ -232,6 +237,10 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
                 ).start();
     }
 
+    @Override
+    public boolean isFABHidden() {
+        return isFABHidden;
+    }
 
 
     ///////////////////////////

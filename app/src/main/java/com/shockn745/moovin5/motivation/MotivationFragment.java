@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -128,13 +127,8 @@ public class MotivationFragment extends Fragment implements
         mAdapter = new CardAdapter(new ArrayList<AbstractCard>(), getActivity(), this);
         mRecyclerView.setAdapter(mAdapter);
 
-        // Set recyclerView
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         // Notify the recyclerView that its size won't change (better perfs)
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setItemAnimator(
-                new CardAnimator(getActivity(), CardAnimator.STYLE_LOADING)
-        );
 
         // Set the OnTouchListener
         SwipeDismissRecyclerViewTouchListener touchListener =
@@ -149,6 +143,16 @@ public class MotivationFragment extends Fragment implements
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
+        // Setting this layout manager is required to ensure the toolbar is displayed when there
+        // is not enough elements to enable scrolling
+        RecyclerView.LayoutManager layoutManager = touchListener.makeLinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setItemAnimator(
+                new CardAnimator(
+                        getActivity(),
+                        (CardAnimator.OnMoveAnimationEndListener) layoutManager
+                )
+        );
     }
 
     @Override
@@ -241,8 +245,7 @@ public class MotivationFragment extends Fragment implements
         if (mIsInLoadingState) {
             // Remove loading card(s)
             mAdapter.clearLoadingScreen();
-            ((CardAnimator)mRecyclerView.getItemAnimator())
-                    .setAnimationStyle(CardAnimator.STYLE_POST_LOADING);
+
             // Reveal FAB
             // Wait until the first card is added
             new Handler().postDelayed(new Runnable() {

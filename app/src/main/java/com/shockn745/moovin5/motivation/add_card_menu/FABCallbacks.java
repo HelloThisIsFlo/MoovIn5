@@ -21,4 +21,9 @@ public interface FABCallbacks {
      * Hide the FAB (when scrolling down and toolbar fully visible)
      */
     void unHideFAB();
+
+    /**
+     * @return True if FAB is hidden
+     */
+    boolean isFABHidden();
 }

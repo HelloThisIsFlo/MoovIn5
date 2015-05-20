@@ -3,9 +3,11 @@ package com.shockn745.moovin5.motivation.recyclerview.animation;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -81,11 +83,12 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
     private boolean mPaused;
     private boolean mDismissAnimationRunning;
 
-    // Properties for the OnScrollListener
+    // Properties for the OnScrollListener & LayoutManager
     private FABCallbacks mFabCallbacks;
     private AddCardMenuCallbacks mAddCardMenuCallbacks;
     private Toolbar mToolbar;
     private ImageButton mFAB;
+    private Activity mActivity;
 
     /**
      * The callback interface used by {@link SwipeDismissRecyclerViewTouchListener} to inform its client
@@ -121,6 +124,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             AddCardMenuCallbacks addCardMenuCallbacks) {
         this.mFabCallbacks = FABCallbacks;
         this.mAddCardMenuCallbacks = addCardMenuCallbacks;
+        this.mActivity = activity;
         mToolbar = (Toolbar) activity.findViewById(R.id.motivation_toolbar);
         mFAB = (ImageButton) activity.findViewById(R.id.add_card_button);
         ViewConfiguration vc = ViewConfiguration.get(recyclerView.getContext());
@@ -165,7 +169,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             private final static String LOG_TAG = "OnScrollListener";
 
             private int mCurrentTranslationY;
-            private boolean mFABHidden = false;
 
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -181,8 +184,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     mToolbar.setTranslationY(mCurrentTranslationY);
 
                     // Hide FAB
-                    if (!mFABHidden) {
-                        mFABHidden = true;
+                    if (!mFabCallbacks.isFABHidden()) {
                         mFabCallbacks.hideFAB();
                         mAddCardMenuCallbacks.hideAddCardMenu();
                     }
@@ -193,13 +195,72 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     mToolbar.setTranslationY(mCurrentTranslationY);
 
                     // "unhide" FAB if toolbar is fully displayed
-                    if (mFABHidden && mCurrentTranslationY == 0) {
-                        mFABHidden = false;
+                    if (mFabCallbacks.isFABHidden() && mCurrentTranslationY == 0) {
                         mFabCallbacks.unHideFAB();
                     }
                 }
             }
         };
+    }
+
+
+    /**
+     * Returns an {@link RecyclerView.LayoutManager} to be added to the {@link
+     * RecyclerView} using {@link RecyclerView#setLayoutManager(RecyclerView.LayoutManager)}.
+     *
+     * This linear manager ensure the toolbar is displayed when removing enough items to make
+     * the list non scrollable
+     */
+    public RecyclerView.LayoutManager makeLinearLayoutManager(Context context) {
+        return new ToolbarLinearLayoutManager(context);
+    }
+
+    /**
+     * Linear Layout manager with extra features
+     * @see {@link SwipeDismissRecyclerViewTouchListener#makeLinearLayoutManager(Context)}
+     */
+    private class ToolbarLinearLayoutManager
+            extends LinearLayoutManager
+            implements CardAnimator.OnMoveAnimationEndListener {
+        private final String LOG_TAG = ToolbarLinearLayoutManager.class.getSimpleName();
+
+        public ToolbarLinearLayoutManager(Context context) {
+            super(context);
+        }
+
+
+        /**
+         * Called when after the elements are reorganized.
+         * Show toolbar if hidden and the reorganization cause the RecyclerView
+         * to not be scrollable anymore
+         */
+        @Override
+        public void onMoveAnimationEnd() {
+            // If scroll not possible anymore, show toolbar & FAB
+            int firstItemPosition = 0;
+            int lastItemPosition = getItemCount() - 1;
+            if (findFirstCompletelyVisibleItemPosition() == firstItemPosition &&
+                    findLastCompletelyVisibleItemPosition() == lastItemPosition) {
+                Log.d(LOG_TAG, "Show toolbar + FAB");
+                if (!isToolbarDisplayed()) {
+                    mToolbar.animate()
+                            .translationY(0)
+                            .setDuration(mActivity
+                                            .getResources()
+                                            .getInteger(R.integer.card_menu_FAB_hide_duration)
+                            );
+                    mFabCallbacks.unHideFAB();
+                }
+            }
+        }
+
+        /**
+         * @return True if toolbar is fully displayed
+         */
+        public boolean isToolbarDisplayed() {
+            return mToolbar.getTranslationY() == 0;
+        }
+
     }
 
 

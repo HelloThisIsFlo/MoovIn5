@@ -43,10 +43,15 @@ import java.util.List;
  */
 public class CardAnimator extends RecyclerView.ItemAnimator {
 
+    /**
+     * This interface is used to notify that a remove animation is finished
+     */
+    public interface OnMoveAnimationEndListener {
+        void onMoveAnimationEnd();
+    }
+
     private static final String LOG_TAG = CardAnimator.class.getSimpleName();
     private static final boolean DEBUG = false;
-    public static final int STYLE_LOADING = 0;
-    public static final int STYLE_POST_LOADING = 1;
 
     private ArrayList<ViewHolder> mPendingRemovals = new ArrayList<>();
     private ArrayList<AddInfo> mPendingAdditions = new ArrayList<>();
@@ -64,11 +69,13 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
     private ArrayList<ViewHolder> mChangeAnimations = new ArrayList<>();
 
     private Context mContext;
-    private int mAnimationStyle;
 
-    public CardAnimator(Context mContext, int animationStyle) {
+    private OnMoveAnimationEndListener mAnimationEndListener;
+
+    public CardAnimator(Context mContext,
+                        OnMoveAnimationEndListener listener) {
         this.mContext = mContext;
-        this.mAnimationStyle = animationStyle;
+        this.mAnimationEndListener = listener;
         setAddDuration(mContext.getResources().getInteger(R.integer.card_add_anim_duration));
     }
 
@@ -226,66 +233,10 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
     }
 
     /**
-     * Decides which implementation of the remove animation to use depending on the
-     * animation style attribute.
+     * Executes the add animation
      * @param holder holder containing the view to animate
      */
     private void animateRemoveImpl(final ViewHolder holder) {
-        if (mAnimationStyle == STYLE_LOADING) {
-            animateRemoveImplLoading(holder);
-        } else {
-            // Default animation
-            animateRemoveImplPostLoading(holder);
-        }
-    }
-
-    /**
-     * Implementation of the animation for the step 1 (loading screen)
-     * @param holder holder containing the view to animate
-     */
-    private void animateRemoveImplLoading(final ViewHolder holder) {
-        final View view = holder.itemView;
-
-        // Compute translation distance
-        /// Get the screen dimensions
-        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int height = size.y;
-
-        int translationDistance = - height;
-
-
-        final ViewPropertyAnimatorCompat animation = ViewCompat.animate(view);
-        animation.setInterpolator(
-                AnimationUtils.loadInterpolator(mContext, android.R.interpolator.fast_out_linear_in)
-        );
-        animation.setDuration(getRemoveDuration())
-                .translationY(translationDistance).setListener(new VpaListenerAdapter() {
-            @Override
-            public void onAnimationStart(View view) {
-                dispatchRemoveStarting(holder);
-            }
-
-            @Override
-            public void onAnimationEnd(View view) {
-                animation.setListener(null);
-                ViewCompat.setTranslationY(view, 0);
-                dispatchRemoveFinished(holder);
-                mRemoveAnimations.remove(holder);
-                dispatchFinishedWhenDone();
-            }
-        }).start();
-        mRemoveAnimations.add(holder);
-    }
-
-    /**
-     * Implementation of the animation for the step 2 (after loading)
-     * Also the default animation
-     * @param holder holder containing the view to animate
-     */
-    private void animateRemoveImplPostLoading(final ViewHolder holder) {
         final View view = holder.itemView;
         final ViewPropertyAnimatorCompat animation = ViewCompat.animate(view);
         animation.setDuration(getRemoveDuration())
@@ -424,6 +375,8 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
                 dispatchMoveFinished(holder);
                 mMoveAnimations.remove(holder);
                 dispatchFinishedWhenDone();
+                // Notify the listener that the end animation is done
+                mAnimationEndListener.onMoveAnimationEnd();
             }
         }).start();
     }
@@ -736,14 +689,6 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
         for (int i = viewHolders.size() - 1; i >= 0; i--) {
             ViewCompat.animate(viewHolders.get(i).itemView).cancel();
         }
-    }
-
-    /**
-     * Set the animation style
-     * @param animationStyle Either STYLE_LOADING or STYLE_POST_LOADING
-     */
-    public void setAnimationStyle(int animationStyle) {
-        this.mAnimationStyle = animationStyle;
     }
 
     private static class VpaListenerAdapter implements ViewPropertyAnimatorListener {
