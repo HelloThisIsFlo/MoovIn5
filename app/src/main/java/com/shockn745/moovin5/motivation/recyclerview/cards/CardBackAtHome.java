@@ -18,7 +18,7 @@ import java.util.Date;
  *
  * @author Florian Kempenich
  */
-public class CardBackAtHome implements CardInterface {
+public class CardBackAtHome extends AbstractCard {
 
     public static class BackAtHomeVH extends RecyclerView.ViewHolder {
         public final TextView mBackAtHomeTimeTextView;
@@ -36,8 +36,8 @@ public class CardBackAtHome implements CardInterface {
     private String mBackAtHomeTimeString;
     private String mMotivationalString;
 
-    public CardBackAtHome(Date backAtHomeTime, Activity activity) {
-
+    public CardBackAtHome(Activity activity, Date backAtHomeTime) {
+        super(activity);
         // Format backAtHome time
         this.mBackAtHomeTimeString = DateFormat
                 .getTimeFormat(activity)

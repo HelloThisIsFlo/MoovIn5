@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.shockn745.moovin5.R;
-import com.shockn745.moovin5.motivation.recyclerview.cards.CardInterface;
+import com.shockn745.moovin5.motivation.recyclerview.cards.AbstractCard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,15 +80,15 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         // Add a description for when no card is in cache
         mCardDescriptions = new HashMap<>();
         mCardDescriptions.put(
-                CardInterface.WEATHER_VIEW_TYPE,
+                AbstractCard.WEATHER_VIEW_TYPE,
                 mActivity.getString(R.string.add_card_menu_weather)
         );
         mCardDescriptions.put(
-                CardInterface.ROUTE_VIEW_TYPE,
+                AbstractCard.ROUTE_VIEW_TYPE,
                 mActivity.getString(R.string.add_card_menu_route)
         );
         mCardDescriptions.put(
-                CardInterface.CALORIES_VIEW_TYPE,
+                AbstractCard.CALORIES_VIEW_TYPE,
                 mActivity.getString(R.string.add_card_menu_calories)
         );
         mCardDescriptions.put(

@@ -1,5 +1,6 @@
 package com.shockn745.moovin5.motivation.recyclerview.cards;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -13,7 +14,7 @@ import com.shockn745.moovin5.R;
  *
  * @author Florian Kempenich
  */
-public class CardLoadingSimple implements CardInterface {
+public class CardLoadingSimple extends AbstractCard {
 
     public static class LoadingSimpleVH extends RecyclerView.ViewHolder {
         public final TextView mTextView;
@@ -26,7 +27,8 @@ public class CardLoadingSimple implements CardInterface {
 
     private String mText;
 
-    public CardLoadingSimple(String text) {
+    public CardLoadingSimple(Activity activity, String text) {
+        super(activity);
         this.mText = text;
     }
 

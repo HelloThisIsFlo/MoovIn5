@@ -1,6 +1,8 @@
 package com.shockn745.moovin5.motivation.recyclerview;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,7 +19,7 @@ import com.shockn745.moovin5.motivation.add_card_menu.AddCardMenuAdapter;
 import com.shockn745.moovin5.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardAd;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardBackAtHome;
-import com.shockn745.moovin5.motivation.recyclerview.cards.CardInterface;
+import com.shockn745.moovin5.motivation.recyclerview.cards.AbstractCard;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardLoading;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardLoadingSimple;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardRoute;
@@ -40,11 +42,11 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     private static final String LOG_TAG = CardAdapter.class.getSimpleName();
 
-    private final ArrayList<CardInterface> mDataSet;
+    private final ArrayList<AbstractCard> mDataSet;
     private final MotivationActivity mActivity;
 
     // Card cache variables
-    private final HashMap<Integer, CardInterface> mRemovedCards;
+    private final HashMap<Integer, AbstractCard> mRemovedCards;
     private final ArrayList<Integer> mRemovedCardsViewTypes;
     private final AddCardMenuAdapter mAddCardMenuAdapter;
 
@@ -54,7 +56,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         void drawPolylineCallback();
     }
 
-    public CardAdapter(ArrayList<CardInterface> dataSet,
+    public CardAdapter(ArrayList<AbstractCard> dataSet,
                        Activity activity,
                        DrawPolylineCallback drawPolylineCallback) {
         // Init the dataset
@@ -86,25 +88,25 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View itemView;
         switch (viewType) {
-            case CardInterface.LOADING_VIEW_TYPE:
+            case AbstractCard.LOADING_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.motivation_card_loading, parent, false);
                 return createLoadingVH(itemView);
 
-            case CardInterface.LOADING_SIMPLE_VIEW_TYPE:
+            case AbstractCard.LOADING_SIMPLE_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.motivation_card_loading_simple, parent, false);
                 return new CardLoadingSimple.LoadingSimpleVH(itemView);
 
-            case CardInterface.BACK_AT_HOME_VIEW_TYPE:
+            case AbstractCard.BACK_AT_HOME_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.motivation_card_back_at_home, parent, false);
                 return createBackAtHomeVH(itemView);
 
-            case CardInterface.WEATHER_VIEW_TYPE:
+            case AbstractCard.WEATHER_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.motivation_card_weather, parent, false);
@@ -114,19 +116,19 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         mActivity.getResources().getFraction(R.fraction.card_weather_ratio, 1, 1)
                 );
 
-            case CardInterface.ROUTE_VIEW_TYPE:
+            case AbstractCard.ROUTE_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.motivation_card_route, parent, false);
                 return createRouteVH(itemView);
 
-            case CardInterface.CALORIES_VIEW_TYPE:
+            case AbstractCard.CALORIES_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.motivation_card_calories, parent, false);
                 return new CardCalories.CaloriesVH(itemView);
 
-            case CardInterface.AD_VIEW_TYPE:
+            case AbstractCard.AD_VIEW_TYPE:
                 itemView = LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.motivation_card_ad, parent, false);
@@ -244,7 +246,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
      * Triggers the animation.
      * @param toAdd Card to add at the end
      */
-    public void addCard(CardInterface toAdd) {
+    public void addCard(AbstractCard toAdd) {
         // Element inserted at the end
         // So size of dataset before insertion == position of inserted element
         int position = mDataSet.size();
@@ -260,8 +262,12 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     @Override
     public void addCardFromCache(int viewType) {
         // Retrieve card and delete it from cache
-        CardInterface cardToAdd = mRemovedCards.get(viewType);
+        AbstractCard cardToAdd = mRemovedCards.get(viewType);
         mRemovedCards.remove(viewType);
+
+        // Remember to add card at next launch
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        prefs.edit().putBoolean(cardToAdd.getPreferenceKey(), true).apply();
 
         // Update mRemovedCardsViewTypes
         mRemovedCardsViewTypes.clear();
@@ -295,16 +301,28 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
      */
     public void removeCard(int position) {
         // Remove from dataset
-        CardInterface toCache = mDataSet.remove(position);
+        AbstractCard toCache = mDataSet.remove(position);
+
+        // Remember to directly cache card at next launch
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        prefs.edit().putBoolean(toCache.getPreferenceKey(), false).apply();
 
         // Cache the card and the viewtype
-        mRemovedCards.put(toCache.getViewType(), toCache);
-        mRemovedCardsViewTypes.clear();
-        mRemovedCardsViewTypes.addAll(mRemovedCards.keySet());
-        mAddCardMenuAdapter.notifyDataSetChanged();
+        addCardToCache(toCache);
 
         // Notify Adapter to refresh (also starts the animation)
         notifyItemRemoved(position);
+    }
+
+    /**
+     * Cache a specific card and its viewtype
+     * @param cardToCache Card to cache
+     */
+    public void addCardToCache(AbstractCard cardToCache) {
+        mRemovedCards.put(cardToCache.getViewType(), cardToCache);
+        mRemovedCardsViewTypes.clear();
+        mRemovedCardsViewTypes.addAll(mRemovedCards.keySet());
+        mAddCardMenuAdapter.notifyDataSetChanged();
     }
 
 

@@ -1,5 +1,6 @@
 package com.shockn745.moovin5.motivation.recyclerview.cards;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -11,7 +12,7 @@ import com.shockn745.moovin5.R;
  *
  * @author Florian Kempenich
  */
-public class CardRoute implements CardInterface {
+public class CardRoute extends AbstractCard {
 
     private static final String LOG_TAG = CardRoute.class.getSimpleName();
 
@@ -26,7 +27,8 @@ public class CardRoute implements CardInterface {
     }
 
 
-    public CardRoute() {
+    public CardRoute(Activity activity) {
+        super(activity);
     }
 
     @Override

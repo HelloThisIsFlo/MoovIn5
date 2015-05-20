@@ -1,5 +1,6 @@
 package com.shockn745.moovin5.motivation.recyclerview.cards;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,7 @@ import com.shockn745.moovin5.motivation.background.FetchWeatherTask;
  *
  * @author Florian Kempenich
  */
-public class CardWeather implements CardInterface {
+public class CardWeather extends AbstractCard {
 
     public static class WeatherVH extends RecyclerView.ViewHolder {
         public TextView mTempTextView;
@@ -47,8 +48,8 @@ public class CardWeather implements CardInterface {
     private String mForecastText;
     private int mImageResId;
 
-    public CardWeather(FetchWeatherTask.WeatherInfos weatherInfos) {
-
+    public CardWeather(Activity activity, FetchWeatherTask.WeatherInfos weatherInfos) {
+        super(activity);
         mTempText = Integer.toString(weatherInfos.mTemperature) + " °";
         mForecastText = weatherInfos.mForecast;
         mImageResId = getIconResourceForWeatherCondition(weatherInfos.mWeatherId);

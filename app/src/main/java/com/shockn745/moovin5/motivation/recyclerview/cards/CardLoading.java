@@ -1,5 +1,6 @@
 package com.shockn745.moovin5.motivation.recyclerview.cards;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -25,8 +26,8 @@ public class CardLoading extends CardLoadingSimple {
         }
     }
 
-    public CardLoading(String text) {
-        super(text);
+    public CardLoading(Activity activity, String text) {
+        super(activity, text);
     }
 
     @Override

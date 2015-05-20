@@ -8,14 +8,14 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.shockn745.moovin5.R;
-import com.shockn745.moovin5.motivation.recyclerview.cards.CardInterface;
+import com.shockn745.moovin5.motivation.recyclerview.cards.AbstractCard;
 
 /**
  * Card that display calories information
  *
  * @author Florian Kempenich
  */
-public class CardCalories implements CardInterface {
+public class CardCalories extends AbstractCard {
 
     public static class CaloriesVH extends RecyclerView.ViewHolder {
         public final TextView headerTextView;
@@ -56,6 +56,7 @@ public class CardCalories implements CardInterface {
     private CaloriesItem[] mItems;
 
     public CardCalories(Activity activity) {
+        super(activity);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 
         // Process the estimated calorie burn

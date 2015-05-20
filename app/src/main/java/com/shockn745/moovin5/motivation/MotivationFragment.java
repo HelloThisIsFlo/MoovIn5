@@ -28,13 +28,12 @@ import com.shockn745.moovin5.motivation.add_card_menu.AddCardMenuCallbacks;
 import com.shockn745.moovin5.motivation.add_card_menu.FABCallbacks;
 import com.shockn745.moovin5.motivation.background.BackgroundController;
 import com.shockn745.moovin5.motivation.background.ConnectionListener;
-import com.shockn745.moovin5.motivation.background.FetchWeatherTask;
 import com.shockn745.moovin5.motivation.recyclerview.CardAdapter;
 import com.shockn745.moovin5.motivation.recyclerview.animation.CardAnimator;
 import com.shockn745.moovin5.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardAd;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardBackAtHome;
-import com.shockn745.moovin5.motivation.recyclerview.cards.CardInterface;
+import com.shockn745.moovin5.motivation.recyclerview.cards.AbstractCard;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardLoading;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardLoadingSimple;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardRoute;
@@ -42,7 +41,6 @@ import com.shockn745.moovin5.motivation.recyclerview.cards.CardWeather;
 import com.shockn745.moovin5.motivation.recyclerview.cards.calories.CardCalories;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,7 +62,7 @@ public class MotivationFragment extends Fragment implements
 
     private RecyclerView mRecyclerView;
     private CardAdapter mAdapter;
-    private ArrayList<CardInterface> mDataset;
+    private ArrayList<AbstractCard> mDataset;
     private Handler mHandler;
 
     private boolean mIsInLoadingState = true;
@@ -101,13 +99,14 @@ public class MotivationFragment extends Fragment implements
 
         // Init the route view holder
         // This is to prevent frame skip when adding the route card to the recyclerview
-        mAdapter.createViewHolder(mRecyclerView, CardInterface.ROUTE_VIEW_TYPE);
+        mAdapter.createViewHolder(mRecyclerView, AbstractCard.ROUTE_VIEW_TYPE);
 
         mErrorHandler = new ErrorHandler();
         mBackgroundController = new BackgroundController(getActivity(), this);
         mHandler = new Handler();
 
         mCardScheduler = new CardScheduler(
+                getActivity(),
                 mAdapter,
                 mRecyclerView.getItemAnimator().getAddDuration()
         );
@@ -126,7 +125,7 @@ public class MotivationFragment extends Fragment implements
 
     private void initRecyclerView() {
         // Set the adapter with empty dataset
-        mAdapter = new CardAdapter(new ArrayList<CardInterface>(), getActivity(), this);
+        mAdapter = new CardAdapter(new ArrayList<AbstractCard>(), getActivity(), this);
         mRecyclerView.setAdapter(mAdapter);
 
         // Set recyclerView
@@ -203,7 +202,7 @@ public class MotivationFragment extends Fragment implements
                     if (mIsInLoadingState && !mFirstLoadingCardDisplayed) {
                         mFirstLoadingCardDisplayed = true;
                         // TODO use random sentences from list
-                        mAdapter.addCard(new CardLoading("Contacting your coach"));
+                        mAdapter.addCard(new CardLoading(getActivity(), "Contacting your coach"));
                     }
                 }
             }, 500);
@@ -215,7 +214,7 @@ public class MotivationFragment extends Fragment implements
                     // Check loading state at execution
                     if (mIsInLoadingState && !mSecondLoadingCardDisplayed) {
                         mSecondLoadingCardDisplayed = true;
-                        mAdapter.addCard(new CardLoadingSimple("Almost done !"));
+                        mAdapter.addCard(new CardLoadingSimple(getActivity(), "Almost done !"));
                     }
                 }
             }, getResources().getInteger(R.integer.location_request_expiration) / 2);
@@ -265,14 +264,14 @@ public class MotivationFragment extends Fragment implements
     @Override
     public void onBackgroundProcessDone(BackgroundController.BackgroundProcessResult result) {
         // Create cards
-        CardInterface backAtHomeCard = new CardBackAtHome(
-                result.mTransitInfos.getBackAtHomeDate(),
-                getActivity()
+        AbstractCard backAtHomeCard = new CardBackAtHome(
+                getActivity(),
+                result.mTransitInfos.getBackAtHomeDate()
         );
-        CardInterface weatherCard = new CardWeather(result.mWeatherInfos);
-        CardInterface caloriesCard = new CardCalories(getActivity());
-        CardInterface adCard = new CardAd("PUB");
-        CardInterface routeCard = createRouteCard(result.mTransitInfos.getPolylineRoute());
+        AbstractCard weatherCard = new CardWeather(getActivity(), result.mWeatherInfos);
+        AbstractCard caloriesCard = new CardCalories(getActivity());
+        AbstractCard adCard = new CardAd(getActivity(), "PUB");
+        AbstractCard routeCard = createRouteCard(result.mTransitInfos.getPolylineRoute());
 
         // Add cards to scheduler
         mCardScheduler.addCardToList(backAtHomeCard);
@@ -318,7 +317,7 @@ public class MotivationFragment extends Fragment implements
         // Polyline is null in inHomeMode : No need to display the route card
         if (polyline != null) {
             mPolylineRoute = polyline;
-            return new CardRoute();
+            return new CardRoute(getActivity());
         } else {
             return null;
         }
