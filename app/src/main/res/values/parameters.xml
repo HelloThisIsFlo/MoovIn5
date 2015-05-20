@@ -6,7 +6,7 @@
     <!-- Max, min & default values for the preferences based on duration -->
     <integer name="pref_duration_min">0</integer>
     <integer name="pref_duration_max">60</integer>
-    <integer name="pref_warmup_default">15</integer>
+    <integer name="pref_warmup_default">10</integer>
     <integer name="pref_stretching_default">30</integer>
     <integer name="workout_default">10</integer>
 
@@ -36,7 +36,12 @@
 
     <!-- Parameter for the calories processing -->
     <!-- TODO Update with more accurate coefficient -->
-    <integer name="coeff_calories">10</integer>
+    <integer name="coeff_calories_x10">93</integer>
+    <integer name="calories_croissant_cals">280</integer>
+    <integer name="calories_balanced_cals">700</integer>
+    <integer name="calories_pizza_cals">250</integer>
+    <integer name="calories_chocolate_cals">230</integer>
+
 
     <!-- Parameter for the weather card -->
     <!-- DO NOT CHANGE RATIO : 16/9 -->

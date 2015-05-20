@@ -65,6 +65,10 @@
 
     <!-- Calorie Card -->
     <string name="calories_cals">Cals</string>
+    <string name="calories_croissant">Croissant</string>
+    <string name="calories_balanced">Balanced meal</string>
+    <string name="calories_pizza">Pizza slice</string>
+    <string name="calories_chocolate">Chocolate bar</string>
 
     <!-- Alert dialog -->
     <string name="warning_not_initialized_edit_text">Please initialise the gym location !</string>
