@@ -27,11 +27,11 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
     private static final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
     public static class WeatherInfos {
-        public final int mTemperature;
+        public final double mTemperature;
         public final String mForecast;
         public final int mWeatherId;
 
-        public WeatherInfos(int mTemperature, String mForecast, int mWeatherId) {
+        public WeatherInfos(double mTemperature, String mForecast, int mWeatherId) {
             this.mTemperature = mTemperature;
             this.mForecast = mForecast;
             this.mWeatherId = mWeatherId;
@@ -47,7 +47,7 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
          *                   ERROR if error <br>
          *                   CONNECTION_ERROR if connection error
          */
-        public void onWeatherInfoRetrieved(WeatherInfos weatherInfos, int resultCode);
+        void onWeatherInfoRetrieved(WeatherInfos weatherInfos, int resultCode);
     }
 
     public final static int ERROR = -1;
@@ -154,8 +154,7 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
         Log.d(LOG_TAG, forecastJsonStr);
 
         try {
-            WeatherInfos result = parseJsonString(forecastJsonStr);
-            return result;
+            return parseJsonString(forecastJsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Error ", e);
             publishProgress(ERROR);
@@ -207,11 +206,9 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
 
         String forecast = weatherJSONObject.getString(JSON_FORECAST);
         int weatherId = weatherJSONObject.getInt(JSON_WEATHER_ID);
-        String temperatureString = root
+        Double temperature = root
                 .getJSONObject(JSON_TEMP_ROOT)
-                .getString(JSON_TEMPERATURE);//TODO check if it works with getDouble
-        float temperatureFloat = Float.parseFloat(temperatureString);
-        int temperature = Math.round(temperatureFloat);
+                .getDouble(JSON_TEMPERATURE);
 
         return new WeatherInfos(temperature, forecast, weatherId);
     }

@@ -50,7 +50,7 @@ public class CardWeather extends AbstractCard {
 
     public CardWeather(Activity activity, FetchWeatherTask.WeatherInfos weatherInfos) {
         super(activity);
-        mTempText = Integer.toString(weatherInfos.mTemperature) + " °";
+        mTempText = Double.toString(weatherInfos.mTemperature) + " °";
         mForecastText = weatherInfos.mForecast;
         mImageResId = getIconResourceForWeatherCondition(weatherInfos.mWeatherId);
 
