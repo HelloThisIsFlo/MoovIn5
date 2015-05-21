@@ -4,6 +4,7 @@
     <!-- Common -->
     <string name="tutorial_next">Next</string>
     <string name="tutorial_previous">Previous</string>
+    <string name="tutorial_done">Done</string>
 
 
     <!-- Step 1 -->

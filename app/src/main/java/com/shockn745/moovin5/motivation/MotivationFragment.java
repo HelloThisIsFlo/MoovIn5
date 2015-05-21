@@ -253,7 +253,7 @@ public class MotivationFragment extends Fragment implements
 
             // Reveal FAB
             // Wait until the first card is added
-            new Handler().postDelayed(new Runnable() {
+            mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     mFABCallbacks.revealFAB();

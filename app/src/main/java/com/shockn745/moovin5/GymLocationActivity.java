@@ -3,6 +3,7 @@ package com.shockn745.moovin5;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -25,6 +26,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.shockn745.moovin5.settings.PreferencesUtils;
+import com.shockn745.moovin5.tutorial.TutorialActivityStep4;
+import com.shockn745.moovin5.tutorial.TutorialFinalStep;
 
 /**
  * Activity where the gym location is set by the user
@@ -49,6 +52,9 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
     private boolean mMaptypeIsHybrid = false;
     private boolean mAcceptButtonVisible = false;
 
+    private Handler mHandler = new Handler();
+    private Runnable mHintRunnable;
+
     /**
      *  Called when the activity is first created, or after Destroy
      *  If savedInstanceState is not null, go back to main activity
@@ -60,18 +66,8 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
         if (savedInstanceState == null) {
             setContentView(R.layout.gym_activity);
 
-            // Hint the user 1 sec after start
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(
-                            GymLocationActivity.this,
-                            GymLocationActivity.this.getString(R.string.gym_location_hint),
-                            Toast.LENGTH_SHORT
-                    ).show();
-
-                }
-            }, 2000);
+            // Hint the user 2 sec after start
+            scheduleHint();
 
             // Find elements by id
             mSetLocationButton = (ImageButton) findViewById(R.id.set_location_button);
@@ -152,7 +148,24 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
                         Log.v(LOG_TAG, "lat : " + mCoordinates.latitude);
                         Log.v(LOG_TAG, "long : " + mCoordinates.longitude);
 
-                        finish();
+                        // Cancel hint
+                        cancelHint();
+
+                        if (!isInTutorialMode()) {
+                            finish();
+                        } else {
+                            // In tutorial mode
+                            // Launch final tutorial step
+                            Intent startFinalStep = new Intent(
+                                    GymLocationActivity.this,
+                                    TutorialFinalStep.class
+                            );
+                            startActivity(startFinalStep);
+                            overridePendingTransition(
+                                    R.anim.tutorial_next_slide_in,
+                                    R.anim.tutorial_next_slide_out
+                            );
+                        }
                     }
                 }
             });
@@ -161,11 +174,45 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
         }
     }
 
+
+    /**
+     * Hint the user to long press to select
+     * Hint appear after 2 seconds
+     */
+    private void scheduleHint(){
+        mHintRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(
+                        GymLocationActivity.this,
+                        GymLocationActivity.this.getString(R.string.gym_location_hint),
+                        Toast.LENGTH_SHORT
+                ).show();
+
+            }
+        };
+        mHandler.postDelayed(mHintRunnable , 2000);
+    }
+
+    /**
+     * Cancel the scheduled hint message
+     */
+    private void cancelHint() {
+        mHandler.removeCallbacks(mHintRunnable);
+    }
+
+
+    /**
+     * Override the UP button behavior when in tutorial mode
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
+                // Cancel hint
+                cancelHint();
+
                 if (isInTutorialMode()) {
                     finish();
                     overridePendingTransition(
@@ -176,6 +223,13 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
                 }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // Cancel hint
+        cancelHint();
     }
 
     /**

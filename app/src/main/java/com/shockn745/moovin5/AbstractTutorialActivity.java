@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 
 /**
  * This class factor functions related to the tutorial mode at first launch of the application
+ *
+ * @author Kempenich Florian
  */
 public abstract class AbstractTutorialActivity extends Activity {
 
@@ -28,7 +30,6 @@ public abstract class AbstractTutorialActivity extends Activity {
                     .apply();
         }
 
-        // TODO don't forget to set to false when tutorial is over
     }
 
     /**

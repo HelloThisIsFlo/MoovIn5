@@ -13,6 +13,12 @@ import com.shockn745.moovin5.AbstractTutorialActivity;
 import com.shockn745.moovin5.GymLocationActivity;
 import com.shockn745.moovin5.R;
 
+/**
+ * Step 4 of the tutorial
+ *
+ * @author Kempenich Florian
+ *
+ */
 public class TutorialActivityStep4 extends AbstractTutorialActivity {
 
     @Override

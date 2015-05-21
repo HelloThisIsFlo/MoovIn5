@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/tutorial_background"
+    tools:context="com.shockn745.moovin5.tutorial.TutorialFinalStep">
+
+
+
+
+
+    <TextView
+        android:id="@+id/tutorial_final_step_done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tutorial_done"
+        android:textSize="40sp"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"/>
+
+
+    <View
+        android:id="@+id/tutorial_final_step_horizontal_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_above="@id/tutorial_final_step_done"
+        />
+
+</RelativeLayout>

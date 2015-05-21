@@ -96,5 +96,6 @@
     <string name="title_activity_tutorial_activity_step2">TutorialActivityStep2</string>
     <string name="title_activity_tutorial_activity_step3">TutorialActivityStep3</string>
     <string name="title_activity_tutorial_activity_step4">TutorialActivityStep4</string>
+    <string name="title_activity_tutorial_final_step">TutorialFinalStep</string>
 
 </resources>

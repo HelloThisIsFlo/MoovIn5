@@ -12,6 +12,12 @@ import android.widget.TextView;
 import com.shockn745.moovin5.AbstractTutorialActivity;
 import com.shockn745.moovin5.R;
 
+/**
+ * Step 3 of the tutorial
+ *
+ * @author Kempenich Florian
+ *
+ */
 public class TutorialActivityStep3 extends AbstractTutorialActivity {
 
     @Override
