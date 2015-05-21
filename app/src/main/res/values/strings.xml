@@ -18,6 +18,8 @@
 
 
     <!-- Preference name & key -->
+    <string name="pref_tutorial_key">tutorial</string>
+
     <string name="pref_warmup">Warmup duration</string>
     <string name="pref_warmup_key">warmup</string>
     <string name="pref_stretching">Streching + shower duration</string>
@@ -30,6 +32,10 @@
     <string name="pref_card_route_displayed">card_route_displayed</string>
     <string name="pref_card_calories_displayed">card_calories_displayed</string>
 
+
+
+    <!-- GymLocationActivity -->
+    <string name="gym_location_hint">Long press to select</string>
 
 
     <!-- MotivationActivity -->
@@ -89,5 +95,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_tutorial_activity_step2">TutorialActivityStep2</string>
     <string name="title_activity_tutorial_activity_step3">TutorialActivityStep3</string>
+    <string name="title_activity_tutorial_activity_step4">TutorialActivityStep4</string>
 
 </resources>

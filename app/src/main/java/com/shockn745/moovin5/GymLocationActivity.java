@@ -4,13 +4,16 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.ImageButton;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -28,7 +31,7 @@ import com.shockn745.moovin5.settings.PreferencesUtils;
  *
  * @author Florian Kempenich
  */
-public class GymLocationActivity extends Activity implements OnMapReadyCallback {
+public class GymLocationActivity extends AbstractTutorialActivity implements OnMapReadyCallback {
 
     private final static String LOG_TAG = GymLocationActivity.class.getSimpleName();
 
@@ -56,6 +59,19 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
             setContentView(R.layout.gym_activity);
+
+            // Hint the user 1 sec after start
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(
+                            GymLocationActivity.this,
+                            GymLocationActivity.this.getString(R.string.gym_location_hint),
+                            Toast.LENGTH_SHORT
+                    ).show();
+
+                }
+            }, 2000);
 
             // Find elements by id
             mSetLocationButton = (ImageButton) findViewById(R.id.set_location_button);
@@ -143,6 +159,23 @@ public class GymLocationActivity extends Activity implements OnMapReadyCallback 
         } else {
             finish();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                if (isInTutorialMode()) {
+                    finish();
+                    overridePendingTransition(
+                            R.anim.tutorial_previous_slide_in,
+                            R.anim.tutorial_previous_slide_out
+                    );
+                    return true;
+                }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**

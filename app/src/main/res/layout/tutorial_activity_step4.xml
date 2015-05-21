@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_alignParentTop="true"
-        android:layout_above="@+id/tutorial_step_3_horizontal_separator"
+        android:layout_above="@+id/tutorial_step_4_info_card_view"
         >
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             >
 
             <TextView
-                android:id="@+id/tutorial_step_3_content_text_view"
+                android:id="@+id/tutorial_step_4_content_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
@@ -33,9 +33,31 @@
         </android.support.v7.widget.CardView>
     </FrameLayout>
 
+    <android.support.v7.widget.CardView
+        android:id="@+id/tutorial_step_4_info_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@color/tutorialTint"
+        card_view:cardElevation="0dp"
+        android:layout_above="@+id/tutorial_step_4_horizontal_separator"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="15dp"
+        android:layout_gravity="center"
+        >
+
+        <TextView
+            android:id="@+id/tutorial_step_4_info_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:textSize="15sp"
+            android:gravity="start"/>
+
+    </android.support.v7.widget.CardView>
 
     <TextView
-        android:id="@+id/tutorial_step_3_next"
+        android:id="@+id/tutorial_step_4_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Next"
@@ -43,10 +65,10 @@
         android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/tutorial_step_3_vertical_separator"/>
+        android:layout_toEndOf="@+id/tutorial_step_4_vertical_separator"/>
 
     <TextView
-        android:id="@+id/tutorial_step_3_previous"
+        android:id="@+id/tutorial_step_4_previous"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Previous"
@@ -54,23 +76,23 @@
         android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/tutorial_step_3_vertical_separator"/>
+        android:layout_toStartOf="@+id/tutorial_step_4_vertical_separator"/>
 
     <View
-        android:id="@+id/tutorial_step_3_vertical_separator"
+        android:id="@+id/tutorial_step_4_vertical_separator"
         android:layout_width="1dp"
         android:layout_height="0dp"
         android:background="@android:color/darker_gray"
-        android:layout_alignTop="@id/tutorial_step_3_next"
+        android:layout_alignTop="@id/tutorial_step_4_next"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
 
     <View
-        android:id="@+id/tutorial_step_3_horizontal_separator"
+        android:id="@+id/tutorial_step_4_horizontal_separator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        android:layout_above="@id/tutorial_step_3_next"
+        android:layout_above="@id/tutorial_step_4_next"
         />
 
 

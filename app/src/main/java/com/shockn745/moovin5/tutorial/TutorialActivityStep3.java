@@ -3,14 +3,16 @@ package com.shockn745.moovin5.tutorial;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.shockn745.moovin5.AbstractTutorialActivity;
 import com.shockn745.moovin5.R;
 
-public class TutorialActivityStep3 extends Activity {
+public class TutorialActivityStep3 extends AbstractTutorialActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,47 +24,35 @@ public class TutorialActivityStep3 extends Activity {
         TextView previousTextView = (TextView) findViewById(R.id.tutorial_step_3_previous);
         TextView contentTextView = (TextView) findViewById(R.id.tutorial_step_3_content_text_view);
 
-
-
-
-
-//        + "<h3>"
-//                + getString(R.string.app_name)
-//                + " "
-//                + getString(R.string.tutorial_step_2_content_part_2)
-//                + "</h3>";
-
-
-
-
-
-
-
-
+        // Set text
+        contentTextView.setText(
+                Html.fromHtml(
+                        getString(R.string.tutorial_step_3_content_part_1)
+                                + "<b>" + getString(R.string.app_name) + "</b>"
+                                + " "
+                                + getString(R.string.tutorial_step_3_content_part_2)
+                )
+        );
 
         // Set listeners
         nextTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent startStep4 = new Intent(
-//                        TutorialActivityStep3.this,
-//                        TutorialActivityStep4.class
-//                );
-//                startActivity(startStep4);
-//                overridePendingTransition(
-//                        R.anim.tutorial_next_slide_in,
-//                        R.anim.tutorial_next_slide_out
-//                );
+                Intent startStep4 = new Intent(
+                        TutorialActivityStep3.this,
+                        TutorialActivityStep4.class
+                );
+                startActivity(startStep4);
+                overridePendingTransition(
+                        R.anim.tutorial_next_slide_in,
+                        R.anim.tutorial_next_slide_out
+                );
             }
         });
         previousTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent startStep2 = new Intent(
-                        TutorialActivityStep3.this,
-                        TutorialActivityStep2.class
-                );
-                startActivity(startStep2);
+                finish();
                 overridePendingTransition(
                         R.anim.tutorial_previous_slide_in,
                         R.anim.tutorial_previous_slide_out

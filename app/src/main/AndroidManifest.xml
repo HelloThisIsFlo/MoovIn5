@@ -83,6 +83,11 @@
             android:label="@string/title_activity_tutorial_activity_step3"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".tutorial.TutorialActivityStep4"
+            android:label="@string/title_activity_tutorial_activity_step4"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>

@@ -32,11 +32,30 @@
 
     <!-- Step 3 -->
     <string name="tutorial_step_3_content_part_1">
-            <![CDATA[<h1>The solution :</h1>]]>
+            <![CDATA[<h1><u>The solution :</u></h1>]]>
     </string>
     <string name="tutorial_step_3_content_part_2">
-        provides you in seconds with the exact time when
-        you\'ll be done with your workout, showered, and ready to roll
+        <![CDATA[provides you in seconds with the <b>exact time</b> when
+        you\'ll be done with your workout, showered, and ready to roll!<br/><br/>
+        Plus you get some neat additional infos : <br/><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp; &#8226; Exact time when you\'ll be free<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp; &#8226; Weather at the gym/parc location<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp; &#8226; Route overview<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp; &#8226; Estimation of calories
+        ]]>
+    </string>
+
+
+    <!-- Step 4 -->
+    <string name="tutorial_step_4_content"><b>Great!</b>\n\n
+        Now let\'s get started!\n\n
+        First let\'s set your gym location.\n\n
+        Press \"Next\"\n and <b>long press</b> at your gym location on the next screen.
+    </string>
+    <string name="tutorial_step_4_infos">
+        If you train outdoor, just select the park where you go work out.
+        \nIf you train inside only, pick a random location.
+        \nYou\'ll be able to change it later ;)
     </string>
 
 

@@ -10,9 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.shockn745.moovin5.AbstractTutorialActivity;
 import com.shockn745.moovin5.R;
 
-public class TutorialActivityStep1 extends Activity {
+public class TutorialActivityStep1 extends AbstractTutorialActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
