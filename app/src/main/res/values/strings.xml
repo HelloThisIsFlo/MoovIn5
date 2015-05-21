@@ -84,5 +84,8 @@
         please check your internet connection</string>
     <string name="alert_transit_no_routes">No route found between your location and your gym
         \nPlease check the gym location!</string>
+    <string name="title_activity_tutorial_activity_step1">TutorialActivityStep1</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>

@@ -1,0 +1,67 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/tutorial_background"
+    tools:context="com.shockn745.moovin5.tutorial.TutorialActivityStep1">
+
+    <TextView
+        android:id="@+id/tutorial_step_1_header_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="50sp"
+        android:layout_marginTop="50dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/tutorial_step_1_content_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_below="@id/tutorial_step_1_header_text_view"
+        android:textSize="30sp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/tutorial_step_1_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:textSize="40sp"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/tutorial_step_1_vertical_separator"/>
+
+    <TextView
+        android:id="@+id/tutorial_step_1_previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Previous"
+        android:textSize="40sp"
+        android:textColor="@android:color/darker_gray"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/tutorial_step_1_vertical_separator"/>
+
+    <View
+        android:id="@+id/tutorial_step_1_vertical_separator"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="@android:color/darker_gray"
+        android:layout_alignTop="@id/tutorial_step_1_next"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
+
+    <View
+        android:id="@+id/tutorial_step_1_horizontal_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_above="@id/tutorial_step_1_next"
+        />
+
+
+
+</RelativeLayout>
