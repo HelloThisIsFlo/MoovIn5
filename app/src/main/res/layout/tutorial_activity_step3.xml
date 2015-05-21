@@ -7,46 +7,24 @@
     tools:context="com.shockn745.moovin5.tutorial.TutorialActivityStep2">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/tutorial_step_2_content_card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         card_view:cardBackgroundColor="@color/tutorialTint"
         card_view:cardElevation="0dp"
         android:layout_alignParentTop="true"
+        android:layout_above="@+id/tutorial_step_3_horizontal_separator"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginTop="50dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="40dp"
         >
 
         <TextView
-            android:id="@+id/tutorial_step_2_content_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:textSize="20sp"
-            android:gravity="start"/>
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        card_view:cardBackgroundColor="@color/tutorialTint"
-        card_view:cardElevation="0dp"
-        android:layout_below="@id/tutorial_step_2_content_card"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        >
-
-        <TextView
-            android:id="@+id/tutorial_step_2_skip_text_view"
+            android:id="@+id/tutorial_step_3_content_text_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="5dp"
             android:textSize="20sp"
-            android:textColor="#FF0000"
             android:gravity="start"/>
 
     </android.support.v7.widget.CardView>
@@ -54,7 +32,7 @@
 
 
     <TextView
-        android:id="@+id/tutorial_step_2_next"
+        android:id="@+id/tutorial_step_3_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Next"
@@ -62,10 +40,10 @@
         android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/tutorial_step_2_vertical_separator"/>
+        android:layout_toEndOf="@+id/tutorial_step_3_vertical_separator"/>
 
     <TextView
-        android:id="@+id/tutorial_step_2_previous"
+        android:id="@+id/tutorial_step_3_previous"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Previous"
@@ -73,23 +51,23 @@
         android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/tutorial_step_2_vertical_separator"/>
+        android:layout_toStartOf="@+id/tutorial_step_3_vertical_separator"/>
 
     <View
-        android:id="@+id/tutorial_step_2_vertical_separator"
+        android:id="@+id/tutorial_step_3_vertical_separator"
         android:layout_width="1dp"
         android:layout_height="0dp"
         android:background="@android:color/darker_gray"
-        android:layout_alignTop="@id/tutorial_step_2_next"
+        android:layout_alignTop="@id/tutorial_step_3_next"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
 
     <View
-        android:id="@+id/tutorial_step_2_horizontal_separator"
+        android:id="@+id/tutorial_step_3_horizontal_separator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        android:layout_above="@id/tutorial_step_2_next"
+        android:layout_above="@id/tutorial_step_3_next"
         />
 
 

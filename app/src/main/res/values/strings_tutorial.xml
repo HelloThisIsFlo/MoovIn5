@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Common -->
+    <string name="tutorial_next">Next</string>
+    <string name="tutorial_previous">Previous</string>
+
+
     <!-- Step 1 -->
     <string name="tutorial_step_1_header">Welcome to</string>
     <string name="tutorial_step_1_content"><p>This great app has one<br />
@@ -8,6 +13,30 @@
         goal!</p>\n\n
         <p>Getting you motivated to move in the next<br />\n
         <u>5 minutes</u></p>
+    </string>
+
+
+    <!-- Step 2 -->
+    <string name="tutorial_step_2_content"><![CDATA[<h1><u>The problem :</u></h1>
+        <p>Ever wondered how long it would take you to be done
+            with your workout today?</p>
+        <p>Sure you know how long the actual workout will last.</p>
+        <p>But what about warm-up ? The time to get to the gym ?
+            And stretching ? Not to forget taking a shower afterwards.</p>
+        \n\n<em>&quot;Heck, I don\'t have time for this!
+            I\'ll train tomorrow . . maybe&quot;</em>]]>
+    </string>
+    <string name="tutorial_step_2_safe_skip">It\'s safe to skip this step and
+        the next one if don\'t want to read ;)</string>
+
+
+    <!-- Step 3 -->
+    <string name="tutorial_step_3_content_part_1">
+            <![CDATA[<h1>The solution :</h1>]]>
+    </string>
+    <string name="tutorial_step_3_content_part_2">
+        provides you in seconds with the exact time when
+        you\'ll be done with your workout, showered, and ready to roll
     </string>
 
 
