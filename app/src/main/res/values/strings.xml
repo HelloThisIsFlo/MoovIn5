@@ -87,5 +87,6 @@
     <string name="title_activity_tutorial_activity_step1">TutorialActivityStep1</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_tutorial_activity_step2">TutorialActivityStep2</string>
 
 </resources>

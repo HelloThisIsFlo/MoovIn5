@@ -8,13 +8,13 @@
 
     <android.support.v7.widget.CardView
         style="@style/Card"
-        android:id="@+id/tutorial_step_1_header_card_view"
+        android:id="@+id/tutorial_step_2_header_card_view"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         card_view:cardBackgroundColor="@color/primary"
         >
         <TextView
-            android:id="@+id/tutorial_step_1_header_text_view"
+            android:id="@+id/tutorial_step_2_header_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="50sp"
@@ -29,14 +29,14 @@
         android:layout_height="wrap_content"
         card_view:cardBackgroundColor="@color/tutorialTint"
         card_view:cardElevation="0dp"
-        android:layout_below="@id/tutorial_step_1_header_card_view"
+        android:layout_below="@id/tutorial_step_2_header_card_view"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginTop="40dp"
         >
 
         <TextView
-            android:id="@+id/tutorial_step_1_content_text_view"
+            android:id="@+id/tutorial_step_2_content_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
@@ -48,7 +48,7 @@
 
 
     <TextView
-        android:id="@+id/tutorial_step_1_next"
+        android:id="@+id/tutorial_step_2_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Next"
@@ -56,35 +56,34 @@
         android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/tutorial_step_1_vertical_separator"/>
+        android:layout_toEndOf="@+id/tutorial_step_2_vertical_separator"/>
 
     <TextView
-        android:id="@+id/tutorial_step_1_previous"
+        android:id="@+id/tutorial_step_2_previous"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Previous"
         android:textSize="40sp"
-        android:textColor="@android:color/darker_gray"
         android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/tutorial_step_1_vertical_separator"/>
+        android:layout_toStartOf="@+id/tutorial_step_2_vertical_separator"/>
 
     <View
-        android:id="@+id/tutorial_step_1_vertical_separator"
+        android:id="@+id/tutorial_step_2_vertical_separator"
         android:layout_width="1dp"
         android:layout_height="0dp"
         android:background="@android:color/darker_gray"
-        android:layout_alignTop="@id/tutorial_step_1_next"
+        android:layout_alignTop="@id/tutorial_step_2_next"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
 
     <View
-        android:id="@+id/tutorial_step_1_horizontal_separator"
+        android:id="@+id/tutorial_step_2_horizontal_separator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        android:layout_above="@id/tutorial_step_1_next"
+        android:layout_above="@id/tutorial_step_2_next"
         />
 
 

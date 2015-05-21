@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Step 1 -->
+    <string name="tutorial_step_1_header">Welcome to</string>
+    <string name="tutorial_step_1_content"><p>This great app has one<br />
+        <b>unique</b> &amp; <b>simple</b><br />\n
+        goal!</p>\n\n
+        <p>Getting you motivated to move in the next<br />\n
+        <u>5 minutes</u></p>
+    </string>
+
+
+</resources>

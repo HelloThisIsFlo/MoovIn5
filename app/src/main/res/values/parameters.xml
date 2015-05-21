@@ -49,4 +49,9 @@
     <item name="card_weather_ratio" type="fraction">178%</item>
 
 
+
+    <!-- Parameter for the tutorial -->
+    <integer name="tutorial_transition_duration">500</integer>
+
+
 </resources>
