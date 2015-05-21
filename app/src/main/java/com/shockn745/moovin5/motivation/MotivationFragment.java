@@ -174,6 +174,16 @@ public class MotivationFragment extends Fragment implements
     }
 
     /**
+     * Remove callbacks when activity is destroy.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mHandler.removeCallbacksAndMessages(null);
+        Log.d(LOG_TAG, "onDestroy");
+    }
+
+    /**
      * In the case of this fragment, this function will be called if the connection result
      * started the resolution.
      * After the end of the resolution this function will be called when the activity & fragment
