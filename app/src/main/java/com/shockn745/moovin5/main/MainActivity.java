@@ -2,6 +2,7 @@ package com.shockn745.moovin5.main;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -9,8 +10,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.shockn745.moovin5.AbstractTutorialActivity;
 import com.shockn745.moovin5.R;
+import com.shockn745.moovin5.settings.PreferencesUtils;
 import com.shockn745.moovin5.settings.SettingsActivity;
+import com.shockn745.moovin5.tutorial.TutorialActivityStep1;
 
 /**
  * Main activity displaying a duration picker, the main "motivate me" button and a secondary
@@ -18,13 +22,24 @@ import com.shockn745.moovin5.settings.SettingsActivity;
  *
  * @author Florian Kempenich
  */
-public class MainActivity extends Activity {
+public class MainActivity extends AbstractTutorialActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // If in tutorial mode, start tutorial
+        if (isInTutorialMode()) {
+            // Clear Gym location
+            PreferencesUtils.clearGymLocation(this);
+            // Start tutorial
+            Intent startTutorial = new Intent(this, TutorialActivityStep1.class);
+            startActivity(startTutorial);
+        }
+
+
         setContentView(R.layout.main_activity);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()

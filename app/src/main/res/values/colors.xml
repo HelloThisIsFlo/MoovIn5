@@ -9,5 +9,6 @@
     <item name="accent" type="color">#F50057</item>
     <item name="fabHighlight" type="color">#EEFF41</item>
     <item name="weatherTint" type="color">#66333333</item>
+    <item name="tutorialTint" type="color">#33333333</item>
     <item name="textColor" type="color">#FFFFFF</item>
 </resources>

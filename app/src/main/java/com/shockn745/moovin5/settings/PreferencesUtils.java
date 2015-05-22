@@ -59,6 +59,20 @@ public class PreferencesUtils {
                 .apply();
     }
 
+    /**
+     * Clear the gym location
+     * Used when starting tutorial
+     *
+     * @param context Context to get the default shared preferences
+     */
+    public static void clearGymLocation(Context context) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .remove(GymLocationActivity.LATITUDE_KEY)
+                .remove(GymLocationActivity.LONGITUDE_KEY)
+                .apply();
+    }
+
     public static class PreferenceNotInitializedException extends Exception {
 
         public PreferenceNotInitializedException(String detailMessage) {

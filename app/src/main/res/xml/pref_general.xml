@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.shockn745.moovin5.settings.NumberPickerPreference
-        android:title="@string/pref_warmup"
-        android:key="@string/pref_warmup_key"
-        android:defaultValue="@integer/pref_warmup_default"
-        />
+    <PreferenceCategory
+        android:title="@string/pref_category_workout">
+        <com.shockn745.moovin5.settings.NumberPickerPreference
+            android:title="@string/pref_warmup"
+            android:key="@string/pref_warmup_key"
+            android:defaultValue="@integer/pref_warmup_default"
+            />
 
-    <com.shockn745.moovin5.settings.NumberPickerPreference
-        android:title="@string/pref_stretching"
-        android:key="@string/pref_stretching_key"
-        android:defaultValue="@integer/pref_stretching_default"
-        />
+        <com.shockn745.moovin5.settings.NumberPickerPreference
+            android:title="@string/pref_stretching"
+            android:key="@string/pref_stretching_key"
+            android:defaultValue="@integer/pref_stretching_default"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_misc">
+
+        <Preference
+            android:key="@string/pref_start_tutorial_key"
+            android:title="@string/pref_start_tutorial"
+            android:summary="@string/pref_start_tutorial_summary"/>
+        <Preference
+            android:key="@string/pref_credits_key"
+            android:title="@string/pref_credits"
+            />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -1,0 +1,72 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/tutorial_background"
+    tools:context="com.shockn745.moovin5.tutorial.TutorialActivityFinalStep">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/tutorial_final_step_all_set_card_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@color/tutorialTint"
+        card_view:cardElevation="0dp"
+        android:layout_marginTop="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        >
+
+        <TextView
+            android:text="@string/tutorial_final_step_all_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:textSize="50sp"
+            android:gravity="center"/>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/tutorial_final_step_screenshot_card_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_below="@id/tutorial_final_step_all_set_card_view"
+        android:layout_above="@+id/tutorial_final_step_horizontal_separator"
+        android:layout_centerHorizontal="true"
+        android:measureAllChildren="false"
+        android:transitionGroup="false"
+        android:nestedScrollingEnabled="false"
+        android:touchscreenBlocksFocus="false">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/screenshot_tutorial"
+            android:scaleType="centerCrop"/>
+
+    </android.support.v7.widget.CardView>
+
+
+
+    <TextView
+        android:id="@+id/tutorial_final_step_done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tutorial_final_step_done"
+        android:textSize="40sp"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"/>
+
+
+    <View
+        android:id="@+id/tutorial_final_step_horizontal_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_above="@id/tutorial_final_step_done"
+        />
+
+</RelativeLayout>
