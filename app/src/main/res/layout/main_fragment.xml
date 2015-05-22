@@ -128,7 +128,6 @@
     </android.support.v7.widget.CardView>
 
 
-
     <ImageButton
         android:id="@+id/main_moovit_button"
         style="@style/FloatingActionButton.Default"

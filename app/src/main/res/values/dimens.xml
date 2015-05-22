@@ -45,6 +45,8 @@
     <dimen name="add_card_menu_list_item_height">30dp</dimen>
 
     <!-- Card -->
+    <!-- /!\ Do not increase margin over 9dp -->
+    <!-- /!\ Otherwise ads are not displayed on some screens -->
     <dimen name="card_margin">8dp</dimen>
     <dimen name="card_side_margin">8dp</dimen>
     <dimen name="card_elevation">2dp</dimen>

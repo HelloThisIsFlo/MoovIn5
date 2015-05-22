@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.shockn745.moovin5.R;
 
 /**
@@ -15,19 +17,19 @@ import com.shockn745.moovin5.R;
 public class CardAd extends AbstractCard {
 
     public static class AdVH extends RecyclerView.ViewHolder {
-        public TextView mTextView;
+        public AdView mAdView;
 
         public AdVH(View itemView) {
             super(itemView);
-            this.mTextView = (TextView) itemView.findViewById(R.id.ad_text_view);
+            this.mAdView = (AdView) itemView.findViewById(R.id.ad_view);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
         }
     }
 
-    private String mText;
 
-    public CardAd(Activity activity, String text) {
+    public CardAd(Activity activity) {
         super(activity);
-        this.mText = "Ad : " + text;
     }
 
     @Override
@@ -40,7 +42,4 @@ public class CardAd extends AbstractCard {
         return false;
     }
 
-    public String getText() {
-        return mText;
-    }
 }

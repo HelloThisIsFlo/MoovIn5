@@ -1,3 +1,5 @@
+<!-- Set Start/End margin on cards, not here -->
+<!-- cf @dimen/card_margin comment -->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -23,6 +25,8 @@
         android:elevation="@dimen/toolbar_elevation"
         />
 
+    <!-- Set Start/End margin on cards, not here -->
+    <!-- cf @dimen/card_margin comment -->
     <FrameLayout
         android:id="@+id/motivation_container"
         android:layout_width="match_parent"

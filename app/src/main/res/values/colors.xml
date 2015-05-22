@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <item name="windowBackground" type="color">#BDBDBD</item>
     <item name="primary" type="color">#00ACC1</item>
     <item name="primaryDark" type="color">#0097A7</item>
     <!--<item name="accent" type="color">#F50057</item>-->

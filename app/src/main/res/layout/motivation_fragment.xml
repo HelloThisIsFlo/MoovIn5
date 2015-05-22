@@ -1,11 +1,13 @@
+<!-- Set Start/End margin on cards, not here -->
+<!-- cf @dimen/card_margin comment -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.shockn745.moovin5.motivation.MotivationActivity.MotivationFragment">
 
-    <!-- test with margin / padding / etc -->
-    <!-- Otherwise set margin/padding on BackAtHome Card ! -->
+    <!-- Set Start/End margin on cards, not here -->
+    <!-- cf @dimen/card_margin comment -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cards_recycler_view"
         android:layout_width="match_parent"

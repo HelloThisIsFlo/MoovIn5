@@ -172,8 +172,6 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         } else if (holder instanceof CardRoute.RouteVH) {
             CardRoute.RouteVH routeVH = (CardRoute.RouteVH) holder;
 
-            CardRoute card = (CardRoute) mDataSet.get(position);
-
             // Add the MapView to the FrameLayout
             // if necessary remove from the previous FrameLayout
             if (mActivity.getMapView().getParent() != null) {
@@ -184,13 +182,9 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         } else if (holder instanceof CardCalories.CaloriesVH) {
             bindCaloriesCard((CardCalories.CaloriesVH) holder, position);
 
-        } else if (holder instanceof CardAd.AdVH) {
-            CardAd.AdVH adVH = (CardAd.AdVH) holder;
-
-            CardAd card = (CardAd) mDataSet.get(position);
-
-            adVH.mTextView.setText(card.getText());
-
+        } else //noinspection StatementWithEmptyBody
+            if (holder instanceof CardAd.AdVH) {
+            // Nothing to do
         } else {
             Log.d(LOG_TAG, "ERROR VH not recognized");
         }

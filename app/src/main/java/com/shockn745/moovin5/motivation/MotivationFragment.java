@@ -288,16 +288,16 @@ public class MotivationFragment extends Fragment implements
         );
         AbstractCard weatherCard = new CardWeather(getActivity(), result.mWeatherInfos);
         AbstractCard caloriesCard = new CardCalories(getActivity());
-        AbstractCard adCard = new CardAd(getActivity(), "PUB");
+        AbstractCard adCard = new CardAd(getActivity());
         AbstractCard routeCard = createRouteCard(result.mTransitInfos.getPolylineRoute());
 
         // Add cards to scheduler
         mCardScheduler.addCardToList(backAtHomeCard);
         mCardScheduler.addCardToList(weatherCard);
+        mCardScheduler.addCardToList(adCard);
         if (routeCard != null) {
             mCardScheduler.addCardToList(routeCard);
         }
-        mCardScheduler.addCardToList(adCard);
         mCardScheduler.addCardToList(caloriesCard);
 
         // Display cards
