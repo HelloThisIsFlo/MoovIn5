@@ -18,8 +18,13 @@
 
 
     <!-- Preference name & key -->
+
     <string name="pref_tutorial_key">tutorial</string>
 
+    <string name="pref_category_workout">Workout</string>
+    <string name="pref_category_misc">Misc.</string>
+
+    <!-- workout category -->
     <string name="pref_warmup">Warmup duration</string>
     <string name="pref_warmup_key">warmup</string>
     <string name="pref_stretching">Streching + shower duration</string>
@@ -27,6 +32,14 @@
     <string name="pref_summary_minute">Minutes</string>
     <string name="pref_workout_key">workout</string>
     <string name="pref_home_mode_key">home_mode</string>
+    <!-- misc category -->
+    <string name="pref_start_tutorial">Restart tutorial</string>
+    <string name="pref_start_tutorial_key">restart_tutorial</string>
+    <string name="pref_start_tutorial_summary">Gym location is deleted.
+        \nThe other settings remain safe.</string>
+    <string name="pref_credits">Credits</string>
+    <string name="pref_credits_key">credits</string>
+
 
     <string name="pref_card_weather_displayed">card_weather_displayed</string>
     <string name="pref_card_route_displayed">card_route_displayed</string>
@@ -85,6 +98,7 @@
         - Allow this application to access your location
     </string>
     <string name="alert_dismiss">Dismiss</string>
+    <string name="alert_ok">Ok</string>
     <string name="alert_fail">Unknown error, please try again!</string>
     <string name="alert_connection_fail">Connection failed,
         please check your internet connection</string>
@@ -97,5 +111,12 @@
     <string name="title_activity_tutorial_activity_step3">TutorialActivityStep3</string>
     <string name="title_activity_tutorial_activity_step4">TutorialActivityStep4</string>
     <string name="title_activity_tutorial_final_step">TutorialFinalStep</string>
+
+
+    <!-- Credits -->
+    <string name="credits_message">Credits bla bla bla
+        \n\nHey test
+        \nCoucou
+    </string>
 
 </resources>
