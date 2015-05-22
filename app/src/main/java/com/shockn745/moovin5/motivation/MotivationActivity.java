@@ -96,6 +96,7 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
                     .mapType(GoogleMap.MAP_TYPE_NORMAL);
             mMapView = new MapView(this, options);
             mMapView.onCreate(null);
+            mMapView.setClickable(false);
             mMapView.getMapAsync(motivationFragment);
 
 
