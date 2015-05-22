@@ -94,7 +94,7 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".tutorial.TutorialFinalStep"
+            android:name=".tutorial.TutorialActivityFinalStep"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_tutorial_final_step"
             android:theme="@style/AppTheme.NoActionBar" >

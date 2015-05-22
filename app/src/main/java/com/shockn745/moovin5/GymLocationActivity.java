@@ -2,7 +2,6 @@ package com.shockn745.moovin5;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,8 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.shockn745.moovin5.settings.PreferencesUtils;
-import com.shockn745.moovin5.tutorial.TutorialActivityStep4;
-import com.shockn745.moovin5.tutorial.TutorialFinalStep;
+import com.shockn745.moovin5.tutorial.TutorialActivityFinalStep;
 
 /**
  * Activity where the gym location is set by the user
@@ -158,7 +156,7 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
                             // Launch final tutorial step
                             Intent startFinalStep = new Intent(
                                     GymLocationActivity.this,
-                                    TutorialFinalStep.class
+                                    TutorialActivityFinalStep.class
                             );
                             startActivity(startFinalStep);
                             overridePendingTransition(

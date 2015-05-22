@@ -4,7 +4,6 @@
     <!-- Common -->
     <string name="tutorial_next">Next</string>
     <string name="tutorial_previous">Previous</string>
-    <string name="tutorial_done">Done</string>
 
 
     <!-- Step 1 -->
@@ -58,6 +57,10 @@
         \nIf you train inside only, pick a random location.
         \nYou\'ll be able to change it later ;)
     </string>
+
+    <!-- Final step -->
+    <string name="tutorial_final_step_done">Done</string>
+    <string name="tutorial_final_step_all_set">You\'re all set!</string>
 
 
 </resources>
