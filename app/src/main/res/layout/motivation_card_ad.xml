@@ -6,7 +6,7 @@
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     card_view:cardBackgroundColor="@color/primaryDark"
     android:id="@+id/ad_card_view"
-    android:layout_height="260dp"
+    android:layout_height="256dp"
     >
 
     <!-- TODO set message for people using adBlockers -->
