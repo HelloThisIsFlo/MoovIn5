@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.MenuItem;
@@ -14,7 +15,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -73,7 +73,7 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
             Toolbar mToolbar = (Toolbar) findViewById(R.id.gym_toolbar);
 
             // Add toolbar
-            setActionBar(mToolbar);
+            setSupportActionBar(mToolbar);
 
             // Add the navigation arrow
 
@@ -81,7 +81,7 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
             // initialized just above.
 
             //noinspection ConstantConditions
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
             // Initialize the GoogleMapOption with the location stored in the preferences
@@ -290,10 +290,8 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
                 if (!mAcceptButtonVisible) {
                     // Animate FABs
                     /// Init interpolator
-                    Interpolator interpolator = AnimationUtils.loadInterpolator(
-                            GymLocationActivity.this,
-                            android.R.interpolator.fast_out_slow_in
-                    );
+                    Interpolator interpolator =
+                            AnimCompatUtils.createInterpolator(GymLocationActivity.this);
 
                     /// Slide "satellite" button up
                     float slideLength = getResources().getDimension(R.dimen.fab_size)
@@ -344,10 +342,8 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
                             1f,
                             0).setDuration(1000);
 
-                    Interpolator interpolator = AnimationUtils.loadInterpolator(
-                            GymLocationActivity.this,
-                            android.R.interpolator.fast_out_slow_in
-                    );
+                    Interpolator interpolator =
+                            AnimCompatUtils.createInterpolator(GymLocationActivity.this);
                     flashAnimation.setInterpolator(interpolator);
 
                     // Handle visibility of Highlight FAB

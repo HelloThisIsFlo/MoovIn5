@@ -1,16 +1,16 @@
 package com.shockn745.moovin5;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * This class factor functions related to the tutorial mode at first launch of the application
  *
  * @author Kempenich Florian
  */
-public abstract class AbstractTutorialActivity extends Activity {
+public abstract class AbstractTutorialActivity extends AppCompatActivity {
 
     private boolean inTutorialMode = true;
 

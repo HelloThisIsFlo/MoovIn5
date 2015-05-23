@@ -1,6 +1,5 @@
 package com.shockn745.moovin5.motivation.background;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;

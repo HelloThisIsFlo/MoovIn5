@@ -11,8 +11,8 @@ import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 
+import com.shockn745.moovin5.AnimCompatUtils;
 import com.shockn745.moovin5.R;
 
 /**
@@ -58,6 +58,8 @@ class GymHomeOnTouchListener implements View.OnTouchListener {
     private final SharedPreferences mPrefs;
     private final String homeModePrefKey;
 
+    private Activity mActivity;
+
     private final static int TRANSLATION_VALUE_HIDDEN = -10;
 
     public GymHomeOnTouchListener(Activity activity,
@@ -71,6 +73,7 @@ class GymHomeOnTouchListener implements View.OnTouchListener {
         this.mGymLocationCard = gymLocationCard;
         this.mDuration = duration;
         this.mHomeMode = inHomeMode;
+        this.mActivity = activity;
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
         homeModePrefKey = activity.getString(R.string.pref_home_mode_key);
@@ -171,9 +174,15 @@ class GymHomeOnTouchListener implements View.OnTouchListener {
         //noinspection SuspiciousNameCombination
         int radius = (int) Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
 
-        Animator revealCardMenuAnim = ViewAnimationUtils
-                .createCircularReveal(toReveal, touchX, touchY, 0, radius)
-                .setDuration(mDuration);
+        Animator revealCardMenuAnim = AnimCompatUtils.createCircularReveal(
+                mActivity,
+                toReveal,
+                touchX,
+                touchY,
+                0,
+                radius,
+                mDuration
+        );
 
         revealCardMenuAnim.addListener(new Animator.AnimatorListener() {
             @Override

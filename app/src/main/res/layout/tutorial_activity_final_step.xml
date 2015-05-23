@@ -37,10 +37,7 @@
         android:layout_below="@id/tutorial_final_step_all_set_card_view"
         android:layout_above="@+id/tutorial_final_step_horizontal_separator"
         android:layout_centerHorizontal="true"
-        android:measureAllChildren="false"
-        android:transitionGroup="false"
-        android:nestedScrollingEnabled="false"
-        android:touchscreenBlocksFocus="false">
+        android:measureAllChildren="false">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

@@ -1,8 +1,14 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!--<item name="android:windowNoTitle">false</item>-->
         <!-- Set theme colors from http://www.google.com/design/spec/style/color.html#color-color-palette-->
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="android:colorPrimary">@color/primary</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="android:colorPrimaryDark">@color/primaryDark</item>
+        <!-- colorAccent is used as the default value for colorControlActivated
+             which is used to tint widgets -->
+        <item name="android:colorAccent">@color/accent</item>
         <item name="android:windowBackground">@drawable/motivation_background</item>
         <!-- You can also set colorControlNormal, colorControlActivated
              colorControlHighlight and colorSwitchThumbNormal. -->
@@ -10,15 +16,16 @@
 
     <!-- Theme for the GymActivity -->
     <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
+        <!--We will be using the toolbar so no need to show ActionBar-->
+        <item name="windowActionBar">false</item>
     </style>
 
     <!-- Styles for FABs -->
-    <style name="FloatingActionButton" parent="android:Widget.Button">
+    <style name="FloatingActionButton" parent="android:Widget.Material.Button">
         <item name="android:layout_width">@dimen/fab_size</item>
         <item name="android:layout_height">@dimen/fab_size</item>
+        <item name="android:stateListAnimator">@anim/fab_state_list_animator</item>
     </style>
 
     <style name="FloatingActionButton.Default">

@@ -28,10 +28,6 @@ public class CustomNumberPicker extends NumberPicker {
         super(context, attrs, defStyleAttr);
     }
 
-    public CustomNumberPicker(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
     @Override
     public void addView(@NonNull View child) {
         super.addView(child);

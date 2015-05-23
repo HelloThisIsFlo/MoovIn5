@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 
+import com.shockn745.moovin5.AnimCompatUtils;
 import com.shockn745.moovin5.R;
 
 import java.util.ArrayList;
@@ -296,7 +297,7 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
         mAddAnimations.add(holder);
         final ViewPropertyAnimatorCompat animation = ViewCompat.animate(view);
         animation.setInterpolator(
-                AnimationUtils.loadInterpolator(mContext, android.R.interpolator.fast_out_slow_in)
+                AnimCompatUtils.createInterpolator(mContext)
         );
         animation.y(addInfo.originY).setDuration(getAddDuration()).
                 setListener(new VpaListenerAdapter() {

@@ -2,27 +2,28 @@ package com.shockn745.moovin5.motivation;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toolbar;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
+import com.shockn745.moovin5.AnimCompatUtils;
 import com.shockn745.moovin5.R;
 import com.shockn745.moovin5.motivation.add_card_menu.AddCardMenuCallbacks;
 import com.shockn745.moovin5.motivation.add_card_menu.FABCallbacks;
@@ -33,7 +34,7 @@ import com.shockn745.moovin5.motivation.add_card_menu.FABCallbacks;
  *
  * @author Florian Kempenich
  */
-public class MotivationActivity extends Activity implements FABCallbacks, AddCardMenuCallbacks {
+public class MotivationActivity extends AppCompatActivity implements FABCallbacks, AddCardMenuCallbacks {
 
     private static final String LOG_TAG = MotivationActivity.class.getSimpleName();
     private int mRevealDuration;
@@ -78,13 +79,13 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
 
             // Set toolbar
             Toolbar mToolbar = (Toolbar) findViewById(R.id.motivation_toolbar);
-            setActionBar(mToolbar);
+            setSupportActionBar(mToolbar);
 
             // Add the navigation arrow
             /// Inspection removed, because it won't throw NullPointerException since the actionBar
             /// is initialized just above.
             //noinspection ConstantConditions
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
 
@@ -204,14 +205,15 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
         int radius = width/2;
 
         // Create the animator for the cardMenu (the start radius is zero)
-        final Animator revealCardMenuFABAnim = ViewAnimationUtils
-                .createCircularReveal(mAddCardButton, cx, cy, 0, radius)
-                .setDuration(REVEAL_DURATION);
-        Interpolator interpolator = AnimationUtils.loadInterpolator(
-                MotivationActivity.this,
-                android.R.interpolator.fast_out_slow_in
+        Animator revealCardMenuFABAnim = AnimCompatUtils.createCircularReveal(
+                this,
+                mAddCardButton,
+                cx,
+                cy,
+                0,
+                radius,
+                REVEAL_DURATION
         );
-        revealCardMenuFABAnim.setInterpolator(interpolator);
 
         // Make the view visible
         mAddCardButton.setVisibility(View.VISIBLE);
@@ -234,10 +236,7 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
                 .translationY(-mBottomPositionFAB)
                 .setDuration(getResources().getInteger(R.integer.card_menu_FAB_hide_duration))
                 .setInterpolator(
-                        AnimationUtils.loadInterpolator(
-                                this,
-                                android.R.interpolator.fast_out_linear_in
-                        )
+                        AnimCompatUtils.createInterpolator(this)
                 ).start();
     }
 
@@ -253,12 +252,8 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
         mAddCardButton.animate()
                 .translationY(0)
                 .setDuration(getResources().getInteger(R.integer.card_menu_FAB_hide_duration))
-                .setInterpolator(
-                        AnimationUtils.loadInterpolator(
-                                this,
-                                android.R.interpolator.fast_out_slow_in
-                        )
-                ).start();
+                .setInterpolator(AnimCompatUtils.createInterpolator(this))
+                .start();
     }
 
     @Override
@@ -294,14 +289,15 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
             int radius = (int) Math.sqrt(Math.pow(height, 2) + Math.pow(width, 2));
 
             // Create the animator for the cardMenu (the start radius is zero)
-            Animator revealCardMenuAnim = ViewAnimationUtils
-                    .createCircularReveal(mAddCardMenu, cx, cy, 0, radius)
-                    .setDuration(mRevealDuration);
-            Interpolator interpolator = AnimationUtils.loadInterpolator(
-                    MotivationActivity.this,
-                    android.R.interpolator.fast_out_slow_in
+            Animator revealCardMenuAnim = AnimCompatUtils.createCircularReveal(
+                    this,
+                    mAddCardMenu,
+                    cx,
+                    cy,
+                    0,
+                    radius,
+                    mRevealDuration
             );
-            revealCardMenuAnim.setInterpolator(interpolator);
 
             // Make the view visible
             mAddCardMenu.setVisibility(View.VISIBLE);
@@ -315,7 +311,7 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
                     0,
                     -45f
             ).setDuration(mRevealDuration);
-            rotateFAB.setInterpolator(interpolator);
+            rotateFAB.setInterpolator(AnimCompatUtils.createInterpolator(this));
 
             // Start the animations
             revealCardMenuAnim.start();
@@ -345,14 +341,15 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
 
 
             // Create the animator for the cardMenu (the start radius is zero)
-            Animator hideCardMenuAnim = ViewAnimationUtils
-                    .createCircularReveal(mAddCardMenu, cx, cy, radius, 0)
-                    .setDuration(mRevealDuration);
-            Interpolator interpolator = AnimationUtils.loadInterpolator(
-                    MotivationActivity.this,
-                    android.R.interpolator.fast_out_slow_in
+            Animator hideCardMenuAnim = AnimCompatUtils.createCircularReveal(
+                    this,
+                    mAddCardMenu,
+                    cx,
+                    cy,
+                    radius,
+                    0,
+                    mRevealDuration
             );
-            hideCardMenuAnim.setInterpolator(interpolator);
 
             // Add listener to hide the view when animation is done
             hideCardMenuAnim.addListener(new Animator.AnimatorListener() {
@@ -385,7 +382,7 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
                     -45f,
                     0
             ).setDuration(mRevealDuration);
-            rotateFAB.setInterpolator(interpolator);
+            rotateFAB.setInterpolator(AnimCompatUtils.createInterpolator(this));
 
             // Start the animations
             hideCardMenuAnim.start();

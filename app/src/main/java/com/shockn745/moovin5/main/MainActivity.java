@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -39,6 +40,10 @@ public class MainActivity extends AbstractTutorialActivity {
 
 
         setContentView(R.layout.main_activity);
+
+        // Add toolbar
+        setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
+
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.main_container, new MainFragment())

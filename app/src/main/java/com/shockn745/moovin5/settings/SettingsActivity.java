@@ -10,6 +10,8 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.shockn745.moovin5.R;
 import com.shockn745.moovin5.main.MainActivity;
@@ -19,7 +21,7 @@ import com.shockn745.moovin5.main.MainActivity;
  *
  * @author Florian Kempenich
  */
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends AppCompatActivity {
 
     /**
      *  Called when the activity is first created, or after Destroy
@@ -31,6 +33,13 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
             setContentView(R.layout.settings_activity);
+            // Add toolbar
+            setSupportActionBar((Toolbar) findViewById(R.id.settings_toolbar));
+            // Add the navigation arrow
+            // Inspection removed, because it won't throw NullPointerException since the actionBar is
+            // initialized just above.
+            //noinspection ConstantConditions
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getFragmentManager().beginTransaction()
                     .add(R.id.settings_container, new SettingsFragment())
                     .commit();

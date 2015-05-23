@@ -22,6 +22,7 @@ import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.shockn745.moovin5.AnimCompatUtils;
 import com.shockn745.moovin5.GymLocationActivity;
 import com.shockn745.moovin5.R;
 import com.shockn745.moovin5.motivation.MotivationActivity;
@@ -222,10 +223,7 @@ public class MainFragment extends Fragment {
                 + getResources().getDimension(R.dimen.fab_margin_bottom);
         Animation slideFAB = new TranslateAnimation(0, 0, slideLength, 0);
         slideFAB.setInterpolator(
-                AnimationUtils.loadInterpolator(
-                        getActivity(),
-                        android.R.interpolator.fast_out_slow_in
-                )
+                AnimCompatUtils.createInterpolator(getActivity())
         );
         slideFAB.setDuration(getResources().getInteger(R.integer.fab_anim_duration));
         slideFAB.setStartOffset(rollInGymHomeCard.getDuration());
