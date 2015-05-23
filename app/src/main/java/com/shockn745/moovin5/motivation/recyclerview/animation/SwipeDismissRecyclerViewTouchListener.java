@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.AbsListView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.shockn745.moovin5.R;
 import com.shockn745.moovin5.motivation.add_card_menu.AddCardMenuCallbacks;
@@ -308,15 +309,12 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     mDownX = motionEvent.getRawX();
                     mDownY = motionEvent.getRawY();
                     mDownPosition = mRecyclerView.getChildPosition(mDownView);
-                    if (mDismissCallbacks.canDismiss(mDownPosition)) {
-                        // Helper for tracking the velocity of touch events, for implementing
-                        // flinging and other such gestures
-                        // cf : Doc VelocityTracker
-                        mVelocityTracker = VelocityTracker.obtain();
-                        mVelocityTracker.addMovement(motionEvent);
-                    } else {
-                        mDownView = null;
-                    }
+
+                    // Helper for tracking the velocity of touch events, for implementing
+                    // flinging and other such gestures
+                    // cf : Doc VelocityTracker
+                    mVelocityTracker = VelocityTracker.obtain();
+                    mVelocityTracker.addMovement(motionEvent);
                 }
                 return false;
             }
@@ -373,7 +371,9 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     dismiss = (velocityX < 0) == (deltaX < 0);
                     dismissRight = mVelocityTracker.getXVelocity() > 0;
                 }
-                if (dismiss && mDownPosition != ListView.INVALID_POSITION) {
+                if (dismiss
+                        && mDownPosition != ListView.INVALID_POSITION
+                        && mDismissCallbacks.canDismiss(mDownPosition)) {
                     // dismiss
                     final View downView = mDownView; // mDownView gets null'd before animation ends
                     final int downPosition = mDownPosition;
@@ -399,6 +399,13 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                             });
                 } else {
                     // cancel
+                    if (dismiss && !mDismissCallbacks.canDismiss(mDownPosition)) {
+                        Toast.makeText(
+                                mActivity,
+                                mActivity.getString(R.string.add_card_menu_non_dissmissable_toast),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
                     mDownView.animate()
                             .translationX(0)
                             .alpha(1)

@@ -58,6 +58,7 @@
     <string name="add_card_menu_empty_set">No cards to add\n\nSwipe to remove a card</string>
     <string name="add_card_menu_toast_part_1">Card</string>
     <string name="add_card_menu_toast_part_2">added</string>
+    <string name="add_card_menu_non_dissmissable_toast">This card cannot be dismissed</string>
 
     <!-- Card Headers -->
     <string name="card_header_back_at_home">If you move in the next 5 minutes</string>
