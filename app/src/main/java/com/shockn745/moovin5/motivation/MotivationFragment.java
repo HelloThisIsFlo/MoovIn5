@@ -284,8 +284,8 @@ public class MotivationFragment extends Fragment implements
 
         // Add cards to scheduler
         mCardScheduler.addCardToList(backAtHomeCard);
-        mCardScheduler.addCardToList(weatherCard);
         mCardScheduler.addCardToList(adCard);
+        mCardScheduler.addCardToList(weatherCard);
         if (routeCard != null) {
             mCardScheduler.addCardToList(routeCard);
         }

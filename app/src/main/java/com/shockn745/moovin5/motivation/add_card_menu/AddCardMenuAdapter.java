@@ -2,6 +2,7 @@ package com.shockn745.moovin5.motivation.add_card_menu;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,6 +120,21 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (textToSet != null) {
             ((VH) holder).textView.setText(textToSet);
             ((VH) holder).setCardViewType(cardType);
+            if (cardType == EMPTY_SET) {
+                ((VH) holder).textView.setTextSize(
+                        TypedValue.COMPLEX_UNIT_PX,
+                        mActivity
+                            .getResources()
+                            .getDimension(R.dimen.add_card_menu_test_size_empty_set)
+                );
+            } else {
+                ((VH) holder).textView.setTextSize(
+                        TypedValue.COMPLEX_UNIT_PX,
+                        mActivity
+                            .getResources()
+                            .getDimension(R.dimen.add_card_menu_test_size)
+                );
+            }
         } else {
             throw new IllegalStateException("Card type not supported");
         }

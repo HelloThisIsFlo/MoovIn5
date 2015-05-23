@@ -114,7 +114,8 @@
 
     <style name="TextView.Content.MainInfo.GeneralVariation.HomeVariation"
         parent="TextView.Content.MainInfo.GeneralVariation">
-        <item name="android:textSize">@dimen/text_size_content_main_info_home</item>
+        <!-- Workaround : different value for pre-lollipop -->
+        <item name="android:textSize">35sp</item>
     </style>
 
 
