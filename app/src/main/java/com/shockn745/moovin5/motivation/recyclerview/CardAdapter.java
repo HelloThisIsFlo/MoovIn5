@@ -182,9 +182,15 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         } else if (holder instanceof CardCalories.CaloriesVH) {
             bindCaloriesCard((CardCalories.CaloriesVH) holder, position);
 
-        } else //noinspection StatementWithEmptyBody
-            if (holder instanceof CardAd.AdVH) {
-            // Nothing to do
+        } else if (holder instanceof CardAd.AdVH) {
+            CardAd.AdVH adVH = (CardAd.AdVH) holder;
+
+            // Add the AdView to the FrameLayout
+            // if necessary remove from the previous FrameLayout
+            if (mActivity.getAdView().getParent() != null) {
+                ((FrameLayout) mActivity.getAdView().getParent()).removeAllViews();
+            }
+            adVH.mFrameLayout.addView(mActivity.getAdView());
         } else {
             Log.d(LOG_TAG, "ERROR VH not recognized");
         }

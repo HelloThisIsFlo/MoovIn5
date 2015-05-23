@@ -16,6 +16,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toolbar;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
@@ -40,6 +44,7 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
     private CardView mAddCardMenu;
 
     private MapView mMapView;
+    private AdView mAdView;
 
     private boolean isFABHidden = true;
 
@@ -81,7 +86,25 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
             //noinspection ConstantConditions
             getActionBar().setDisplayHomeAsUpEnabled(true);
 
-            
+
+
+            ////////////
+            // AdView //
+            ////////////
+
+            // Init the AdView
+            mAdView = new AdView(this);
+            mAdView.setAdUnitId(getString(R.string.banner_ad_unit_id));
+            mAdView.setAdSize(AdSize.MEDIUM_RECTANGLE);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+            // Disable focus, to prevent recyclerview to scroll to the view when
+            // the ad is refreshed
+            mAdView.setFocusable(false);
+            mAdView.setFocusableInTouchMode(false);
+
+
+
             
             /////////////
             // MapView //
@@ -154,7 +177,9 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
         return mMapView;
     }
 
-
+    public AdView getAdView() {
+        return mAdView;
+    }
 
     ///////////////////
     // FAB Callbacks //

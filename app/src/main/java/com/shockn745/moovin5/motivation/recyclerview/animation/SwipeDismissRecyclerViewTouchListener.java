@@ -15,7 +15,6 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.AbsListView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toolbar;
 
@@ -125,7 +124,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
         this.mAddCardMenuCallbacks = addCardMenuCallbacks;
         this.mActivity = activity;
         mToolbar = (Toolbar) activity.findViewById(R.id.motivation_toolbar);
-        ImageButton mFAB = (ImageButton) activity.findViewById(R.id.add_card_button);
         ViewConfiguration vc = ViewConfiguration.get(recyclerView.getContext());
         mSlop = vc.getScaledTouchSlop();
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * 16;
