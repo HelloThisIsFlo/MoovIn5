@@ -87,6 +87,8 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
     private final AddCardMenuCallbacks mAddCardMenuCallbacks;
     private final Toolbar mToolbar;
     private final Activity mActivity;
+    private int mCurrentTranslationY;
+
 
     /**
      * The callback interface used by {@link SwipeDismissRecyclerViewTouchListener} to inform its client
@@ -165,8 +167,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
         return new RecyclerView.OnScrollListener() {
             private final static String LOG_TAG = "OnScrollListener";
 
-            private int mCurrentTranslationY;
-
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 setEnabled(newState != RecyclerView.SCROLL_STATE_DRAGGING);
@@ -238,16 +238,23 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             int lastItemPosition = getItemCount() - 1;
             if (findFirstCompletelyVisibleItemPosition() == firstItemPosition &&
                     findLastCompletelyVisibleItemPosition() == lastItemPosition) {
-                Log.d(LOG_TAG, "Show toolbar + FAB");
-                if (!isToolbarDisplayed()) {
-                    mToolbar.animate()
-                            .translationY(0)
-                            .setDuration(mActivity
-                                            .getResources()
-                                            .getInteger(R.integer.card_menu_FAB_hide_duration)
-                            );
-                    mFabCallbacks.unHideFAB();
-                }
+                showToolbar();
+            } else if (findLastCompletelyVisibleItemPosition()
+                    == findLastVisibleItemPosition()) {
+                showToolbar();
+            }
+        }
+
+        private void showToolbar() {
+            if (!isToolbarDisplayed()) {
+                mToolbar.animate()
+                        .translationY(0)
+                        .setDuration(mActivity
+                                        .getResources()
+                                        .getInteger(R.integer.card_menu_FAB_hide_duration)
+                        );
+                mFabCallbacks.unHideFAB();
+                mCurrentTranslationY = 0;
             }
         }
 
