@@ -19,9 +19,9 @@ public abstract class AbstractCard {
     public final static int CALORIES_VIEW_TYPE = 500;
     public final static int AD_VIEW_TYPE = 600;
 
-    private Activity mActivity;
+    private final Activity mActivity;
 
-    public AbstractCard(Activity activity) {
+    protected AbstractCard(Activity activity) {
         this.mActivity = activity;
     }
 

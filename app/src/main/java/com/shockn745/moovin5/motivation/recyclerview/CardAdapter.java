@@ -50,7 +50,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private final ArrayList<Integer> mRemovedCardsViewTypes;
     private final AddCardMenuAdapter mAddCardMenuAdapter;
 
-    private DrawPolylineCallback mDrawPolylineCallback;
+    private final DrawPolylineCallback mDrawPolylineCallback;
 
     public interface DrawPolylineCallback {
         void drawPolylineCallback();
@@ -293,7 +293,7 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
      * Also cache the removed cards in a stack
      * @param position Position of the card to remove
      */
-    public void removeCard(int position) {
+    private void removeCard(int position) {
         // Remove from dataset
         AbstractCard toCache = mDataSet.remove(position);
 
@@ -376,7 +376,6 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
         // Set the height of the recyclerview depending on the number of elements
         ViewGroup.LayoutParams layoutParams = holder.recyclerView.getLayoutParams();
-        float test = mActivity.getResources().getDimension(R.dimen.calories_recycler_view_list_item_height);
         layoutParams.height = (int) (card.getItems().length
                 * mActivity.getResources().getDimension(R.dimen.calories_recycler_view_list_item_height));
 

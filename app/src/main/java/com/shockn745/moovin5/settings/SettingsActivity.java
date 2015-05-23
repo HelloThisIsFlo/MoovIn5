@@ -139,7 +139,7 @@ public class SettingsActivity extends Activity {
                                     .setTitle(R.string.pref_credits)
                                     .setMessage(R.string.credits_message)
                                     .setPositiveButton(
-                                            getString(R.string.alert_ok),
+                                            getString(android.R.string.ok),
                                             new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(
@@ -165,6 +165,7 @@ public class SettingsActivity extends Activity {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
             // Test if OnSharedPreferenceChanged is being manually triggered
+            //noinspection StatementWithEmptyBody
             if (!mBindingPreferences) {
                 //Do something when preference changes
             }

@@ -61,15 +61,11 @@ public class MotivationFragment extends Fragment implements
 
     private RecyclerView mRecyclerView;
     private CardAdapter mAdapter;
-    private ArrayList<AbstractCard> mDataset;
     private Handler mHandler;
 
     private boolean mIsInLoadingState = true;
     private boolean mFirstLoadingCardDisplayed = false;
     private boolean mSecondLoadingCardDisplayed = false;
-
-    // Add times to schedule initial add animations
-    private long addTimes[];
 
     private GoogleMap mMap = null;
     private String mPolylineRoute = null;
@@ -79,11 +75,6 @@ public class MotivationFragment extends Fragment implements
 
     public void setShowFABCallback(FABCallbacks FABCallbacks) {
         this.mFABCallbacks = FABCallbacks;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override

@@ -18,7 +18,7 @@ import com.shockn745.moovin5.R;
  */
 public class CaloriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private CardCalories.CaloriesItem[] mDataSet;
+    private final CardCalories.CaloriesItem[] mDataSet;
 
     public CaloriesAdapter(CardCalories.CaloriesItem[] dataSet) {
         this.mDataSet = dataSet;

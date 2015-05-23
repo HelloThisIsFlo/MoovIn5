@@ -41,8 +41,6 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
 
     private MapView mMapView;
 
-    private int mBottomPositionFAB;
-
     private boolean isFABHidden = true;
 
     /**
@@ -204,7 +202,7 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
     @Override
     public void hideFAB() {
         isFABHidden = true;
-        mBottomPositionFAB = mAddCardButton.getBottom();
+        int mBottomPositionFAB = mAddCardButton.getBottom();
 
         // Animate the FAB out of the screen (UP direction)
         mAddCardButton.animate()
@@ -260,7 +258,9 @@ public class MotivationActivity extends Activity implements FABCallbacks, AddCar
             /// Get dimensions
             int width = mAddCardMenu.getWidth();
             int height = mAddCardMenu.getHeight();
+
             /// Start circle at top right corner
+            //noinspection UnnecessaryLocalVariable
             int cx = width;
             int cy = 0;
 

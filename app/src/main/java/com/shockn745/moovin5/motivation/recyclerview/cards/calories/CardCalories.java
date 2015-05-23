@@ -51,9 +51,9 @@ public class CardCalories extends AbstractCard {
         }
     }
 
-    private String mHeaderText;
-    private String mCaloriesText;
-    private CaloriesItem[] mItems;
+    private final String mHeaderText;
+    private final String mCaloriesText;
+    private final CaloriesItem[] mItems;
 
     public CardCalories(Activity activity) {
         super(activity);

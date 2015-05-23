@@ -36,12 +36,7 @@ public class MainFragment extends Fragment {
     private static final String LOG_TAG = MainFragment.class.getSimpleName();
 
     private ImageButton mMotivateButton;
-    private NumberPicker mDurationPicker;
     private TextView mWarningEditText;
-    private ImageView mHomeIcon;
-    private ImageView mGymIcon;
-
-    private boolean mInHomeMode;
 
     // Components for the timer used by mDurationPicker
     private Handler mHandler;
@@ -58,10 +53,10 @@ public class MainFragment extends Fragment {
 
         // Find elements by id
         mMotivateButton = (ImageButton) rootView.findViewById(R.id.main_moovit_button);
-        mDurationPicker = (NumberPicker) rootView.findViewById(R.id.duration_picker);
+        NumberPicker mDurationPicker = (NumberPicker) rootView.findViewById(R.id.duration_picker);
         mWarningEditText = (TextView) rootView.findViewById(R.id.warning_edit_text);
-        mHomeIcon = (ImageView) rootView.findViewById(R.id.main_home_image_view);
-        mGymIcon = (ImageView) rootView.findViewById(R.id.main_gym_image_view);
+        ImageView mHomeIcon = (ImageView) rootView.findViewById(R.id.main_home_image_view);
+        ImageView mGymIcon = (ImageView) rootView.findViewById(R.id.main_gym_image_view);
 
         // Get the preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -75,6 +70,7 @@ public class MainFragment extends Fragment {
         final CardView mGymCard = (CardView) rootView.findViewById(R.id.main_gym_card_view);
         final CardView mGymLocationCard = (CardView) rootView.findViewById(R.id.main_change_gym_card_view);
         // Retrieve inHomeMode
+        boolean mInHomeMode;
         if (prefs.contains(getString(R.string.pref_home_mode_key))) {
             // Init
             mInHomeMode = prefs.getBoolean(getString(R.string.pref_home_mode_key),false);

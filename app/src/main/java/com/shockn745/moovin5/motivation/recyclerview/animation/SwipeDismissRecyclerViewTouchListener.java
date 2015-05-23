@@ -60,17 +60,17 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             SwipeDismissRecyclerViewTouchListener.class.getSimpleName();
 
     // Cached ViewConfiguration and system-wide constant values
-    private int mSlop;
-    private int mMinFlingVelocity;
-    private int mMaxFlingVelocity;
-    private long mAnimationTime;
+    private final int mSlop;
+    private final int mMinFlingVelocity;
+    private final int mMaxFlingVelocity;
+    private final long mAnimationTime;
 
     // Fixed properties
-    private RecyclerView mRecyclerView;
-    private DismissCallbacks mDismissCallbacks;
+    private final RecyclerView mRecyclerView;
+    private final DismissCallbacks mDismissCallbacks;
     private int mViewWidth = 1; // 1 and not 0 to prevent dividing by zero
-    private Handler mHandler;
-    private long mRecyclerViewRemoveAnimationDuration;
+    private final Handler mHandler;
+    private final long mRecyclerViewRemoveAnimationDuration;
 
     // Transient properties
     private float mDownX;
@@ -84,11 +84,10 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
     private boolean mDismissAnimationRunning;
 
     // Properties for the OnScrollListener & LayoutManager
-    private FABCallbacks mFabCallbacks;
-    private AddCardMenuCallbacks mAddCardMenuCallbacks;
-    private Toolbar mToolbar;
-    private ImageButton mFAB;
-    private Activity mActivity;
+    private final FABCallbacks mFabCallbacks;
+    private final AddCardMenuCallbacks mAddCardMenuCallbacks;
+    private final Toolbar mToolbar;
+    private final Activity mActivity;
 
     /**
      * The callback interface used by {@link SwipeDismissRecyclerViewTouchListener} to inform its client
@@ -126,7 +125,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
         this.mAddCardMenuCallbacks = addCardMenuCallbacks;
         this.mActivity = activity;
         mToolbar = (Toolbar) activity.findViewById(R.id.motivation_toolbar);
-        mFAB = (ImageButton) activity.findViewById(R.id.add_card_button);
+        ImageButton mFAB = (ImageButton) activity.findViewById(R.id.add_card_button);
         ViewConfiguration vc = ViewConfiguration.get(recyclerView.getContext());
         mSlop = vc.getScaledTouchSlop();
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * 16;
@@ -149,7 +148,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      *
      * @param enabled Whether or not to watch for gestures.
      */
-    public void setEnabled(boolean enabled) {
+    private void setEnabled(boolean enabled) {
         mPaused = !enabled;
     }
 
@@ -462,11 +461,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      */
     private boolean isAddRemoveAnimationRunning() {
         RecyclerView.ItemAnimator itemAnimator = mRecyclerView.getItemAnimator();
-        if (itemAnimator != null) {
-            return itemAnimator.isRunning();
-        } else {
-            return false;
-        }
+        return itemAnimator != null && itemAnimator.isRunning();
     }
 
     private void performDismiss(final View dismissView, final int dismissPosition) {

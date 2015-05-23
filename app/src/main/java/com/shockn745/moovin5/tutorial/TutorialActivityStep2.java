@@ -1,6 +1,5 @@
 package com.shockn745.moovin5.tutorial;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;

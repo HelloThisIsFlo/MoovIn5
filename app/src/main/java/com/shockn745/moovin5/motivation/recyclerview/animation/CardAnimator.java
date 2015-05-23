@@ -51,37 +51,40 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
     }
 
     private static final String LOG_TAG = CardAnimator.class.getSimpleName();
-    private static final boolean DEBUG = false;
 
-    private ArrayList<ViewHolder> mPendingRemovals = new ArrayList<>();
-    private ArrayList<AddInfo> mPendingAdditions = new ArrayList<>();
-    private ArrayList<MoveInfo> mPendingMoves = new ArrayList<>();
-    private ArrayList<ChangeInfo> mPendingChanges = new ArrayList<>();
+    private final ArrayList<ViewHolder> mPendingRemovals = new ArrayList<>();
+    private final ArrayList<AddInfo> mPendingAdditions = new ArrayList<>();
+    private final ArrayList<MoveInfo> mPendingMoves = new ArrayList<>();
+    private final ArrayList<ChangeInfo> mPendingChanges = new ArrayList<>();
 
-    private ArrayList<ArrayList<AddInfo>> mAdditionsList =
+    private final ArrayList<ArrayList<AddInfo>> mAdditionsList =
             new ArrayList<>();
-    private ArrayList<ArrayList<MoveInfo>> mMovesList = new ArrayList<>();
-    private ArrayList<ArrayList<ChangeInfo>> mChangesList = new ArrayList<>();
+    private final ArrayList<ArrayList<MoveInfo>> mMovesList = new ArrayList<>();
+    private final ArrayList<ArrayList<ChangeInfo>> mChangesList = new ArrayList<>();
 
-    private ArrayList<ViewHolder> mAddAnimations = new ArrayList<>();
-    private ArrayList<ViewHolder> mMoveAnimations = new ArrayList<>();
-    private ArrayList<ViewHolder> mRemoveAnimations = new ArrayList<>();
-    private ArrayList<ViewHolder> mChangeAnimations = new ArrayList<>();
+    private final ArrayList<ViewHolder> mAddAnimations = new ArrayList<>();
+    private final ArrayList<ViewHolder> mMoveAnimations = new ArrayList<>();
+    private final ArrayList<ViewHolder> mRemoveAnimations = new ArrayList<>();
+    private final ArrayList<ViewHolder> mChangeAnimations = new ArrayList<>();
 
-    private Context mContext;
+    private final Context mContext;
 
-    private OnMoveAnimationEndListener mAnimationEndListener;
+    private final OnMoveAnimationEndListener mAnimationEndListener;
 
     public CardAnimator(Context mContext,
                         OnMoveAnimationEndListener listener) {
         this.mContext = mContext;
         this.mAnimationEndListener = listener;
         setAddDuration(mContext.getResources().getInteger(R.integer.card_add_anim_duration));
+        setRemoveDuration(mContext.getResources().getInteger(R.integer.card_remove_anim_duration));
     }
 
     private static class MoveInfo {
-        public ViewHolder holder;
-        public int fromX, fromY, toX, toY;
+        public final ViewHolder holder;
+        public final int fromX;
+        public final int fromY;
+        public final int toX;
+        public final int toY;
 
         private MoveInfo(ViewHolder holder, int fromX, int fromY, int toX, int toY) {
             this.holder = holder;
@@ -126,8 +129,8 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
      * Class to store original Y position
      */
     private static class AddInfo {
-        public ViewHolder holder;
-        public float originY;
+        public final ViewHolder holder;
+        public final float originY;
 
         private AddInfo(ViewHolder holder, float originY) {
             this.holder = holder;
@@ -550,26 +553,6 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
             }
         }
 
-        // animations should be ended by the cancel above.
-        if (mRemoveAnimations.remove(item) && DEBUG) {
-            throw new IllegalStateException("after animation is cancelled, item should not be in "
-                    + "mRemoveAnimations list");
-        }
-
-        if (mAddAnimations.remove(item) && DEBUG) {
-            throw new IllegalStateException("after animation is cancelled, item should not be in "
-                    + "mAddAnimations list");
-        }
-
-        if (mChangeAnimations.remove(item) && DEBUG) {
-            throw new IllegalStateException("after animation is cancelled, item should not be in "
-                    + "mChangeAnimations list");
-        }
-
-        if (mMoveAnimations.remove(item) && DEBUG) {
-            throw new IllegalStateException("after animation is cancelled, item should not be in "
-                    + "mMoveAnimations list");
-        }
         dispatchFinishedWhenDone();
     }
 
@@ -685,7 +668,7 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
         dispatchAnimationsFinished();
     }
 
-    void cancelAll(List<ViewHolder> viewHolders) {
+    private void cancelAll(List<ViewHolder> viewHolders) {
         for (int i = viewHolders.size() - 1; i >= 0; i--) {
             ViewCompat.animate(viewHolders.get(i).itemView).cancel();
         }

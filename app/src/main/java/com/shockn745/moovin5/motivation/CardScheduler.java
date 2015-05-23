@@ -17,13 +17,13 @@ import java.util.ArrayList;
  *
  * @author Kempenich Florian
  */
-public class CardScheduler {
+class CardScheduler {
 
-    private ArrayList<AbstractCard> pendingCards = new ArrayList<>();
-    private CardAdapter mAdapter;
-    private long mAddDuration;
-    private Handler mHandler;
-    private Activity mActivity;
+    private final ArrayList<AbstractCard> pendingCards = new ArrayList<>();
+    private final CardAdapter mAdapter;
+    private final long mAddDuration;
+    private final Handler mHandler;
+    private final Activity mActivity;
 
     /**
      * Create a new CardScheduler

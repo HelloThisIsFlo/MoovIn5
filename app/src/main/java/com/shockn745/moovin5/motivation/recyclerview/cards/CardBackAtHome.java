@@ -33,8 +33,8 @@ public class CardBackAtHome extends AbstractCard {
         }
     }
 
-    private String mBackAtHomeTimeString;
-    private String mMotivationalString;
+    private final String mBackAtHomeTimeString;
+    private final String mMotivationalString;
 
     public CardBackAtHome(Activity activity, Date backAtHomeTime) {
         super(activity);

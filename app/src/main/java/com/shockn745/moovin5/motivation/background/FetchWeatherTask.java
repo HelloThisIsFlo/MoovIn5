@@ -54,11 +54,9 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
     public final static int RESULT_OK = 0;
     public final static int CONNECTION_ERROR = 1;
 
-    private Context mContext;
-    private OnWeatherInfoRetrievedListener mListener;
+    private final OnWeatherInfoRetrievedListener mListener;
 
-    public FetchWeatherTask(Context context, OnWeatherInfoRetrievedListener listener) {
-        this.mContext = context;
+    public FetchWeatherTask(OnWeatherInfoRetrievedListener listener) {
         this.mListener = listener;
     }
 

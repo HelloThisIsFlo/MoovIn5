@@ -3,6 +3,7 @@ package com.shockn745.moovin5.main;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -19,7 +20,7 @@ import com.shockn745.moovin5.R;
  *
  * @author Kempenich Florian
  */
-public class GymHomeOnTouchListener implements View.OnTouchListener {
+class GymHomeOnTouchListener implements View.OnTouchListener {
 
     private class GymLocationAnimators {
         private ObjectAnimator translationAnimator;
@@ -54,7 +55,7 @@ public class GymHomeOnTouchListener implements View.OnTouchListener {
 
     private boolean mHomeMode;
 
-    private SharedPreferences mPrefs;
+    private final SharedPreferences mPrefs;
     private final String homeModePrefKey;
 
     private final static int TRANSLATION_VALUE_HIDDEN = -10;
@@ -97,6 +98,7 @@ public class GymHomeOnTouchListener implements View.OnTouchListener {
         }
     }
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (!mAnimationRunning) {
@@ -122,14 +124,6 @@ public class GymHomeOnTouchListener implements View.OnTouchListener {
         String homeModeString = mHomeMode ? "true" : "false";
         Log.d("touch listener", "home mode : " + homeModeString);
         return true;
-    }
-
-    /**
-     * Check if in HomeMode
-     * @return true if in homeMode
-     */
-    private boolean inHomeMode() {
-        return mHomeMode;
     }
 
 

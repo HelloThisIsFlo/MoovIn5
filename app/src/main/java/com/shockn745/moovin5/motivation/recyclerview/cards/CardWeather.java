@@ -19,9 +19,9 @@ import com.shockn745.moovin5.motivation.background.FetchWeatherTask;
 public class CardWeather extends AbstractCard {
 
     public static class WeatherVH extends RecyclerView.ViewHolder {
-        public TextView mTempTextView;
-        public TextView mForecastTextView;
-        public ImageView mImageView;
+        public final TextView mTempTextView;
+        public final TextView mForecastTextView;
+        public final ImageView mImageView;
 
         public WeatherVH(View itemView, final float ratio) {
             super(itemView);
@@ -29,24 +29,22 @@ public class CardWeather extends AbstractCard {
             this.mForecastTextView = (TextView) itemView.findViewById(R.id.forecast_text_view);
             this.mImageView = (ImageView) itemView.findViewById(R.id.weather_image_view);
 
-            final View cardView = itemView.findViewById(R.id.weather_image_view);
-
             // Set the height dynamically after layout (to be able to get the width parameter)
             itemView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    cardView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    ViewGroup.LayoutParams layoutParams = cardView.getLayoutParams();
-                    layoutParams.height = (int) (cardView.getWidth() / ratio);
-                    cardView.setLayoutParams(layoutParams);
+                    mImageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    ViewGroup.LayoutParams layoutParams = mImageView.getLayoutParams();
+                    layoutParams.height = (int) (mImageView.getWidth() / ratio);
+                    mImageView.setLayoutParams(layoutParams);
                 }
             });
         }
     }
 
-    private String mTempText;
-    private String mForecastText;
-    private int mImageResId;
+    private final String mTempText;
+    private final String mForecastText;
+    private final int mImageResId;
 
     public CardWeather(Activity activity, FetchWeatherTask.WeatherInfos weatherInfos) {
         super(activity);

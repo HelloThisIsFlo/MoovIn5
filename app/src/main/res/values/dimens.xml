@@ -5,8 +5,6 @@
 
     <dimen name="toolbar_elevation">4dp</dimen>
 
-    
-    
     <!-- FAB -->
     <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_resting_elevation">6dp</dimen>
@@ -32,9 +30,7 @@
     <dimen name="main_card_home_height">90dp</dimen>
     <dimen name="main_card_home_width">270dp</dimen>
     <dimen name="main_card_picker_height">250dp</dimen>
-    <dimen name="main_card_picker_width">240dp</dimen>
-    <dimen name="main_card_elevation_resting">4dp</dimen>
-    <dimen name="main_card_elevation_pressed">10dp</dimen>
+    <dimen name="main_card_picker_width">100dp</dimen>
 
 
 
@@ -42,7 +38,6 @@
     <!-- Add card menu -->
     <dimen name="add_card_menu_width">150dp</dimen>
     <dimen name="add_card_menu_height">150dp</dimen>
-    <dimen name="add_card_menu_list_item_height">30dp</dimen>
 
     <!-- Card -->
     <!-- /!\ Do not increase margin over 9dp -->
@@ -55,11 +50,8 @@
 
 
     <!-- Card Heights -->
-    <dimen name="card_ad_height">70dp</dimen>
     <dimen name="card_loading_height">100dp</dimen>
-    <dimen name="card_loading_simple_height">100dp</dimen>
     <dimen name="card_route_content_height">180dp</dimen>
-    <dimen name="card_weather_content_height">180dp</dimen>
 
     <!-- Calories card : recyclerView -->
     <dimen name="calories_recycler_view_list_item_height">70dp</dimen>

@@ -35,7 +35,7 @@ public class AddCardMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      * Also set the OnClickListener
      */
     private class VH extends RecyclerView.ViewHolder {
-        public TextView textView;
+        public final TextView textView;
         private int mCardViewType;
 
         public VH(View itemView,

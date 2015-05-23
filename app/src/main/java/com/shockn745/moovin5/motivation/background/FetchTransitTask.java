@@ -48,8 +48,8 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTas
     }
 
     public static class TransitInfos {
-        private int mTransitTime;
-        private String mPolylineRoute;
+        private final int mTransitTime;
+        private final String mPolylineRoute;
         private Date backAtHomeDate;
 
         public TransitInfos(int transitTime, String polylineRoute) {
@@ -85,10 +85,10 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTas
     private final static int EMPTY_ERROR = 5;
     public final static int NO_ROUTES_ERROR = 6;
 
-    private Activity mActivity;
-    private OnBackAtHomeTimeRetrievedListener mListener;
+    private final Activity mActivity;
+    private final OnBackAtHomeTimeRetrievedListener mListener;
 
-    private boolean mInHomeMode;
+    private final boolean mInHomeMode;
 
     public FetchTransitTask(Activity mActivity,
                             OnBackAtHomeTimeRetrievedListener mListener,

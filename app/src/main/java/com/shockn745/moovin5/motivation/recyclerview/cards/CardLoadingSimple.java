@@ -25,7 +25,7 @@ public class CardLoadingSimple extends AbstractCard {
         }
     }
 
-    private String mText;
+    private final String mText;
 
     public CardLoadingSimple(Activity activity, String text) {
         super(activity);

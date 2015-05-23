@@ -14,11 +14,8 @@ import com.shockn745.moovin5.R;
  */
 public class CardRoute extends AbstractCard {
 
-    private static final String LOG_TAG = CardRoute.class.getSimpleName();
-
-
     public static class RouteVH extends RecyclerView.ViewHolder {
-        public FrameLayout mFrameLayout;
+        public final FrameLayout mFrameLayout;
 
         public RouteVH(View itemView) {
             super(itemView);

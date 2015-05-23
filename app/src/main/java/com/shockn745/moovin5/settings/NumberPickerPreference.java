@@ -18,7 +18,7 @@ import com.shockn745.moovin5.R;
  *
  * @author Florian Kempenich
  */
-public class NumberPickerPreference extends DialogPreference {
+class NumberPickerPreference extends DialogPreference {
 
     private int mMinValue;
     private int mMaxValue;
@@ -91,12 +91,12 @@ public class NumberPickerPreference extends DialogPreference {
         setValue(restorePersistedValue ? getPersistedInt(mMinValue) : (Integer) defaultValue);
     }
 
-    public void setValue(int value) {
+    private void setValue(int value) {
         this.mValue = value;
         persistInt(this.mValue);
     }
 
-    public int getValue() {
+    private int getValue() {
         return this.mValue;
     }
 }

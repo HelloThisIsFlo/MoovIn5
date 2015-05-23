@@ -87,7 +87,7 @@ public class BackgroundController implements
     private static final String LOG_TAG = BackgroundController.class.getSimpleName();
 
     // Client used to communicate with the Google API for the location
-    private GoogleApiClient mGoogleApiClient;
+    private final GoogleApiClient mGoogleApiClient;
 
     // Location request parameters
     private static int LOC_REQ_INTERVAL;
@@ -99,23 +99,23 @@ public class BackgroundController implements
 
     public static final int CONN_OK = 11;
 
-    public static final int LOC_OK = 20;
-    public static final int LOC_FAIL = 21;
+    private static final int LOC_OK = 20;
+    private static final int LOC_FAIL = 21;
 
-    public static final int FETCH_TRANSIT_DONE = 30;
-    public static final int FETCH_TRANSIT_ERROR = 31;
-    public static final int FETCH_TRANSIT_CONNECTION_ERROR = 32;
-    public static final int FETCH_TRANSIT_NO_ROUTES = 33;
+    private static final int FETCH_TRANSIT_DONE = 30;
+    private static final int FETCH_TRANSIT_ERROR = 31;
+    private static final int FETCH_TRANSIT_CONNECTION_ERROR = 32;
+    private static final int FETCH_TRANSIT_NO_ROUTES = 33;
 
-    public static final int FETCH_WEATHER_DONE = 40;
-    public static final int FETCH_WEATHER_ERROR = 41;
-    public static final int FETCH_WEATHER_CONNECTION_ERROR = 42;
+    private static final int FETCH_WEATHER_DONE = 40;
+    private static final int FETCH_WEATHER_ERROR = 41;
+    private static final int FETCH_WEATHER_CONNECTION_ERROR = 42;
 
     public static final int CLEAR_RESOURCES = 100;
-    public static final int BG_PROCESS_SUCCESS = 101;
+    private static final int BG_PROCESS_SUCCESS = 101;
     private static final int GYM_NOT_INIT = 102;
 
-    public static final int TEST_SCENARIO = 999;
+    private static final int TEST_SCENARIO = 999;
 
     // Results of background tasks
     private FetchTransitTask.TransitInfos mTransitInfos = null;
@@ -125,10 +125,10 @@ public class BackgroundController implements
     private Location mLocation; // Current location of the user
     private Runnable mExpiredRunnable; // Expiration timer for when the location is not available
 
-    private Handler mHandler;
+    private final Handler mHandler;
 
-    private Activity mActivity;
-    private BackgroundControllerListener mListener;
+    private final Activity mActivity;
+    private final BackgroundControllerListener mListener;
 
     private boolean mFetchingLocation = false;
     private boolean mFetchLocationDone = false;
@@ -140,7 +140,7 @@ public class BackgroundController implements
     private boolean mFetchTransitSecondTry = false;
     private boolean mFetchWeatherSecondTry = false;
 
-    private boolean mInHomeMode;
+    private final boolean mInHomeMode;
 
 
     public BackgroundController(Activity mActivity, BackgroundControllerListener mListener) {
@@ -368,7 +368,7 @@ public class BackgroundController implements
         try {
             LatLng coordGym = PreferencesUtils.getCoordinatesFromPreferences(mActivity);
 
-            new FetchWeatherTask(mActivity, this).execute(coordGym);
+            new FetchWeatherTask(this).execute(coordGym);
 
         } catch (PreferencesUtils.PreferenceNotInitializedException e) {
             handleResult(GYM_NOT_INIT);

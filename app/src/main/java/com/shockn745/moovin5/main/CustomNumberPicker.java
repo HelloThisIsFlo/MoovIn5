@@ -1,7 +1,6 @@
 package com.shockn745.moovin5.main;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;

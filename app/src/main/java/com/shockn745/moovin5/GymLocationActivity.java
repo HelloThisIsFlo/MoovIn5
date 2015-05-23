@@ -50,7 +50,7 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
     private boolean mMaptypeIsHybrid = false;
     private boolean mAcceptButtonVisible = false;
 
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
     private Runnable mHintRunnable;
 
     /**
@@ -110,11 +110,9 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
 
             // Add the MapFragment
             MapFragment mapFragment = MapFragment.newInstance(options);
-            if (savedInstanceState == null) {
-                getFragmentManager().beginTransaction()
-                        .add(R.id.gym_container, mapFragment)
-                        .commit();
-            }
+            getFragmentManager().beginTransaction()
+                    .add(R.id.gym_container, mapFragment)
+                    .commit();
 
             // Register this Activity as the callback to get the GoogleMap object
             mapFragment.getMapAsync(this);
@@ -232,10 +230,10 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
 
     /**
      * Clear saveInstanceState to prevent activity from restoring.
-     * @param outState
+     * @param outState bundle to clear
      */
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.clear();
     }
 

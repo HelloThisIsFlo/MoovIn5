@@ -26,10 +26,6 @@ class SaveDurationTimer implements Runnable {
         this.mActivity = mActivity;
     }
 
-    public int getWorkoutDuration() {
-        return workoutDuration;
-    }
-
     public void setWorkoutDuration(int workoutDuration) {
         this.workoutDuration = workoutDuration;
     }
