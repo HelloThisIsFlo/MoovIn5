@@ -191,8 +191,6 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 ((FrameLayout) mActivity.getAdView().getParent()).removeAllViews();
             }
             adVH.mFrameLayout.addView(mActivity.getAdView());
-        } else {
-            Log.d(LOG_TAG, "ERROR VH not recognized");
         }
 
     }
@@ -334,13 +332,11 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         try {
             mDataSet.remove(0);
         } catch (IndexOutOfBoundsException e) {
-            Log.d(LOG_TAG, "First loading card was not yet shown");
         }
         try {
             mDataSet.remove(0);
             bothCardsShown = true;
         } catch (IndexOutOfBoundsException e) {
-            Log.d(LOG_TAG, "Second loading card was not yet shown");
             // Only first card removed
             notifyItemRemoved(0);
         }

@@ -141,8 +141,6 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
                     if (mCoordinates != null) {
                         PreferencesUtils.saveCoordinatesToPreferences(GymLocationActivity.this, mCoordinates);
 
-                        Log.v(LOG_TAG, "lat : " + mCoordinates.latitude);
-                        Log.v(LOG_TAG, "long : " + mCoordinates.longitude);
 
                         // Cancel hint
                         cancelHint();

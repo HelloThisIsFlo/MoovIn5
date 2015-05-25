@@ -125,7 +125,6 @@ class GymHomeOnTouchListener implements View.OnTouchListener {
             }
         }
         String homeModeString = mHomeMode ? "true" : "false";
-        Log.d("touch listener", "home mode : " + homeModeString);
         return true;
     }
 

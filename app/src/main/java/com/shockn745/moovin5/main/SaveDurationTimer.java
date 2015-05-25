@@ -44,7 +44,6 @@ class SaveDurationTimer implements Runnable {
             prefs.edit()
                     .putInt(mActivity.getString(R.string.pref_workout_key), workoutDuration)
                     .commit();
-            Log.d(LOG_TAG, "Workout duration saved in shared prefs");
         }
     }
 

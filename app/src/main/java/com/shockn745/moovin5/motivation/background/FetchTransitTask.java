@@ -154,7 +154,6 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTas
                 try {
                     // Init the URL
                     URL url = new URL(uri.toString());
-                    Log.d(LOG_TAG, url.toString());
 
                     // Create the request and connect
                     connection = (HttpURLConnection) url.openConnection();
@@ -198,7 +197,6 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTas
                             bufferedReader.close();
                         } catch (IOException e) {
                             e.printStackTrace();
-                            Log.d(LOG_TAG, "Problem closing the buffered reader !");
                         }
                     }
                 }
@@ -208,7 +206,6 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTas
                 if (jsonString != null) {
                     try {
                         // String too long to log => using debug mode instead
-                        // Log.d(LOG_TAG, jsonString);
                         TransitInfos transitInfos = parseTransitInfos(jsonString);
                         if (transitInfos == null) {
                             // No routes available
@@ -241,33 +238,26 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTas
     protected void onProgressUpdate(Integer... errorCode) {
         switch (errorCode[0]) {
             case ARG_ERROR:
-                Log.d(LOG_TAG, "Please provide an array of 2 arguments : " +
-                        "origin and destination !");
                 mListener.onBackAtHomeTimeRetrieved(null, ERROR);
                 break;
 
             case URL_ERROR:
-                Log.d(LOG_TAG, "Internal error : URL error");
                 mListener.onBackAtHomeTimeRetrieved(null, ERROR);
                 break;
 
             case CONNECTION_ERROR:
-                Log.d(LOG_TAG, "Connection error !");
                 mListener.onBackAtHomeTimeRetrieved(null, CONNECTION_ERROR);
                 break;
 
             case JSON_ERROR:
-                Log.d(LOG_TAG, "Error with JSON parsing !");
                 mListener.onBackAtHomeTimeRetrieved(null, ERROR);
                 break;
 
             case EMPTY_ERROR:
-                Log.d(LOG_TAG, "Empty JSON string !");
                 mListener.onBackAtHomeTimeRetrieved(null, ERROR);
                 break;
 
             case NO_ROUTES_ERROR:
-                Log.d(LOG_TAG, "No routes => Warn the user !");
                 mListener.onBackAtHomeTimeRetrieved(null, NO_ROUTES_ERROR);
                 break;
             default:
@@ -283,7 +273,6 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTas
     @Override
     protected void onPostExecute(TransitInfos transitInfos) {
         if (transitInfos != null) {
-            Log.d(LOG_TAG, "Transit time (in seconds) : " + transitInfos.getTransitTime());
 
             // Get workout, warmup & stretching times
             SharedPreferences prefs = PreferenceManager

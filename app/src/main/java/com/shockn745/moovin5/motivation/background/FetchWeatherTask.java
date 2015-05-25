@@ -149,7 +149,6 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
                 }
             }
         }
-        Log.d(LOG_TAG, forecastJsonStr);
 
         try {
             return parseJsonString(forecastJsonStr);
@@ -170,7 +169,6 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
                 mListener.onWeatherInfoRetrieved(null, ERROR);
                 break;
             default:
-                Log.d(LOG_TAG, "Unknown errorCode!");
         }
     }
 

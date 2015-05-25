@@ -169,7 +169,6 @@ public class MotivationFragment extends Fragment implements
     public void onDestroy() {
         super.onDestroy();
         mHandler.removeCallbacksAndMessages(null);
-        Log.d(LOG_TAG, "onDestroy");
     }
 
     /**
@@ -380,7 +379,6 @@ public class MotivationFragment extends Fragment implements
                     break;
 
                 default:
-                    Log.d(LOG_TAG, "Unknown error !");
             }
         }
 

@@ -314,7 +314,6 @@ public class BackgroundController implements
                 break;
 
             default:
-                Log.d(LOG_TAG, "handleResult : Result type not recognized");
                 break;
         }
     }
@@ -481,7 +480,6 @@ public class BackgroundController implements
                 break;
 
             default:
-                Log.d(LOG_TAG, "Error code not recognized!");
         }
     }
 
@@ -514,7 +512,6 @@ public class BackgroundController implements
                 break;
 
             default:
-                Log.d(LOG_TAG, "Error code not recognized!");
         }
 
     }

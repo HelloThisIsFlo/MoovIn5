@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.mediation.admob.AdMobExtras;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
@@ -97,7 +98,17 @@ public class MotivationActivity extends AppCompatActivity implements FABCallback
             mAdView = new AdView(this);
             mAdView.setAdUnitId(getString(R.string.banner_ad_unit_id));
             mAdView.setAdSize(AdSize.MEDIUM_RECTANGLE);
-            AdRequest adRequest = new AdRequest.Builder().build();
+            Bundle bundle = new Bundle();
+            bundle.putString("color_bg", "00ACC1");
+//            bundle.putString("color_bg_top", "FFFFFF");
+//            bundle.putString("color_border", "FFFFFF");
+//            bundle.putString("color_link", "000080");
+            bundle.putString("color_text", "FFFFFF");
+//            bundle.putString("color_url", "008000");
+
+            AdMobExtras extras = new AdMobExtras(bundle);
+            AdRequest adRequest = new AdRequest.Builder()
+                    .addNetworkExtras(extras).build();
             mAdView.loadAd(adRequest);
             // Disable focus, to prevent recyclerview to scroll to the view when
             // the ad is refreshed
