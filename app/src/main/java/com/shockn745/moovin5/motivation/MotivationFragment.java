@@ -151,8 +151,6 @@ public class MotivationFragment extends Fragment implements
         super.onResume();
 
         // Connect the GoogleApiClient
-        // TODO Uncomment for test scenario
-//        mBackgroundController.handleResult(BackgroundController.TEST_SCENARIO);
         mBackgroundController.handleResult(BackgroundController.INIT_LOADING);
     }
 
@@ -206,7 +204,6 @@ public class MotivationFragment extends Fragment implements
                     // Check loading state at execution
                     if (mIsInLoadingState && !mFirstLoadingCardDisplayed) {
                         mFirstLoadingCardDisplayed = true;
-                        // TODO use random sentences from list
                         mAdapter.addCard(
                                 new CardLoading(
                                         getActivity(),

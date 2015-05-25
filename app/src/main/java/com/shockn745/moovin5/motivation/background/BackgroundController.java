@@ -115,7 +115,6 @@ public class BackgroundController implements
     private static final int BG_PROCESS_SUCCESS = 101;
     private static final int GYM_NOT_INIT = 102;
 
-    private static final int TEST_SCENARIO = 999;
 
     // Results of background tasks
     private FetchTransitTask.TransitInfos mTransitInfos = null;
@@ -313,20 +312,6 @@ public class BackgroundController implements
                         BackgroundControllerListener.ERROR_GYM_NOT_INITIALIZED
                 );
                 break;
-
-            case TEST_SCENARIO:
-                mListener.onLoadingStateFinished();
-                FetchTransitTask.TransitInfos transitInfos = new FetchTransitTask.TransitInfos(
-                        -1,
-                        "s{j_I{itpANlEeLc@[fGFV@CcBfc@C{@Fi@J_A@EHq@CAYUCREJEVAPF@b@BZ@nE?j@O"
-                );
-                transitInfos.setBackAtHomeDate(new Date(2015, 4, 28));
-                mListener.onBackgroundProcessDone(
-                        new BackgroundProcessResult(
-                                transitInfos,
-                                new FetchWeatherTask.WeatherInfos(19, "Test forecast", 800)
-                        )
-                );
 
             default:
                 Log.d(LOG_TAG, "handleResult : Result type not recognized");

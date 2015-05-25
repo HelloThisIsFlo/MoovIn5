@@ -30,11 +30,9 @@
     <!-- Parameters for the location request -->
     <integer name="location_request_interval">1000</integer>
     <integer name="location_request_fastest_interval">500</integer>
-    <!-- TODO check if 30 sec is enough -->
     <integer name="location_request_expiration">30000</integer>
 
     <!-- Parameter for the calories processing -->
-    <!-- TODO Update with more accurate coefficient -->
     <integer name="coeff_calories_x10">93</integer>
     <integer name="calories_croissant_cals">280</integer>
     <integer name="calories_balanced_cals">700</integer>

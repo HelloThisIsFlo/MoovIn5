@@ -112,9 +112,30 @@
 
 
     <!-- Credits -->
-    <string name="credits_message">Credits bla bla bla
-        \n\nHey test
-        \nCoucou
+    <string name="credits_message"><div>Icon made by
+        <a href="http://www.unocha.org" title="OCHA">OCHA</a>
+            from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>
+            is licensed under
+            <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">
+                CC BY 3.0</a>
+        </div>
+        \n<div>Icon made by <a href="http://www.freepik.com" title="Freepik">Freepik</a>
+            from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>
+            is licensed under
+            <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">
+                CC BY 3.0</a>
+        </div>
+        \n<div>Background image made by
+            <a href="http://www.shutterstock.com/gallery-1621796p1.html" title="Pulvas">Pulvas</a>
+            from
+            <a href="http://www.shutterstock.com/" title="ShutterStock">www.ShutterStock.com</a>
+        </div>
+        \n<div>Launcher icon made by
+            <a href="http://www.shutterstock.com/gallery-2084027p1.html" title="Yershov Oleksandr">
+                Yershov Oleksandr</a>
+            from
+            <a href="http://www.shutterstock.com/" title="ShutterStock">www.ShutterStock.com</a>
+        </div>
     </string>
 
 </resources>

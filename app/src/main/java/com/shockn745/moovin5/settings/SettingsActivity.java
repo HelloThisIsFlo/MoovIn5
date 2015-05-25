@@ -146,7 +146,7 @@ public class SettingsActivity extends AppCompatActivity {
                             // Create dialog
                             AlertDialog dialog = new AlertDialog.Builder(getActivity())
                                     .setTitle(R.string.pref_credits)
-                                    .setMessage(R.string.credits_message)
+                                    .setMessage(getText(R.string.credits_message))
                                     .setPositiveButton(
                                             getString(android.R.string.ok),
                                             new DialogInterface.OnClickListener() {
