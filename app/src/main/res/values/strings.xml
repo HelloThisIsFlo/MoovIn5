@@ -38,6 +38,13 @@
         \nThe other settings remain safe.</string>
     <string name="pref_credits">Credits</string>
     <string name="pref_credits_key">credits</string>
+    <string name="pref_feedback">Send feedback</string>
+    <string name="pref_feedback_key">feedback</string>
+
+    <string name="pref_feedback_email">shockn745@gmail.com</string>
+    <string name="pref_feedback_subject">FEEDBACK : MoovIn5</string>
+    <string name="pref_feedback_body">Please enter your feedback here.
+        \nI\'m glad to hear from you :)</string>
 
 
     <string name="pref_card_weather_displayed">card_weather_displayed</string>

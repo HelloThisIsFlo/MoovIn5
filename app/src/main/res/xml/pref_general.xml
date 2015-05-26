@@ -27,6 +27,10 @@
             android:key="@string/pref_credits_key"
             android:title="@string/pref_credits"
             />
+        <Preference
+            android:key="@string/pref_feedback_key"
+            android:title="@string/pref_feedback"
+            />
 
     </PreferenceCategory>
 

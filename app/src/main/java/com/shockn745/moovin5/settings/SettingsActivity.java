@@ -2,9 +2,11 @@ package com.shockn745.moovin5.settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -91,6 +93,23 @@ public class SettingsActivity extends AppCompatActivity {
 
             // Init the credits preference
             initCreditsPref();
+
+            // Init the feedback preference
+            initFeedbackPref();
+
+            // TODO add "rate the app" link
+//            Uri uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
+//            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+//            try {
+//                startActivity(goToMarket);
+//            } catch (ActivityNotFoundException e) {
+//                startActivity(new Intent(
+//                        Intent.ACTION_VIEW,
+//                        Uri.parse("http://play.google.com/store/apps/details?id="
+//                                + getActivity().getPackageName()
+//                        ))
+//                );
+//            }
         }
 
 
@@ -169,6 +188,43 @@ public class SettingsActivity extends AppCompatActivity {
             pref.setOnPreferenceClickListener(listener);
         }
 
+        /**
+         * Set an OnClickListener that send an email to me
+         */
+        private void initFeedbackPref() {
+
+            Preference pref = findPreference(getString(R.string.pref_feedback_key));
+
+            // Create listener
+            Preference.OnPreferenceClickListener listener =
+                    new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            // Send email feedback
+                            Intent sendEmail = new Intent(
+                                    Intent.ACTION_SENDTO,
+                                    Uri.fromParts(
+                                            "mailto",
+                                            getString(R.string.pref_feedback_email),
+                                            null)
+                            );
+                            sendEmail.putExtra(
+                                    Intent.EXTRA_SUBJECT,
+                                    getString(R.string.pref_feedback_subject)
+                            );
+                            sendEmail.putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    getString(R.string.pref_feedback_body)
+                            );
+
+                            startActivity(sendEmail);
+
+                            return true;
+                        }
+                    };
+
+            pref.setOnPreferenceClickListener(listener);
+        }
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
