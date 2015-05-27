@@ -96,7 +96,7 @@ public class MotivationActivity extends AppCompatActivity implements FABCallback
 
             // Init the AdView
             mAdView = new AdView(this);
-            mAdView.setAdUnitId(getString(R.string.banner_ad_unit_id_debug));
+            mAdView.setAdUnitId(getString(R.string.banner_ad_unit_id));
             mAdView.setAdSize(AdSize.MEDIUM_RECTANGLE);
             Bundle bundle = new Bundle();
             bundle.putString("color_bg", "00ACC1");
