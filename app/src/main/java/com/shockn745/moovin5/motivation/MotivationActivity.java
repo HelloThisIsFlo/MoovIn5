@@ -95,7 +95,7 @@ public class MotivationActivity extends AppCompatActivity implements FABCallback
 
             // Init the AdView
             mAdView = new AdView(this);
-            mAdView.setAdUnitId(getString(R.string.banner_ad_unit_id));
+            mAdView.setAdUnitId(getString(R.string.banner_ad_unit_id_debug));
             mAdView.setAdSize(AdSize.MEDIUM_RECTANGLE);
             AdRequest adRequest = new AdRequest.Builder().build();
             mAdView.loadAd(adRequest);

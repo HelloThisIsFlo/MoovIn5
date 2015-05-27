@@ -23,6 +23,7 @@
             android:gravity="start"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             />
 
         <TextView
@@ -30,8 +31,10 @@
             android:id="@+id/forecast_text_view"
             android:gravity="end"
             android:layout_toEndOf="@id/temperature_text_view"
+            android:layout_toRightOf="@id/temperature_text_view"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             />
 
     </RelativeLayout>

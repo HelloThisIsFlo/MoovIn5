@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.shockn745.moovin5" >
+    package="com.shockn745.moovin5">
 
     <!-- Permissions used by Google Maps Android API -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -98,7 +98,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/api_key_maps" />
+            android:value="@string/api_key_maps_debug" />
 
         <uses-library android:name="com.google.android.maps" />
 

@@ -41,7 +41,9 @@
         style="@style/FloatingActionButton.Default"
         android:src="@drawable/ic_add"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:visibility="invisible"
         android:layout_marginTop="@dimen/fab_margin_top" />
@@ -56,6 +58,7 @@
         android:layout_height="@dimen/add_card_menu_height"
         android:layout_below="@id/add_card_button"
         android:layout_toStartOf="@id/add_card_button"
+        android:layout_toLeftOf="@id/add_card_button"
         android:visibility="invisible"
         card_view:cardCornerRadius="2dp"
         card_view:cardElevation="6dp">

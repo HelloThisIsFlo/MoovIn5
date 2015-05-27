@@ -15,12 +15,14 @@
         android:background="@color/accent"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"/>
 
     <TextView
         style="@style/TextView.Content.CalorieItemVariation"
         android:id="@+id/calories_list_item_text_view"
         android:layout_toEndOf="@id/calories_list_item_image_view"
+        android:layout_toRightOf="@id/calories_list_item_image_view"
         android:layout_centerVertical="true"/>
 
 

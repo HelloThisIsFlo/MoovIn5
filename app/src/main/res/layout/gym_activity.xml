@@ -29,7 +29,9 @@
         style="@style/FloatingActionButton.Default"
         android:src="@drawable/ic_satellite_view"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/fab_margin_bottom" />
 
@@ -38,7 +40,9 @@
         style="@style/FloatingActionButton.Default"
         android:src="@drawable/ic_done"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/fab_margin_bottom"
         android:visibility="gone" />
@@ -48,7 +52,9 @@
         style="@style/FloatingActionButton.Highlight"
         android:src="@drawable/ic_done"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/fab_margin_bottom"
         android:visibility="gone" />
