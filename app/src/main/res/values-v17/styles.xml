@@ -37,8 +37,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginBottom">@dimen/card_margin</item>
         <item name="android:layout_marginTop">@dimen/card_margin</item>
-        <item name="android:layout_marginLeft">@dimen/card_side_margin</item>
-        <item name="android:layout_marginRight">@dimen/card_side_margin</item>
+        <item name="android:layout_marginStart">@dimen/card_side_margin</item>
+        <item name="android:layout_marginEnd">@dimen/card_side_margin</item>
         <item name="cardCornerRadius">@dimen/card_corner_radius</item>
     </style>
     <style name="Card.GymHomeVariation" parent="Card">
@@ -53,7 +53,7 @@
         <item name="android:textColor">@color/textColor</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingStart">10dp</item>
     </style>
 
     <style name="TextView.LoadingVariation" parent="TextView">
@@ -81,7 +81,7 @@
     </style>
 
     <style name="TextView.Content.GymVariation" parent="TextView.Content">
-        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingStart">0dp</item>
     </style>
 
     <style name="TextView.Content.CalorieItemVariation" parent="TextView.Content">
@@ -102,8 +102,8 @@
     <style name="TextView.Content.MainInfo.WeatherVariation" parent="TextView.Content.MainInfo">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:background">@color/weatherTint</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
         <!-- cf. motivation_card_weather.xmlweather.xml for padding start & end-->
     </style>
 
