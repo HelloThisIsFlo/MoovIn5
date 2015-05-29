@@ -97,19 +97,8 @@ public class SettingsActivity extends AppCompatActivity {
             // Init the feedback preference
             initFeedbackPref();
 
-            // TODO add "rate the app" link
-//            Uri uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
-//            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-//            try {
-//                startActivity(goToMarket);
-//            } catch (ActivityNotFoundException e) {
-//                startActivity(new Intent(
-//                        Intent.ACTION_VIEW,
-//                        Uri.parse("http://play.google.com/store/apps/details?id="
-//                                + getActivity().getPackageName()
-//                        ))
-//                );
-//            }
+            // Init the rate preference
+            initRatePref();
         }
 
 
@@ -218,6 +207,42 @@ public class SettingsActivity extends AppCompatActivity {
                             );
 
                             startActivity(sendEmail);
+
+                            return true;
+                        }
+                    };
+
+            pref.setOnPreferenceClickListener(listener);
+        }
+
+        /**
+         * Set an OnClickListener that open the app page on the play store
+         */
+        private void initRatePref() {
+            Preference pref = findPreference(getString(R.string.pref_rate_key));
+            final String packageName = getActivity().getApplicationContext().getPackageName();
+
+            // Create listener
+            Preference.OnPreferenceClickListener listener =
+                    new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+
+
+                            // Launch play store
+                            Uri uri = Uri.parse("market://details?id=" + packageName);
+                            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                            try {
+                                startActivity(goToMarket);
+                            } catch (ActivityNotFoundException e) {
+                                // If play store not present : go to website
+                                Intent goToWebsite = new Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("http://play.google.com/store/apps/details?id="
+                                                + packageName)
+                                );
+                                startActivity(goToWebsite);
+                            }
 
                             return true;
                         }

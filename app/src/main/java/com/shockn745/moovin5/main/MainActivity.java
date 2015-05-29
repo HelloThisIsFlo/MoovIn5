@@ -60,6 +60,9 @@ public class MainActivity extends AbstractTutorialActivity {
                         Color.rgb(darkenValue, darkenValue, darkenValue),
                         android.graphics.PorterDuff.Mode.MULTIPLY
                 );
+
+        // Init prompt user to rate the app
+        AppRater.app_launched(this);
     }
 
 

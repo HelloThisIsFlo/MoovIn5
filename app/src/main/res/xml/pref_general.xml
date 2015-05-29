@@ -31,6 +31,10 @@
             android:key="@string/pref_feedback_key"
             android:title="@string/pref_feedback"
             />
+        <Preference
+            android:key="@string/pref_rate_key"
+            android:title="@string/pref_rate"
+            />
 
     </PreferenceCategory>
 

@@ -40,6 +40,8 @@
     <string name="pref_credits_key">credits</string>
     <string name="pref_feedback">Send feedback</string>
     <string name="pref_feedback_key">feedback</string>
+    <string name="pref_rate">Rate the app</string>
+    <string name="pref_rate_key">rate</string>
 
     <string name="pref_feedback_email">shockn745@gmail.com</string>
     <string name="pref_feedback_subject">FEEDBACK : MoovIn5</string>
@@ -116,6 +118,19 @@
     <string name="title_activity_tutorial_activity_step3">TutorialActivityStep3</string>
     <string name="title_activity_tutorial_activity_step4">TutorialActivityStep4</string>
     <string name="title_activity_tutorial_final_step">TutorialFinalStep</string>
+
+
+
+    <!-- AppRater -->
+    <!-- Neutral & negative seem reversed, but it's to have a better organisation of the buttons -->
+    <string name="app_rater_dialog_title">Rate</string>
+    <string name="app_rater_dialog_positive">Rate it!</string>
+    <string name="app_rater_dialog_neutral">Never</string>
+    <string name="app_rater_dialog_negative">Later</string>
+    <string name="app_rater_dialog_message_part_1">If you enjoy using </string>
+    <string name="app_rater_dialog_message_part_2">,
+        please take a moment to rate it.\nThanks for your support!</string>
+
 
 
     <!-- Credits -->
