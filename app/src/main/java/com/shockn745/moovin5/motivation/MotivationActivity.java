@@ -99,10 +99,6 @@ public class MotivationActivity extends AppCompatActivity implements FABCallback
             mAdView.setAdSize(AdSize.MEDIUM_RECTANGLE);
             AdRequest adRequest = new AdRequest.Builder().build();
             mAdView.loadAd(adRequest);
-            // Disable focus, to prevent recyclerview to scroll to the view when
-            // the ad is refreshed
-            mAdView.setFocusable(false);
-            mAdView.setFocusableInTouchMode(false);
 
 
 
