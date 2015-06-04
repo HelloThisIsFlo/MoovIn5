@@ -56,8 +56,6 @@ import com.shockn745.moovin5.motivation.add_card_menu.FABCallbacks;
  *
  */
 public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListener {
-    private static final String LOG_TAG =
-            SwipeDismissRecyclerViewTouchListener.class.getSimpleName();
 
     // Cached ViewConfiguration and system-wide constant values
     private final int mSlop;
@@ -166,8 +164,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      */
     public RecyclerView.OnScrollListener makeScrollListener() {
         return new RecyclerView.OnScrollListener() {
-            private final static String LOG_TAG = "OnScrollListener";
-
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 setEnabled(newState != RecyclerView.SCROLL_STATE_DRAGGING);
@@ -220,7 +216,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
     private class ToolbarLinearLayoutManager
             extends LinearLayoutManager
             implements CardAnimator.OnMoveAnimationEndListener {
-        private final String LOG_TAG = ToolbarLinearLayoutManager.class.getSimpleName();
 
         public ToolbarLinearLayoutManager(Context context) {
             super(context);

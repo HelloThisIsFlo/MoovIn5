@@ -3,7 +3,6 @@ package com.shockn745.moovin5.motivation.background;
 import android.app.Activity;
 import android.content.IntentSender;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -20,8 +19,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 public class ConnectionListener
         implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
-
-    private static final String LOG_TAG = ConnectionListener.class.getSimpleName();
 
     // Request code to use when launching the resolution activity
     // Checked in MotivationFragment.OnActivityResult(...)
@@ -42,8 +39,6 @@ public class ConnectionListener
      */
     @Override
     public void onConnected(Bundle bundle) {
-        Log.i(LOG_TAG, "Location service connected");
-
         mBackgroundController.handleResult(BackgroundController.CONN_OK);
     }
 
@@ -54,7 +49,6 @@ public class ConnectionListener
      */
     @Override
     public void onConnectionSuspended(int i) {
-        Log.i(LOG_TAG, "Location service suspended! Please reconnect");
     }
 
     /**
@@ -76,8 +70,6 @@ public class ConnectionListener
         } else {
             // TODO implement dialogError
             // See : http://developer.android.com/google/auth/api-client.html
-            Log.i(LOG_TAG, "Location services connection failed with code "
-                    + connectionResult.getErrorCode());
         }
 
     }

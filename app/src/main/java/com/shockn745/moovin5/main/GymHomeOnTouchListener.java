@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 

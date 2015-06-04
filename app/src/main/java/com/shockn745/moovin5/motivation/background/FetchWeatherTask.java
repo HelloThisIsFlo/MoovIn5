@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.shockn745.moovin5.R;
@@ -26,8 +25,6 @@ import java.net.URL;
  * @author Florian Kempenich
  */
 public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTask.WeatherInfos> {
-
-    private static final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
     public static class WeatherInfos {
         public final double mTemperature;
@@ -118,7 +115,6 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
                     .appendQueryParameter(MODE_PARAM, mode)
                     .appendQueryParameter(UNIT_PARAM, unit);
             String uriString = builder.build().toString();
-            Log.v(LOG_TAG, "BUILT URI : " + uriString);
 
             URL url = new URL(uriString);
             // Create the request to OpenWeatherMap, and open the connection
@@ -151,7 +147,6 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
             forecastJsonStr = buffer.toString();
 
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error ", e);
             // If the code didn't successfully get the weather data, there's no point
             // in attemping to parse it.
             publishProgress(CONNECTION_ERROR);
@@ -164,7 +159,6 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
                 try {
                     reader.close();
                 } catch (final IOException e) {
-                    Log.e(LOG_TAG, "Error closing stream", e);
                 }
             }
         }
@@ -172,7 +166,6 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
         try {
             return parseJsonString(forecastJsonStr);
         } catch (JSONException e) {
-            Log.e(LOG_TAG, "Error ", e);
             publishProgress(ERROR);
             return null;
         }

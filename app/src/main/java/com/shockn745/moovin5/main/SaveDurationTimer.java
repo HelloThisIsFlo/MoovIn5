@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.shockn745.moovin5.R;
 
@@ -16,8 +15,6 @@ import com.shockn745.moovin5.R;
  * @author Florian Kempenich
  */
 class SaveDurationTimer implements Runnable {
-
-    private static final String LOG_TAG = SaveDurationTimer.class.getSimpleName();
 
     private int workoutDuration = -1;
     private final Activity mActivity;

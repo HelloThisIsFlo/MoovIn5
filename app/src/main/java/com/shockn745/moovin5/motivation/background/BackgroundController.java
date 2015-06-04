@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -14,8 +13,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.shockn745.moovin5.R;
 import com.shockn745.moovin5.settings.PreferencesUtils;
-
-import java.util.Date;
 
 /**
  * Class used to factor all the functions and parameters related to handling
@@ -83,8 +80,6 @@ public class BackgroundController implements
         void onBackgroundProcessError(int errorCode);
 
     }
-
-    private static final String LOG_TAG = BackgroundController.class.getSimpleName();
 
     // Client used to communicate with the Google API for the location
     private final GoogleApiClient mGoogleApiClient;

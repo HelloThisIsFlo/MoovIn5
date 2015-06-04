@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +29,9 @@ import com.shockn745.moovin5.motivation.background.ConnectionListener;
 import com.shockn745.moovin5.motivation.recyclerview.CardAdapter;
 import com.shockn745.moovin5.motivation.recyclerview.animation.CardAnimator;
 import com.shockn745.moovin5.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
+import com.shockn745.moovin5.motivation.recyclerview.cards.AbstractCard;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardAd;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardBackAtHome;
-import com.shockn745.moovin5.motivation.recyclerview.cards.AbstractCard;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardLoading;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardLoadingSimple;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardRoute;
@@ -52,8 +51,6 @@ public class MotivationFragment extends Fragment implements
         BackgroundController.BackgroundControllerListener,
         OnMapReadyCallback,
         CardAdapter.DrawPolylineCallback {
-
-    private static final String LOG_TAG = MotivationFragment.class.getSimpleName();
 
     private FABCallbacks mFABCallbacks;
     private BackgroundController mBackgroundController;

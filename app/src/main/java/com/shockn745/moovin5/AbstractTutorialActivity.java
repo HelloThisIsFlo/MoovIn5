@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 /**
  * This class factor functions related to the tutorial mode at first launch of the application
@@ -12,7 +11,6 @@ import android.util.Log;
  * @author Kempenich Florian
  */
 public abstract class AbstractTutorialActivity extends AppCompatActivity {
-    private static final String LOG_TAG = AbstractTutorialActivity.class.getSimpleName();
 
     private boolean inTutorialMode = true;
 
@@ -30,19 +28,6 @@ public abstract class AbstractTutorialActivity extends AppCompatActivity {
             prefs.edit()
                     .putBoolean(getString(R.string.pref_tutorial_key), inTutorialMode)
                     .apply();
-        }
-
-        if (prefs.contains(getString(R.string.pref_is_celsius_key))) {
-            Log.d(LOG_TAG, "Pref IsCelsius PRESENT");
-            boolean isCelsius = prefs.getBoolean(getString(R.string.pref_is_celsius_key), false);
-            Log.d(LOG_TAG, "If FALSE at first launch : NOT GOOD !!!!");
-            if (isCelsius) {
-                Log.d(LOG_TAG, "TRUE");
-            } else {
-                Log.d(LOG_TAG, "FALSE");
-            }
-        } else {
-            Log.d(LOG_TAG, "Pref IsCelsius ABSENT");
         }
 
     }

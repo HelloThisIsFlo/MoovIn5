@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.shockn745.moovin5.R;
@@ -73,8 +72,6 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTas
             this.backAtHomeDate = backAtHomeDate;
         }
     }
-
-    private final String LOG_TAG = FetchTransitTask.class.getSimpleName();
 
     public final static int ERROR = -1;
     public final static int RESULT_OK = 0;

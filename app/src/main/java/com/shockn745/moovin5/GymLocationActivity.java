@@ -7,11 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -34,7 +32,6 @@ import com.shockn745.moovin5.tutorial.TutorialActivityFinalStep;
  */
 public class GymLocationActivity extends AbstractTutorialActivity implements OnMapReadyCallback {
 
-    private final static String LOG_TAG = GymLocationActivity.class.getSimpleName();
 
     public final static String LATITUDE_KEY = "latitude";
     public final static String LONGITUDE_KEY = "longitude";
@@ -259,7 +256,6 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
             mMarker = mMap.addMarker(new MarkerOptions()
                     .position(coord));
         } catch (PreferencesUtils.PreferenceNotInitializedException e) {
-            Log.v(LOG_TAG, "Location not initialized, not adding the marker");
         }
 
         // Activate the myLocation layer

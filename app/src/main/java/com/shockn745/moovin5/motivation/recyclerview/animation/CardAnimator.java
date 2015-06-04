@@ -51,8 +51,6 @@ public class CardAnimator extends RecyclerView.ItemAnimator {
         void onMoveAnimationEnd();
     }
 
-    private static final String LOG_TAG = CardAnimator.class.getSimpleName();
-
     private final ArrayList<ViewHolder> mPendingRemovals = new ArrayList<>();
     private final ArrayList<AddInfo> mPendingAdditions = new ArrayList<>();
     private final ArrayList<MoveInfo> mPendingMoves = new ArrayList<>();

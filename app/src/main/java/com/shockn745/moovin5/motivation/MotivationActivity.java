@@ -3,7 +3,6 @@ package com.shockn745.moovin5.motivation;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -11,9 +10,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -37,7 +33,6 @@ import com.shockn745.moovin5.motivation.add_card_menu.FABCallbacks;
  */
 public class MotivationActivity extends AppCompatActivity implements FABCallbacks, AddCardMenuCallbacks {
 
-    private static final String LOG_TAG = MotivationActivity.class.getSimpleName();
     private int mRevealDuration;
     private boolean mAddCardMenuDisplayed = false;
 

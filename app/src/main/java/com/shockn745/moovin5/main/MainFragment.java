@@ -34,8 +34,6 @@ import com.shockn745.moovin5.motivation.MotivationActivity;
  */
 public class MainFragment extends Fragment {
 
-    private static final String LOG_TAG = MainFragment.class.getSimpleName();
-
     private ImageButton mMotivateButton;
     private TextView mWarningEditText;
 

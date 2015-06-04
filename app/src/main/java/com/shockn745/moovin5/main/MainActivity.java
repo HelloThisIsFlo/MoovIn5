@@ -23,8 +23,6 @@ import com.shockn745.moovin5.tutorial.TutorialActivityStep1;
  */
 public class MainActivity extends AbstractTutorialActivity {
 
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

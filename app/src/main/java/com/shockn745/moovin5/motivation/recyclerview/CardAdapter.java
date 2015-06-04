@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,9 @@ import com.shockn745.moovin5.R;
 import com.shockn745.moovin5.motivation.MotivationActivity;
 import com.shockn745.moovin5.motivation.add_card_menu.AddCardMenuAdapter;
 import com.shockn745.moovin5.motivation.recyclerview.animation.SwipeDismissRecyclerViewTouchListener;
+import com.shockn745.moovin5.motivation.recyclerview.cards.AbstractCard;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardAd;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardBackAtHome;
-import com.shockn745.moovin5.motivation.recyclerview.cards.AbstractCard;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardLoading;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardLoadingSimple;
 import com.shockn745.moovin5.motivation.recyclerview.cards.CardRoute;
@@ -39,8 +38,6 @@ import java.util.Set;
 public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
         SwipeDismissRecyclerViewTouchListener.DismissCallbacks,
         AddCardMenuAdapter.AddCardFromCacheCallback {
-
-    private static final String LOG_TAG = CardAdapter.class.getSimpleName();
 
     private final ArrayList<AbstractCard> mDataSet;
     private final MotivationActivity mActivity;
