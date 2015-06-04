@@ -268,14 +268,24 @@ public class SettingsActivity extends AppCompatActivity {
                                 + getString(R.string.pref_summary_minute)
                 );
             } else if (preference instanceof RadioPreference) {
-                boolean isCelsius = sharedPreferences.getBoolean(
-                        key,
-                        getResources().getBoolean(R.bool.pref_is_celsius_default)
-                );
-                if (isCelsius) {
-                    preference.setSummary(R.string.pref_is_celsius_celsius);
-                } else {
-                    preference.setSummary(R.string.pref_is_celsius_fahrenheit);
+                /* If SettingsActivity is launched at least a second time dureing the lifecycle of
+                   the application, onSharedPreferenceChanged would be called 2 times.
+                   And the second time getResources would throw an IllegalStateException
+
+                   This is not a very clean fix (using ty-catch) but it works for now
+                 */
+                try {
+                    boolean isCelsius = sharedPreferences.getBoolean(
+                            key,
+                            getResources().getBoolean(R.bool.pref_is_celsius_default)
+                    );
+                    if (isCelsius) {
+                        preference.setSummary(R.string.pref_is_celsius_celsius);
+                    } else {
+                        preference.setSummary(R.string.pref_is_celsius_fahrenheit);
+                    }
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
                 }
             }
         }
