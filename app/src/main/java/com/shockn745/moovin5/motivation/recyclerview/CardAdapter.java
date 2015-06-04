@@ -469,7 +469,6 @@ public class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 try {
                     mDrawPolylineCallback.drawPolylineCallback();
                 } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         });

@@ -177,11 +177,9 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTas
                         jsonString = stringBuilder.toString();
                     }
                 } catch (MalformedURLException e) {
-                    e.printStackTrace();
                     publishProgress(URL_ERROR);
                     return null;
                 } catch (IOException e) {
-                    e.printStackTrace();
                     publishProgress(CONNECTION_ERROR);
                     return null;
                 } finally {
@@ -193,7 +191,6 @@ public class FetchTransitTask extends AsyncTask<LatLng, Integer, FetchTransitTas
                         try {
                             bufferedReader.close();
                         } catch (IOException e) {
-                            e.printStackTrace();
                         }
                     }
                 }

@@ -65,7 +65,6 @@ public class ConnectionListener
                 connectionResult
                         .startResolutionForResult(mActivity, REQUEST_RESOLVE_ERROR);
             } catch (IntentSender.SendIntentException e) {
-                e.printStackTrace();
             }
         } else {
             // TODO implement dialogError

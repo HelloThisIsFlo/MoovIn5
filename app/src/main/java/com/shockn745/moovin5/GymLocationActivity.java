@@ -95,7 +95,6 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
                                 0)
                 );
             } catch (PreferencesUtils.PreferenceNotInitializedException e) {
-                e.printStackTrace();
                 // Set default location if retrieval fails
                 options.camera(new CameraPosition(
                                 new LatLng(0, 0),

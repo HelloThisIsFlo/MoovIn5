@@ -285,7 +285,6 @@ public class SettingsActivity extends AppCompatActivity {
                         preference.setSummary(R.string.pref_is_celsius_fahrenheit);
                     }
                 } catch (IllegalStateException e) {
-                    e.printStackTrace();
                 }
             }
         }
