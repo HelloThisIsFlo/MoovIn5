@@ -352,7 +352,7 @@ public class BackgroundController implements
         try {
             LatLng coordGym = PreferencesUtils.getCoordinatesFromPreferences(mActivity);
 
-            new FetchWeatherTask(this).execute(coordGym);
+            new FetchWeatherTask(mActivity, this).execute(coordGym);
 
         } catch (PreferencesUtils.PreferenceNotInitializedException e) {
             handleResult(GYM_NOT_INIT);

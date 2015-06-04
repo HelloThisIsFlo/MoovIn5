@@ -17,6 +17,15 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/pref_category_options">
+        <com.shockn745.moovin5.settings.RadioPreference
+            android:key="@string/pref_is_celsius_key"
+            android:title="@string/pref_is_celsius"
+            android:defaultValue="@bool/pref_is_celsius_default"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/pref_category_misc">
 
         <Preference
@@ -24,16 +33,16 @@
             android:title="@string/pref_start_tutorial"
             android:summary="@string/pref_start_tutorial_summary"/>
         <Preference
-            android:key="@string/pref_credits_key"
-            android:title="@string/pref_credits"
+            android:key="@string/pref_rate_key"
+            android:title="@string/pref_rate"
             />
         <Preference
             android:key="@string/pref_feedback_key"
             android:title="@string/pref_feedback"
             />
         <Preference
-            android:key="@string/pref_rate_key"
-            android:title="@string/pref_rate"
+            android:key="@string/pref_credits_key"
+            android:title="@string/pref_credits"
             />
 
     </PreferenceCategory>

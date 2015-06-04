@@ -60,4 +60,12 @@
     <dimen name="calories_recycler_view_list_item_height">70dp</dimen>
 
 
+
+    <!-- Settings Activity -->
+    <!-- RadioPreference -->
+    <dimen name="radio_button_text_size">7sp</dimen>
+    <dimen name="radio_group_top_margin">10dp</dimen>
+    <dimen name="radio_group_start_margin">5dp</dimen>
+
+
 </resources>

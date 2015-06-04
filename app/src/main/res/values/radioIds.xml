@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This file creates the id used by the radioButtons in RadioPreference -->
+<resources>
+    <item name="pref_unit_celsius_radio_button" type="id" />
+    <item name="pref_unit_fahrenheit_radio_button" type="id" />
+</resources>
