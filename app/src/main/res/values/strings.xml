@@ -21,6 +21,7 @@
     <string name="pref_tutorial_key">tutorial</string>
 
     <string name="pref_category_workout">Workout</string>
+    <string name="pref_category_options">Options</string>
     <string name="pref_category_misc">Misc.</string>
 
     <!-- workout category -->
@@ -31,6 +32,11 @@
     <string name="pref_summary_minute">Minutes</string>
     <string name="pref_workout_key">workout</string>
     <string name="pref_home_mode_key">home_mode</string>
+    <!-- options category -->
+    <string name="pref_is_celsius">Temperature unit</string>
+    <string name="pref_is_celsius_key">unit</string>
+    <string name="pref_is_celsius_celsius">Celsius</string>
+    <string name="pref_is_celsius_fahrenheit">Fahrenheit</string>
     <!-- misc category -->
     <string name="pref_start_tutorial">Restart tutorial</string>
     <string name="pref_start_tutorial_key">restart_tutorial</string>

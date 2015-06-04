@@ -1,6 +1,5 @@
 package com.shockn745.moovin5.settings;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -86,6 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
             mBindingPreferences = true;
             onSharedPreferenceChanged(sp, getString(R.string.pref_warmup_key));
             onSharedPreferenceChanged(sp, getString(R.string.pref_stretching_key));
+            onSharedPreferenceChanged(sp, getString(R.string.pref_is_celsius_key));
             mBindingPreferences = false;
 
             // Init the restart tutorial preference
@@ -267,6 +267,16 @@ public class SettingsActivity extends AppCompatActivity {
                                 + " "
                                 + getString(R.string.pref_summary_minute)
                 );
+            } else if (preference instanceof RadioPreference) {
+                boolean isCelsius = sharedPreferences.getBoolean(
+                        key,
+                        getResources().getBoolean(R.bool.pref_is_celsius_default)
+                );
+                if (isCelsius) {
+                    preference.setSummary(R.string.pref_is_celsius_celsius);
+                } else {
+                    preference.setSummary(R.string.pref_is_celsius_fahrenheit);
+                }
             }
         }
     }

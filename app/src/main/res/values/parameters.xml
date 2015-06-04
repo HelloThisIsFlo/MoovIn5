@@ -10,6 +10,9 @@
     <integer name="pref_stretching_default">30</integer>
     <integer name="workout_default">10</integer>
 
+    <!-- Preference for the unit of temperature -->
+    <bool name="pref_is_celsius_default">true</bool>
+
     <!-- Min & max values for the main duration picker -->
     <integer name="main_duration_min">10</integer>
     <integer name="main_duration_max">90</integer>
