@@ -234,8 +234,9 @@ public class MotivationActivity extends AppCompatActivity implements FABCallback
         int mBottomPositionFAB = mAddCardButton.getBottom();
 
         // Animate the FAB out of the screen (UP direction)
+        // Add 10 pixels offset to fully hide shadow
         mAddCardButton.animate()
-                .translationY(-mBottomPositionFAB)
+                .translationY(-mBottomPositionFAB - 10)
                 .setDuration(getResources().getInteger(R.integer.card_menu_FAB_hide_duration))
                 .setInterpolator(
                         AnimCompatUtils.createInterpolator(this)
