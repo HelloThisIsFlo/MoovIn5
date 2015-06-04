@@ -1,10 +1,14 @@
 package com.shockn745.moovin5.motivation.background;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.shockn745.moovin5.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,13 +59,21 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
 
     private final OnWeatherInfoRetrievedListener mListener;
 
-    public FetchWeatherTask(OnWeatherInfoRetrievedListener listener) {
+    private boolean mIsCelsius;
+
+    public FetchWeatherTask(Context context, OnWeatherInfoRetrievedListener listener) {
         this.mListener = listener;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        // Retreive the unit type
+        mIsCelsius = prefs.getBoolean(
+                context.getString(R.string.pref_is_celsius_key),
+                context.getResources().getBoolean(R.bool.pref_is_celsius_default)
+        );
     }
 
     @Override
     protected WeatherInfos doInBackground(LatLng... params) {
-        // TODO offer choice for fahrenheit degrees
         if (params.length != 1) {
             publishProgress(ERROR);
             return null;
@@ -78,7 +90,14 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
 
         // These are the parameter for the request
         String mode = "json";
-        String unit = "metric";
+
+        // Use the unit from preferences
+        String unit;
+        if (mIsCelsius) {
+            unit = "metric";
+        } else {
+            unit = "imperial";
+        }
 
         try {
             // Construct the URL for the OpenWeatherMap query
