@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
     defaultConfig {
         applicationId 'com.shockn745.moovin5'
         minSdkVersion 16
-        targetSdkVersion 21
+        targetSdkVersion 23
         versionCode 5
         versionName "1.0.4"
     }
@@ -23,11 +23,12 @@ android {
 // https://developer.android.com/google/play-services/setup.html
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.android.gms:play-services-location:7.5.0'
-    compile 'com.google.android.gms:play-services-maps:7.5.0'
-    compile 'com.google.android.gms:play-services-ads:7.5.0'
-    compile 'com.android.support:cardview-v7:21.0.0'
-    compile 'com.android.support:recyclerview-v7:21.0.0'
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.google.android.gms:play-services-location:7.8.0'
+    compile 'com.google.android.gms:play-services-maps:7.8.0'
+    compile 'com.google.android.gms:play-services-ads:7.8.0'
     compile 'com.google.maps.android:android-maps-utils:0.3.4'
-    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:cardview-v7:23.0.1'
+    compile 'com.android.support:recyclerview-v7:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.0.1'
 }
