@@ -22,6 +22,7 @@ import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -42,7 +43,7 @@ import java.util.List;
  *
  * @author Florian Kempenich
  */
-public class CardAnimator extends RecyclerView.ItemAnimator {
+public class CardAnimator extends SimpleItemAnimator {
 
     /**
      * This interface is used to notify that a remove animation is finished

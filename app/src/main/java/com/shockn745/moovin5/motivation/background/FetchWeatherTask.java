@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
+import com.google.android.gms.ads.internal.request.StringParcel;
 import com.google.android.gms.maps.model.LatLng;
 import com.shockn745.moovin5.R;
 
@@ -55,6 +56,7 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
     public final static int CONNECTION_ERROR = 1;
 
     private final OnWeatherInfoRetrievedListener mListener;
+    private final String mOpenWeatherMapApiKey;
 
     private boolean mIsCelsius;
 
@@ -67,6 +69,9 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
                 context.getString(R.string.pref_is_celsius_key),
                 context.getResources().getBoolean(R.bool.pref_is_celsius_default)
         );
+
+        // Store the API key
+        mOpenWeatherMapApiKey = context.getString(R.string.open_wheather_map_api_key);
     }
 
     @Override
@@ -100,6 +105,7 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
             // Construct the URL for the OpenWeatherMap query
             // Possible parameters are avaiable at OWM's forecast API page, at
             // http://openweathermap.org/API#forecast
+            final String QUERY_PARAM_API_KEY = "APPID";
             final String QUERY_PARAM_LAT = "lat";
             final String QUERY_PARAM_LNG = "lon";
             final String MODE_PARAM = "mode";
@@ -110,6 +116,7 @@ public class FetchWeatherTask extends AsyncTask<LatLng, Integer, FetchWeatherTas
             builder.scheme("http")
                     .authority("api.openweathermap.org")
                     .path("data/2.5/weather")
+                    .appendQueryParameter(QUERY_PARAM_API_KEY, mOpenWeatherMapApiKey)
                     .appendQueryParameter(QUERY_PARAM_LAT, Double.toString(locationQuery.latitude))
                     .appendQueryParameter(QUERY_PARAM_LNG, Double.toString(locationQuery.longitude))
                     .appendQueryParameter(MODE_PARAM, mode)

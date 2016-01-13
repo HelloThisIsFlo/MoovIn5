@@ -1,11 +1,14 @@
 package com.shockn745.moovin5;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.HapticFeedbackConstants;
 import android.view.MenuItem;
@@ -89,18 +92,18 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
 
                 // Init the map with the saved location
                 options.camera(new CameraPosition(
-                                coord,
-                                getResources().getInteger(R.integer.gym_location_level_zoom),
-                                0,
-                                0)
+                        coord,
+                        getResources().getInteger(R.integer.gym_location_level_zoom),
+                        0,
+                        0)
                 );
             } catch (PreferencesUtils.PreferenceNotInitializedException e) {
                 // Set default location if retrieval fails
                 options.camera(new CameraPosition(
-                                new LatLng(0, 0),
-                                getResources().getInteger(R.integer.gym_location_level_zoom_not_initialized),
-                                0,
-                                0)
+                        new LatLng(0, 0),
+                        getResources().getInteger(R.integer.gym_location_level_zoom_not_initialized),
+                        0,
+                        0)
                 );
             }
 
@@ -169,7 +172,7 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
      * Hint the user to long press to select
      * Hint appear after 2 seconds
      */
-    private void scheduleHint(){
+    private void scheduleHint() {
         mHintRunnable = new Runnable() {
             @Override
             public void run() {
@@ -181,7 +184,7 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
 
             }
         };
-        mHandler.postDelayed(mHintRunnable , 2000);
+        mHandler.postDelayed(mHintRunnable, 2000);
     }
 
     /**
@@ -258,6 +261,15 @@ public class GymLocationActivity extends AbstractTutorialActivity implements OnM
         }
 
         // Activate the myLocation layer
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         mMap.setMyLocationEnabled(true);
 
 
