@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.mediation.MediationInterstitialAdapter;
 import com.google.android.gms.ads.mediation.admob.AdMobExtras;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -91,7 +92,7 @@ public class MotivationActivity extends AppCompatActivity implements FABCallback
 
             // Init the AdView
             mAdView = new AdView(this);
-            mAdView.setAdUnitId(getString(R.string.banner_ad_unit_id_debug));
+            mAdView.setAdUnitId(getString(R.string.banner_ad_unit_id));
             mAdView.setAdSize(AdSize.MEDIUM_RECTANGLE);
             Bundle bundle = new Bundle();
             bundle.putString("color_bg", "00ACC1");
@@ -101,9 +102,9 @@ public class MotivationActivity extends AppCompatActivity implements FABCallback
             bundle.putString("color_text", "FFFFFF");
 //            bundle.putString("color_url", "008000");
 
-            AdMobExtras extras = new AdMobExtras(bundle);
             AdRequest adRequest = new AdRequest.Builder()
-                    .addNetworkExtras(extras).build();
+                    .addNetworkExtrasBundle(MediationInterstitialAdapter.class, bundle)
+                    .build();
             mAdView.loadAd(adRequest);
 
 
